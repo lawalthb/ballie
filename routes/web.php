@@ -1,103 +1,49 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardController;
+use App\Http\Controllers\SuperAdmin\TenantController;
+use App\Http\Controllers\SuperAdmin\AuthController as SuperAdminAuthController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
+// Include authentication routes
+require __DIR__.'/auth.php';
 
-// Home/Landing page
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+// Public routes (landing page, pricing, etc.)
+Route::get('/', [HomeController::class, 'welcome'])->name('home');
+Route::get('/features', [HomeController::class, 'features'])->name('features');
+Route::get('/pricing', [HomeController::class, 'pricing'])->name('pricing');
+Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+Route::get('/demo', [HomeController::class, 'demo'])->name('demo');
 
-// Marketing/Landing pages
-Route::get('/features', function () {
-    return view('features');
-})->name('features');
+// Super Admin Routes
+Route::prefix('super-admin')->name('super-admin.')->group(function () {
+    // Super Admin Authentication
+    Route::middleware('guest:super_admin')->group(function () {
+        Route::get('/login', [SuperAdminAuthController::class, 'showLoginForm'])->name('login');
+        Route::post('/login', [SuperAdminAuthController::class, 'login']);
+        Route::get('/register', [SuperAdminAuthController::class, 'showRegistrationForm'])->name('register');
+        Route::post('/register', [SuperAdminAuthController::class, 'register']);
+    });
 
-Route::get('/pricing', function () {
-    return view('pricing');
-})->name('pricing');
+    // Protected Super Admin Routes
+    Route::middleware(['auth:super_admin'])->group(function () {
+        Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
+        Route::post('/logout', [SuperAdminAuthController::class, 'logout'])->name('logout');
 
-Route::get('/about', function () {
-    return view('about');
-})->name('about');
+        // Tenant Management
+        Route::resource('tenants', TenantController::class);
+        Route::post('/tenants/{tenant}/suspend', [TenantController::class, 'suspend'])->name('tenants.suspend');
+        Route::post('/tenants/{tenant}/activate', [TenantController::class, 'activate'])->name('tenants.activate');
 
-Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
-
-// Additional landing pages (if you had them)
-Route::get('/solutions', function () {
-    return view('solutions');
-})->name('solutions');
-
-Route::get('/industries', function () {
-    return view('industries');
-})->name('industries');
-
-Route::get('/resources', function () {
-    return view('resources');
-})->name('resources');
-
-Route::get('/blog', function () {
-    return view('blog');
-})->name('blog');
-
-Route::get('/help', function () {
-    return view('help');
-})->name('help');
-
-Route::get('/demo', function () {
-    return view('demo');
-})->name('demo');
-
-Route::get('/testimonials', function () {
-    return view('testimonials');
-})->name('testimonials');
-
-Route::get('/case-studies', function () {
-    return view('case-studies');
-})->name('case-studies');
-
-Route::get('/integrations', function () {
-    return view('integrations');
-})->name('integrations');
-
-Route::get('/api', function () {
-    return view('api');
-})->name('api');
-
-Route::get('/security', function () {
-    return view('security');
-})->name('security');
-
-Route::get('/privacy', function () {
-    return view('privacy');
-})->name('privacy');
-
-Route::get('/terms', function () {
-    return view('terms');
-})->name('terms');
-
-Route::get('/cookies', function () {
-    return view('cookies');
-})->name('cookies');
-
-// Authentication required routes
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        // Impersonation
+        Route::post('/impersonate/{tenant}/{user}', [TenantController::class, 'impersonate'])->name('impersonate');
+        Route::post('/stop-impersonation', [TenantController::class, 'stopImpersonation'])->name('stop-impersonation');
+    });
 });
 
-// Include Breeze authentication routes
-require __DIR__.'/auth.php';
+// Tenant Routes (path-based: /tenant1/dashboard, /tenant2/invoices, etc.)
+Route::prefix('{tenant}')->middleware(['tenant'])->group(function () {
+    require __DIR__.'/tenant.php';
+});

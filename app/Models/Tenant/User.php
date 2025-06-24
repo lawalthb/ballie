@@ -1,24 +1,17 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Tenant;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        'tenant_id',
         'name',
         'email',
         'password',
@@ -34,21 +27,11 @@ class User extends Authenticatable
         'social_avatar',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
         'last_login_at' => 'datetime',
@@ -57,41 +40,31 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    // User roles within a tenant
+    // User roles
     const ROLE_OWNER = 'owner';
     const ROLE_ADMIN = 'admin';
     const ROLE_MANAGER = 'manager';
+    const ROLE_EMPLOYEE = 'employee';
     const ROLE_ACCOUNTANT = 'accountant';
     const ROLE_SALES = 'sales';
-    const ROLE_EMPLOYEE = 'employee';
 
-    public function tenant(): BelongsTo
-    {
-        return $this->belongsTo(Tenant::class);
-    }
-
-    public function hasRole($role): bool
+    public function hasRole($role)
     {
         return $this->role === $role;
     }
 
-    public function hasPermission($permission): bool
+    public function hasPermission($permission)
     {
         return in_array($permission, $this->permissions ?? []);
     }
 
-    public function isOwner(): bool
+    public function isOwner()
     {
         return $this->role === self::ROLE_OWNER;
     }
 
-    public function isAdmin(): bool
+    public function isAdmin()
     {
         return in_array($this->role, [self::ROLE_OWNER, self::ROLE_ADMIN]);
-    }
-
-    public function canManage($resource): bool
-    {
-        return $this->isAdmin() || $this->hasPermission("manage_{$resource}");
     }
 }

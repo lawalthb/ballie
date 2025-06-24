@@ -39,9 +39,21 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+
+        // Tenant middleware group
+        'tenant' => [
+            'web',
+            \App\Http\Middleware\TenantContext::class,
+            \App\Http\Middleware\SuperAdminImpersonation::class,
+        ],
+
+        // Super admin middleware group
+        'super_admin' => [
+            'web',
         ],
     ];
 
@@ -64,5 +76,12 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+
+        // Custom middleware aliases
+        'tenant.context' => \App\Http\Middleware\TenantContext::class,
+        'super.admin' => \App\Http\Middleware\SuperAdminImpersonation::class,
+        'check.onboarding' => \App\Http\Middleware\CheckOnboarding::class,
+        'onboarding.completed' => \App\Http\Middleware\OnboardingCompleted::class,
+        'role' => \App\Http\Middleware\CheckUserRole::class,
     ];
 }
