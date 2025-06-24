@@ -94,4 +94,58 @@ class User extends Authenticatable
     {
         return $this->isAdmin() || $this->hasPermission("manage_{$resource}");
     }
+
+    /**
+     * Scope for users by business type
+     */
+    public function scopeByBusinessType($query, $type)
+    {
+        return $query->where('business_type', $type);
+    }
+
+    /**
+     * Scope for active users
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+        // Business type constants
+        const BUSINESS_TYPES = [
+            'retail' => 'Retail & E-commerce',
+            'service' => 'Service Business',
+            'restaurant' => 'Restaurant & Food',
+            'manufacturing' => 'Manufacturing',
+            'wholesale' => 'Wholesale & Distribution',
+            'other' => 'Other',
+        ];
+
+
+    /**
+     * Get the business type label
+     */
+    public function getBusinessTypeLabelAttribute()
+    {
+        return self::BUSINESS_TYPES[$this->business_type] ?? 'Unknown';
+    }
+
+
+     /**
+     * Get the user's avatar URL
+     */
+    public function getAvatarUrlAttribute()
+    {
+        if ($this->avatar) {
+            return asset('storage/' . $this->avatar);
+        }
+
+        // Generate avatar from initials
+        $initials = collect(explode(' ', $this->name))
+            ->map(fn($name) => strtoupper(substr($name, 0, 1)))
+            ->take(2)
+            ->implode('');
+
+        return "https://ui-avatars.com/api/?name={$initials}&color=ffffff&background=2b6399&size=200";
+    }
 }

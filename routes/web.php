@@ -17,6 +17,20 @@ Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('/demo', [HomeController::class, 'demo'])->name('demo');
 
+
+
+// Social Authentication Routes
+Route::middleware('guest')->group(function () {
+    Route::get('/auth/{provider}', [SocialAuthController::class, 'redirect'])->name('auth.redirect');
+    Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'])->name('auth.callback');
+
+    // Named routes for specific providers
+    Route::get('/auth/google', [SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
+    Route::get('/auth/facebook', [SocialAuthController::class, 'redirectToFacebook'])->name('auth.facebook');
+});
+
+
+
 // Super Admin Routes
 Route::prefix('super-admin')->name('super-admin.')->group(function () {
     // Super Admin Authentication
