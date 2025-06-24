@@ -3,26 +3,34 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
-use App\Helpers\TenantHelper;
 use Illuminate\Http\Request;
+use App\Models\Tenant;
 
 class DashboardController extends Controller
 {
-    public function index()
+    /**
+     * Display the dashboard
+     */
+    public function index(Request $request, Tenant $tenant)
     {
-        $tenant = TenantHelper::getCurrentTenant();
+        // Get current tenant from route parameter
+        $currentTenant = $tenant;
+
+        // Get authenticated user
         $user = auth()->user();
 
-        // Basic dashboard stats (you'll expand this later)
-        $stats = [
-            'total_customers' => 0, // Will be implemented with actual models
-            'total_invoices' => 0,
-            'total_products' => 0,
-            'monthly_revenue' => 0,
-        ];
+        // You would typically load dashboard data here
+        // For example:
+        // $invoiceCount = Invoice::count();
+        // $customerCount = Customer::count();
+        // $productCount = Product::count();
+        // $recentInvoices = Invoice::latest()->take(5)->get();
+        // $recentCustomers = Customer::latest()->take(5)->get();
 
-        $trialDaysRemaining = TenantHelper::getTrialDaysRemaining();
-
-        return view('tenant.dashboard', compact('tenant', 'user', 'stats', 'trialDaysRemaining'));
+        return view('tenant.dashboard.index', [
+            'currentTenant' => $currentTenant,
+            'user' => $user,
+            // Pass other data as needed
+        ]);
     }
 }

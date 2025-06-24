@@ -40,6 +40,8 @@ class Tenant extends Model
         'onboarding_completed_at',
         'onboarding_progress',
         'status',
+        'payment_terms',
+        'fiscal_year_start'
     ];
 
     protected $casts = [

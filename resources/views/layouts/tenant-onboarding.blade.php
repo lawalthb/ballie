@@ -24,16 +24,6 @@
                     colors: {
 
 
-
-
-
-
-
-
-
-
-
-
                         'brand-gold': '#d1b05e',
                         'brand-blue': '#2b6399',
                         'brand-dark-purple': '#3c2c64',
@@ -62,8 +52,6 @@
 <body class="font-sans antialiased bg-gray-50">
     <div class="min-h-screen">
         <!-- Header -->
-
-
 
         <header class="gradient-bg text-white shadow-lg">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

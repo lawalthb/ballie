@@ -35,6 +35,7 @@ return new class extends Migration
             $table->foreignId('created_by')->nullable()->constrained('super_admins')->onDelete('set null');
             $table->boolean('is_active')->default(true);
             $table->boolean('onboarding_completed')->default(false);
+            $table->json('onboarding_progress')->nullable();
             $table->json('settings')->nullable();
 
             $table->timestamps();
