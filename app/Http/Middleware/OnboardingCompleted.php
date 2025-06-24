@@ -2,17 +2,35 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Tenant;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class OnboardingCompleted
 {
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
     public function handle(Request $request, Closure $next): Response
     {
-        $tenant = app('tenant');
+        $tenantSlug = $request->route('tenant');
 
-        if (!$tenant->onboarding_completed) {
+        // If tenant is already a model instance (from route model binding)
+        if ($tenantSlug instanceof Tenant) {
+            $tenant = $tenantSlug;
+        } else {
+            // If tenant is a string, resolve it
+            $tenant = Tenant::where('slug', $tenantSlug)->first();
+            if (!$tenant) {
+                abort(404, 'Tenant not found');
+            }
+        }
+
+        // If onboarding is not completed, redirect to onboarding
+        if (!$tenant->hasCompletedOnboarding()) {
             return redirect()->route('tenant.onboarding', ['tenant' => $tenant->slug]);
         }
 

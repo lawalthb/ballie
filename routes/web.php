@@ -18,7 +18,6 @@ Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('/demo', [HomeController::class, 'demo'])->name('demo');
 
 // General dashboard route that redirects to tenant dashboard
-Route::get('/profile/edit', [SuperAdminAuthController::class, 'register'])->name('profile.edit');
 Route::middleware(['auth'])->get('/dashboard', function () {
     $user = auth()->user();
     if ($user && $user->tenant) {
@@ -29,8 +28,8 @@ Route::middleware(['auth'])->get('/dashboard', function () {
 
 // Super Admin Routes
 Route::prefix('super-admin')->name('super-admin.')->group(function () {
-    // Super Admin Authentication
-    Route::middleware('guest:super_admin')->group(function () {
+    // Guest routes
+    Route::middleware(['guest:super_admin'])->group(function () {
         Route::get('/login', [SuperAdminAuthController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [SuperAdminAuthController::class, 'login']);
         Route::get('/register', [SuperAdminAuthController::class, 'showRegistrationForm'])->name('register');

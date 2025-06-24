@@ -39,7 +39,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
@@ -48,7 +48,6 @@ class Kernel extends HttpKernel
         'tenant' => [
             'web',
             \App\Http\Middleware\TenantContext::class,
-            \App\Http\Middleware\SuperAdminImpersonation::class,
         ],
 
         // Super admin middleware group

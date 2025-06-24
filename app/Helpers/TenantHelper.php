@@ -135,3 +135,28 @@ class TenantHelper
         return max(0, now()->diffInDays($tenant->trial_ends_at, false));
     }
 }
+
+if (!function_exists('current_tenant')) {
+    /**
+     * Get the current tenant
+     */
+    function current_tenant(): ?\App\Models\Tenant
+    {
+        return app('current_tenant');
+    }
+}
+
+if (!function_exists('tenant_route')) {
+    /**
+     * Generate a tenant-aware route
+     */
+    function tenant_route(string $name, array $parameters = [], bool $absolute = true): string
+    {
+        $tenant = current_tenant();
+        if ($tenant && !isset($parameters['tenant'])) {
+            $parameters['tenant'] = $tenant->slug;
+        }
+
+        return route($name, $parameters, $absolute);
+    }
+}

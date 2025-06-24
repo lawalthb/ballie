@@ -2,39 +2,49 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Tenant;
 use Closure;
 use Illuminate\Http\Request;
-use App\Models\Tenant;
 use Symfony\Component\HttpFoundation\Response;
 
 class TenantContext
 {
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
     public function handle(Request $request, Closure $next): Response
     {
         $tenantSlug = $request->route('tenant');
 
-        if (!$tenantSlug) {
-            abort(404, 'Tenant not specified');
+        // Resolve tenant if it's a string
+        if (is_string($tenantSlug)) {
+            $tenant = Tenant::where('slug', $tenantSlug)->first();
+            if (!$tenant) {
+                abort(404, 'Tenant not found');
+            }
+        } else {
+            $tenant = $tenantSlug;
         }
 
-        $tenant = Tenant::where('slug', $tenantSlug)->first();
+        // Set tenant context for multitenancy
+        if ($tenant) {
 
-        if (!$tenant) {
-            abort(404, 'Tenant not found');
+            // Check if tenant is active
+            if ($tenant->is_active !== true) {
+                abort(403, 'Tenant is not active');
+            }
+
+            // Make tenant current
+            $tenant->makeCurrent();
+
+            // Share tenant with all views
+            view()->share('currentTenant', $tenant);
+
+            // Add tenant to request for easy access
+            $request->merge(['current_tenant' => $tenant]);
         }
-
-        if (!$tenant->canAccess()) {
-            abort(403, 'Tenant access suspended or expired');
-        }
-
-        // Set tenant in the application context
-        app()->instance('tenant', $tenant);
-
-        // Share tenant with all views
-        view()->share('tenant', $tenant);
-
-        // Set tenant context for the request
-        $request->merge(['current_tenant' => $tenant]);
 
         return $next($request);
     }

@@ -151,4 +151,14 @@ class User extends Authenticatable
 
         return "https://ui-avatars.com/api/?name={$initials}&color=ffffff&background=2b6399&size=200";
     }
+
+
+     /**
+     * Check if user is active in a specific tenant.
+     */
+    public function isActiveInTenant(Tenant $tenant): bool
+    {
+        $userTenant = $this->tenants()->where('tenant_id', $tenant->id)->first();
+        return $userTenant && $userTenant->pivot->is_active;
+    }
 }
