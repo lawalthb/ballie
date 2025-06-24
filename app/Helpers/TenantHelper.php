@@ -34,6 +34,19 @@ class TenantHelper
         return route($name, $parameters);
     }
 
+    public static function getDashboardUrl($tenant = null)
+    {
+        if (!$tenant) {
+            $tenant = self::getCurrentTenant();
+        }
+
+        if (is_object($tenant)) {
+            return route('tenant.dashboard', ['tenant' => $tenant->slug]);
+        }
+
+        return route('tenant.dashboard', ['tenant' => $tenant]);
+    }
+
     public static function getPlanFeatures(string $plan): array
     {
         $features = [

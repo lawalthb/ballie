@@ -11,6 +11,7 @@ class DashboardController extends Controller
     public function index()
     {
         $tenant = TenantHelper::getCurrentTenant();
+        $user = auth()->user();
 
         // Basic dashboard stats (you'll expand this later)
         $stats = [
@@ -22,6 +23,6 @@ class DashboardController extends Controller
 
         $trialDaysRemaining = TenantHelper::getTrialDaysRemaining();
 
-        return view('tenant.dashboard', compact('tenant', 'stats', 'trialDaysRemaining'));
+        return view('tenant.dashboard', compact('tenant', 'user', 'stats', 'trialDaysRemaining'));
     }
 }

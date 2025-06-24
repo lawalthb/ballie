@@ -32,6 +32,10 @@ class User extends Authenticatable
         'social_provider',
         'social_provider_id',
         'social_avatar',
+        'business_name',
+        'business_type',
+        'onboarding_completed',
+        'onboarding_step',
     ];
 
     /**
@@ -53,6 +57,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'last_login_at' => 'datetime',
         'is_active' => 'boolean',
+        'onboarding_completed' => 'boolean',
         'permissions' => 'array',
         'password' => 'hashed',
     ];
@@ -111,16 +116,15 @@ class User extends Authenticatable
         return $query->where('is_active', true);
     }
 
-        // Business type constants
-        const BUSINESS_TYPES = [
-            'retail' => 'Retail & E-commerce',
-            'service' => 'Service Business',
-            'restaurant' => 'Restaurant & Food',
-            'manufacturing' => 'Manufacturing',
-            'wholesale' => 'Wholesale & Distribution',
-            'other' => 'Other',
-        ];
-
+    // Business type constants
+    const BUSINESS_TYPES = [
+        'retail' => 'Retail & E-commerce',
+        'service' => 'Service Business',
+        'restaurant' => 'Restaurant & Food',
+        'manufacturing' => 'Manufacturing',
+        'wholesale' => 'Wholesale & Distribution',
+        'other' => 'Other',
+    ];
 
     /**
      * Get the business type label
@@ -130,8 +134,7 @@ class User extends Authenticatable
         return self::BUSINESS_TYPES[$this->business_type] ?? 'Unknown';
     }
 
-
-     /**
+    /**
      * Get the user's avatar URL
      */
     public function getAvatarUrlAttribute()
