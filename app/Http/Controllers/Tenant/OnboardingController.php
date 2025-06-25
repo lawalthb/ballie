@@ -269,12 +269,7 @@ class OnboardingController extends Controller
             ]
         ]);
 
-        // Log the completion
-        \Log::info("Tenant {$tenant->id} ({$tenant->name}) completed onboarding", [
-            'tenant_id' => $tenant->id,
-            'user_id' => auth()->id()
-        ]);
-
+    
         // Redirect to dashboard
         return redirect()->route('tenant.dashboard', ['tenant' => $tenant->slug])
             ->with('success', 'Welcome to Ballie! Your account is now fully set up and ready to use.');

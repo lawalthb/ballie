@@ -31,6 +31,7 @@ class DashboardController extends Controller
         return view('tenant.dashboard.index', [
             'currentTenant' => $currentTenant,
             'user' => $user,
+            'tenant' => $currentTenant,
             // Pass other data as needed
         ]);
     }

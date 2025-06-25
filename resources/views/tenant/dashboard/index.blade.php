@@ -124,7 +124,7 @@
                 <div>
                     <h3 class="font-medium text-gray-900">Set up your business profile</h3>
                     <p class="text-sm text-gray-600 mt-1">Complete your business information to personalize your invoices and reports.</p>
-                    <a href="{{ route('tenant.settings.business', ['tenant' => request()->route('tenant')]) }}" class="text-sm text-blue-600 hover:text-blue-800 mt-1 inline-block">
+                    <a href="#" class="text-sm text-blue-600 hover:text-blue-800 mt-1 inline-block">
                         Complete Profile →
                     </a>
                 </div>

@@ -91,7 +91,7 @@
                            class="text-gray-600 hover:text-gray-900 font-medium transition-colors {{ request()->routeIs('tenant.invoices.*') ? 'text-primary-600' : '' }}">
                             Invoices
                         </a>
-                        <a href="{{ route('tenant.reports.index', $tenant->slug) }}"
+                        <a href="javascript:void(0)"
                            class="text-gray-600 hover:text-gray-900 font-medium transition-colors {{ request()->routeIs('tenant.reports.*') ? 'text-primary-600' : '' }}">
                             Reports
                         </a>
@@ -109,10 +109,10 @@
                             </button>
 
                             <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                                <a href="{{ route('tenant.profile.index', $tenant->slug) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                                <a href="javascript:void(0)"class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
                                 @if(in_array(auth()->user()->role, ['owner', 'admin']))
-                                    <a href="{{ route('tenant.settings.index', $tenant->slug) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-                                    <a href="{{ route('tenant.users.index', $tenant->slug) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Users</a>
+                                    <a href="javascript:void(0)" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                                    <a href="javascript:void(0)" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Users</a>
                                 @endif
                                 <div class="border-t border-gray-100"></div>
                                 <form method="POST" action="{{ route('tenant.logout', $tenant->slug) }}">
@@ -142,13 +142,13 @@
                         <a href="{{ route('tenant.customers.index', $tenant->slug) }}" class="block text-gray-600 hover:text-gray-900 font-medium py-2">Customers</a>
                         <a href="{{ route('tenant.products.index', $tenant->slug) }}" class="block text-gray-600 hover:text-gray-900 font-medium py-2">Products</a>
                         <a href="{{ route('tenant.invoices.index', $tenant->slug) }}" class="block text-gray-600 hover:text-gray-900 font-medium py-2">Invoices</a>
-                        <a href="{{ route('tenant.reports.index', $tenant->slug) }}" class="block text-gray-600 hover:text-gray-900 font-medium py-2">Reports</a>
+                        <a href="javascript:void(0)" class="block text-gray-600 hover:text-gray-900 font-medium py-2">Reports</a>
 
                         <div class="border-t border-gray-200 pt-2">
-                            <a href="{{ route('tenant.profile.index', $tenant->slug) }}" class="block text-gray-600 hover:text-gray-900 font-medium py-2">Profile</a>
+                            <a href="javascript:void(0)" class="block text-gray-600 hover:text-gray-900 font-medium py-2">Profile</a>
                             @if(in_array(auth()->user()->role, ['owner', 'admin']))
-                                <a href="{{ route('tenant.settings.index', $tenant->slug) }}" class="block text-gray-600 hover:text-gray-900 font-medium py-2">Settings</a>
-                                <a href="{{ route('tenant.users.index', $tenant->slug) }}" class="block text-gray-600 hover:text-gray-900 font-medium py-2">Users</a>
+                                <a href="javascript:void(0)" class="block text-gray-600 hover:text-gray-900 font-medium py-2">Settings</a>
+                                <a href="javascript:void(0)" class="block text-gray-600 hover:text-gray-900 font-medium py-2">Users</a>
                             @endif
                             <form method="POST" action="{{ route('tenant.logout', $tenant->slug) }}">
                                 @csrf
@@ -161,7 +161,7 @@
         </nav>
 
         <!-- Trial Banner -->
-        @if($tenant->subscription_status === 'trial' && $tenantHelper::getTrialDaysRemaining() > 0)
+
         <div class="bg-blue-50 border-b border-blue-200 px-4 py-3">
             <div class="max-w-7xl mx-auto flex items-center justify-between">
                 <div class="flex items-center">
@@ -169,15 +169,15 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     <span class="text-blue-800 text-sm">
-                        <strong>Trial Period:</strong> {{ $tenantHelper::getTrialDaysRemaining() }} days remaining
+                        <strong>Trial Period:</strong>5 days remaining
                     </span>
                 </div>
-                <a href="{{ route('tenant.settings.billing', $tenant->slug) }}" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 transition-colors">
+                <a href="javascript:void(0)" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 transition-colors">
                     Upgrade Now
                 </a>
             </div>
         </div>
-        @endif
+
 
         <!-- Main Content -->
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
