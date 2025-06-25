@@ -4,32 +4,23 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\SuperAdmin;
-use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 
 class SuperAdminImpersonation
 {
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
     public function handle(Request $request, Closure $next): Response
     {
-        // Check if super admin is impersonating a user
-        if ($request->session()->has('impersonating_user_id')) {
-            $userId = $request->session()->get('impersonating_user_id');
-            $superAdminId = $request->session()->get('super_admin_id');
+        // Check if super admin is impersonating
+        if (session()->has('impersonating')) {
+            $impersonationData = session('impersonating');
 
-            $user = User::find($userId);
-            $superAdmin = SuperAdmin::find($superAdminId);
-
-            if ($user && $superAdmin && $superAdmin->canImpersonate()) {
-                Auth::guard('web')->login($user);
-
-                // Add impersonation indicator to views
-                view()->share('impersonating', [
-                    'user' => $user,
-                    'super_admin' => $superAdmin
-                ]);
-            }
+            // Add impersonation banner data to views
+            view()->share('impersonating', $impersonationData);
         }
 
         return $next($request);

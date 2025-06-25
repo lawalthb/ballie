@@ -14,34 +14,64 @@ use Illuminate\Validation\Rule;
 
 class OnboardingController extends Controller
 {
-    public function index(Tenant $tenant)
+
+    public function index()
     {
-        // Check if onboarding is already completed
-        if ($tenant->onboarding_completed_at) {
-            return redirect()->route('tenant.dashboard', ['tenant' => $tenant->slug]);
+
+
+
+        $tenant = app('currentTenant');
+
+        // If onboarding is already completed, redirect to dashboard
+        if ($tenant && $tenant->onboarding_completed) {
+            return redirect()->route('tenant.dashboard');
         }
 
-        return view('tenant.onboarding.index', compact('tenant'));
+
+
+        // Start with the first step
+        return redirect()->route('onboarding.step', ['step' => 'company']);
     }
 
-    public function showStep(Tenant $tenant, $step)
+
+    public function showStep($step)
     {
-        // Check if onboarding is already completed
-        if ($tenant->onboarding_completed_at) {
-            return redirect()->route('tenant.dashboard', ['tenant' => $tenant->slug]);
+
+
+
+        $tenant = app('currentTenant');
+
+        // If onboarding is already completed, redirect to dashboard
+        if ($tenant && $tenant->onboarding_completed) {
+            return redirect()->route('tenant.dashboard');
         }
+
 
         $validSteps = ['company', 'preferences', 'team', 'complete'];
 
+
         if (!in_array($step, $validSteps)) {
-            return redirect()->route('tenant.onboarding.index', ['tenant' => $tenant->slug]);
+
+            return redirect()->route('onboarding.step', ['step' => 'company']);
         }
 
-        return view("tenant.onboarding.steps.{$step}", compact('tenant'));
+
+
+        $data = [
+            'tenant' => $tenant,
+            'currentStep' => $step,
+            'steps' => $validSteps,
+            'progress' => $this->calculateProgress($step)
+        ];
+
+        return view("tenant.onboarding.{$step}", $data);
     }
 
-    public function saveStep(Request $request, Tenant $tenant, $step)
+
+    public function saveStep(Request $request, $step)
     {
+        $tenant = app('currentTenant');
+
         switch ($step) {
             case 'company':
                 return $this->saveCompanyStep($request, $tenant);
@@ -51,146 +81,175 @@ class OnboardingController extends Controller
                 return $this->saveTeamStep($request, $tenant);
             default:
 
-                return redirect()->route('tenant.onboarding.index', ['tenant' => $tenant->slug]);
+
+                return redirect()->route('onboarding.step', ['step' => 'company']);
         }
     }
 
     private function saveCompanyStep(Request $request, Tenant $tenant)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'business_type' => 'required|string|max:100',
+
+
+            'company_name' => 'required|string|max:255',
+            'business_type' => 'required|string',
             'phone' => 'nullable|string|max:20',
-            'email' => 'nullable|email|max:255',
-            'website' => 'nullable|string|max:255',
+
+
             'address' => 'nullable|string|max:500',
             'city' => 'nullable|string|max:100',
             'state' => 'nullable|string|max:100',
-            'postal_code' => 'nullable|string|max:20',
-            'country' => 'nullable|string|max:100',
-            'tax_id' => 'nullable|string|max:50',
-            'rc_number' => 'nullable|string|max:50',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+
+
+
+
+
+            'website' => 'nullable|url|max:255',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $data = $request->except(['logo']);
+
+        $data = $request->only([
+            'phone', 'address', 'city', 'state', 'website', 'business_type'
+        ]);
+
+        // Update company name if provided
+        if ($request->filled('company_name')) {
+            $data['name'] = $request->company_name;
+        }
 
         // Handle logo upload
         if ($request->hasFile('logo')) {
-            $logoPath = $request->file('logo')->store('tenant-logos', 'public');
+
+            $logoPath = $request->file('logo')->store('logos', 'public');
             $data['logo'] = $logoPath;
         }
 
-        // Update tenant information
+
         $tenant->update($data);
 
-        // Update onboarding progress
-        $progress = $tenant->onboarding_progress ?? [];
-        $progress['company'] = true;
-        $tenant->update(['onboarding_progress' => $progress]);
 
-        return redirect()->route('tenant.onboarding.step', [
-            'tenant' => $tenant->slug,
-            'step' => 'preferences'
-        ])->with('success', 'Company information saved successfully!');
+
+
+
+
+
+
+
+
+        return redirect()->route('onboarding.step', ['step' => 'preferences'])
+                        ->with('success', 'Company information saved successfully!');
     }
 
     private function savePreferencesStep(Request $request, Tenant $tenant)
     {
         $request->validate([
-            'currency' => 'required|string|size:3',
+
+            'currency' => 'required|string|max:3',
             'timezone' => 'required|string|max:50',
             'date_format' => 'required|string|max:20',
-            'time_format' => 'required|string|max:10',
-            'fiscal_year_start' => 'required|string|max:10',
+
+
             'invoice_prefix' => 'nullable|string|max:10',
             'quote_prefix' => 'nullable|string|max:10',
-            'payment_terms' => 'nullable|integer|min:0|max:365',
-            'default_tax_rate' => 'required|numeric|min:0|max:100',
-            'tax_inclusive' => 'required|boolean',
-            'enable_withholding_tax' => 'nullable|boolean',
-            'features' => 'nullable|array',
-            'features.*' => 'string|in:inventory,invoicing,customers,payroll,pos,reports',
+
+
+
+
+
+
+            'vat_rate' => 'nullable|numeric|min:0|max:100',
+            'apply_vat' => 'boolean'
         ]);
 
-        $data = $request->all();
-        $data['enable_withholding_tax'] = $request->boolean('enable_withholding_tax');
-        $data['features'] = $request->input('features', []);
 
-        // Save preferences to tenant settings
-        $settings = $tenant->settings ?? [];
-        $settings = array_merge($settings, $data);
-        $tenant->update(['settings' => $settings]);
 
-        // Update onboarding progress
-        $progress = $tenant->onboarding_progress ?? [];
-        $progress['preferences'] = true;
-        $tenant->update(['onboarding_progress' => $progress]);
 
-        return redirect()->route('tenant.onboarding.step', [
-            'tenant' => $tenant->slug,
-            'step' => 'team'
-        ])->with('success', 'Preferences saved successfully!');
+        $settings = $request->only([
+            'currency', 'timezone', 'date_format',
+            'invoice_prefix', 'quote_prefix', 'vat_rate', 'apply_vat'
+        ]);
+
+
+
+
+
+        $tenant->update(['settings' => array_merge($tenant->settings ?? [], $settings)]);
+
+
+
+
+
+
+
+
+
+
+        return redirect()->route('onboarding.step', ['step' => 'team'])
+                        ->with('success', 'Preferences saved successfully!');
     }
 
     public function saveTeamStep(Request $request, Tenant $tenant)
     {
-        // If skipping team setup
-        if ($request->has('skip_team') && $request->skip_team == '1') {
-            return redirect()->route('tenant.onboarding.step', [
-                'tenant' => $tenant->slug,
-                'step' => 'complete'
-            ])->with('success', 'Team setup skipped. You can add team members later from your dashboard.');
-        }
 
-        // Validate team members if any are provided
-        $teamMembers = $request->input('team_members', []);
 
-        // Filter out empty team members
-        $validTeamMembers = array_filter($teamMembers, function($member) {
-            return !empty($member['name']) || !empty($member['email']) || !empty($member['role']);
-        });
 
-        // Validate each team member that has data
-        if (!empty($validTeamMembers)) {
-            $rules = [];
-            $messages = [];
 
-            foreach ($validTeamMembers as $index => $member) {
-                $rules["team_members.{$index}.name"] = 'required|string|max:255';
-                $rules["team_members.{$index}.email"] = 'required|email|max:255';
-                $rules["team_members.{$index}.role"] = 'required|string|in:admin,manager,accountant,sales,employee';
-                $rules["team_members.{$index}.department"] = 'nullable|string|max:255';
 
-                $messages["team_members.{$index}.name.required"] = "Team Member " . ($index + 1) . ": Name is required";
-                $messages["team_members.{$index}.email.required"] = "Team Member " . ($index + 1) . ": Email is required";
-                $messages["team_members.{$index}.email.email"] = "Team Member " . ($index + 1) . ": Please enter a valid email address";
-                $messages["team_members.{$index}.role.required"] = "Team Member " . ($index + 1) . ": Role is required";
-            }
 
-            $request->validate($rules, $messages);
 
-            // Process and save team members
-            foreach ($validTeamMembers as $memberData) {
-                // Create user invitation or save team member data
-                $this->createTeamMemberInvitation($tenant, $memberData);
-            }
 
-            $memberCount = count($validTeamMembers);
-            $successMessage = "Great! {$memberCount} team member" . ($memberCount > 1 ? 's' : '') . " invited successfully.";
-        } else {
-            $successMessage = "Team setup completed. You can add team members later from your dashboard.";
-        }
 
-        // Update onboarding progress
-        $progress = $tenant->onboarding_progress ?? [];
-        $progress['team'] = true;
-        $tenant->update(['onboarding_progress' => $progress]);
 
-        return redirect()->route('tenant.onboarding.step', [
-            'tenant' => $tenant->slug,
-            'step' => 'complete'
-        ])->with('success', $successMessage);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Team setup is optional, so we can skip validation
+        // Just proceed to completion
+        return redirect()->route('onboarding.step', ['step' => 'complete']);
     }
 
     private function createTeamMemberInvitation($tenant, $memberData)
@@ -256,22 +315,61 @@ class OnboardingController extends Controller
     /**
      * Complete the onboarding process
      */
-    public function complete(Request $request, Tenant $tenant)
+
+    public function complete(Request $request)
     {
-        // Update tenant to mark onboarding as complete
+
+        $tenant = app('currentTenant');
+
+        if (!$tenant) {
+            return redirect()->route('home');
+        }
+
+        // Mark onboarding as completed
         $tenant->update([
-            'onboarding_completed_at' => now(),
-            'onboarding_progress' => [
-                'company' => true,
-                'preferences' => true,
-                'team' => true,
-                'complete' => true
-            ]
+
+
+
+
+
+
+
+            'onboarding_completed' => true,
+            'onboarding_completed_at' => now()
         ]);
 
-    
-        // Redirect to dashboard
-        return redirect()->route('tenant.dashboard', ['tenant' => $tenant->slug])
-            ->with('success', 'Welcome to Ballie! Your account is now fully set up and ready to use.');
+
+
+
+
+
+        // Clear any onboarding cache
+        cache()->forget("tenant_{$tenant->id}_onboarding_status");
+
+        return redirect()->route('tenant.dashboard')->with('success', 'Welcome to Ballie! Your account setup is complete.');
+    }
+
+    private function calculateProgress($currentStep)
+    {
+        $steps = ['company', 'preferences', 'team', 'complete'];
+        $currentIndex = array_search($currentStep, $steps);
+
+        if ($currentIndex === false) {
+            return 0;
+        }
+
+        return (($currentIndex + 1) / count($steps)) * 100;
+    }
+
+    private function getNextStep($currentStep)
+    {
+        $steps = ['company', 'preferences', 'team', 'complete'];
+        $currentIndex = array_search($currentStep, $steps);
+
+        if ($currentIndex !== false && $currentIndex < count($steps) - 1) {
+            return $steps[$currentIndex + 1];
+        }
+
+        return null;
     }
 }

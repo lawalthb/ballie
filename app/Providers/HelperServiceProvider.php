@@ -11,7 +11,8 @@ class HelperServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Register helper files
+        $this->loadHelpers();
     }
 
     /**
@@ -19,6 +20,22 @@ class HelperServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        require_once app_path('Helpers/TenantHelper.php');
+        //
+    }
+
+    /**
+     * Load helper files
+     */
+    private function loadHelpers(): void
+    {
+        $helperFiles = [
+            app_path('Helpers/TenantHelper.php'),
+        ];
+
+        foreach ($helperFiles as $file) {
+            if (file_exists($file)) {
+                require_once $file;
+            }
+        }
     }
 }

@@ -1,91 +1,73 @@
 <?php
 
-declare(strict_types=1);
-
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Tenant\AuthController;
 use App\Http\Controllers\Tenant\DashboardController;
+use App\Http\Controllers\Tenant\AuthController;
 use App\Http\Controllers\Tenant\OnboardingController;
-use App\Http\Controllers\Tenant\ProductController;
-use App\Http\Controllers\Tenant\CustomerController;
 use App\Http\Controllers\Tenant\InvoiceController;
-use App\Http\Controllers\Tenant\HelpController;
-use App\Http\Controllers\Tenant\SupportController;
-use App\Http\Controllers\Tenant\CommunityController;
+use App\Http\Controllers\Tenant\AccountingController;
+use App\Http\Controllers\Tenant\InventoryController;
+use App\Http\Controllers\Tenant\CRMController;
+use App\Http\Controllers\Tenant\POSController;
+use App\Http\Controllers\Tenant\PayrollController;
+use App\Http\Controllers\Tenant\ReportController;
+use App\Http\Controllers\Tenant\SettingsController;
 use App\Models\Tenant;
-
-/*
-|--------------------------------------------------------------------------
-| Tenant Routes
-|--------------------------------------------------------------------------
-|
-| Here you can register the tenant routes for your application.
-| These routes are loaded by the RouteServiceProvider and are
-| prefixed with the tenant slug from the main web.php routes.
-|
-*/
 
 // Route model binding for tenant
 Route::bind('tenant', function ($value) {
     return Tenant::where('slug', $value)->firstOrFail();
 });
 
-// Guest routes (login, register, etc.)
-Route::middleware(['guest'])->group(function () {
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('tenant.login');
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('tenant.register');
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('tenant.password.request');
-    Route::post('/forgot-password', [AuthController::class, 'sendResetLinkEmail'])->name('tenant.password.email');
-    Route::get('/reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('tenant.password.reset');
-    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('tenant.password.update');
-});
+// Authentication routes for tenants
+//require __DIR__.'/auth.php';
 
-// Authenticated routes
+// All tenant routes require authentication
 Route::middleware(['auth'])->group(function () {
-    // Logout route
-    Route::post('/logout', [AuthController::class, 'logout'])->name('tenant.logout');
 
-    // Onboarding routes
-    Route::prefix('onboarding')->name('tenant.onboarding.')->group(function () {
+    // Root route - check onboarding status and redirect accordingly
+    Route::get('/', function () {
+        $user = auth()->user();
+        $tenant = app('currentTenant');
+
+        if (!$tenant) {
+            return redirect()->route('home');
+        }
+
+        // If onboarding is not completed, redirect to onboarding
+        if (!$tenant->onboarding_completed) {
+            return redirect()->route('onboarding.index');
+        }
+
+        // If onboarding is completed, redirect to dashboard
+        return redirect()->route('tenant.dashboard');
+    })->name('tenant.index');
+
+    // Onboarding routes (accessible without onboarding completion)
+    Route::prefix('onboarding')->name('onboarding.')->group(function () {
         Route::get('/', [OnboardingController::class, 'index'])->name('index');
         Route::post('/complete', [OnboardingController::class, 'complete'])->name('complete');
         Route::get('/{step}', [OnboardingController::class, 'showStep'])->name('step');
         Route::post('/{step}', [OnboardingController::class, 'saveStep'])->name('save-step');
-
-        Route::get('/show-step', [OnboardingController::class, 'showStep'])->name('show-step');
     });
 
-    // Routes that require completed onboarding
+    // Protected tenant routes (require completed onboarding)
     Route::middleware(['onboarding.completed'])->group(function () {
+
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('tenant.dashboard');
 
-        // Products
-        Route::prefix('products')->name('tenant.products.')->group(function () {
-            Route::get('/', [ProductController::class, 'index'])->name('index');
-            Route::get('/create', [ProductController::class, 'create'])->name('create');
-            Route::post('/', [ProductController::class, 'store'])->name('store');
-            Route::get('/{product}', [ProductController::class, 'show'])->name('show');
-            Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
-            Route::put('/{product}', [ProductController::class, 'update'])->name('update');
-            Route::delete('/{product}', [ProductController::class, 'destroy'])->name('destroy');
+        // Accounting Routes
+        Route::prefix('accounting')->name('accounting.')->group(function () {
+            Route::get('/', [AccountingController::class, 'index'])->name('index');
+            Route::get('/chart-of-accounts', [AccountingController::class, 'chartOfAccounts'])->name('chart-of-accounts');
+            Route::get('/journal-entries', [AccountingController::class, 'journalEntries'])->name('journal-entries');
+            Route::get('/trial-balance', [AccountingController::class, 'trialBalance'])->name('trial-balance');
+            Route::get('/financial-statements', [AccountingController::class, 'financialStatements'])->name('financial-statements');
         });
 
-        // Customers
-        Route::prefix('customers')->name('tenant.customers.')->group(function () {
-            Route::get('/', [CustomerController::class, 'index'])->name('index');
-            Route::get('/create', [CustomerController::class, 'create'])->name('create');
-            Route::post('/', [CustomerController::class, 'store'])->name('store');
-            Route::get('/{customer}', [CustomerController::class, 'show'])->name('show');
-            Route::get('/{customer}/edit', [CustomerController::class, 'edit'])->name('edit');
-            Route::put('/{customer}', [CustomerController::class, 'update'])->name('update');
-            Route::delete('/{customer}', [CustomerController::class, 'destroy'])->name('destroy');
-        });
-
-        // Invoices
-        Route::prefix('invoices')->name('tenant.invoices.')->group(function () {
+        // Invoice Routes
+        Route::prefix('invoices')->name('invoices.')->group(function () {
             Route::get('/', [InvoiceController::class, 'index'])->name('index');
             Route::get('/create', [InvoiceController::class, 'create'])->name('create');
             Route::post('/', [InvoiceController::class, 'store'])->name('store');
@@ -93,20 +75,67 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{invoice}/edit', [InvoiceController::class, 'edit'])->name('edit');
             Route::put('/{invoice}', [InvoiceController::class, 'update'])->name('update');
             Route::delete('/{invoice}', [InvoiceController::class, 'destroy'])->name('destroy');
-            Route::get('/{invoice}/pdf', [InvoiceController::class, 'generatePdf'])->name('pdf');
-            Route::post('/{invoice}/send', [InvoiceController::class, 'sendToCustomer'])->name('send');
+            Route::post('/{invoice}/send', [InvoiceController::class, 'send'])->name('send');
+            Route::post('/{invoice}/mark-paid', [InvoiceController::class, 'markPaid'])->name('mark-paid');
+            Route::get('/{invoice}/pdf', [InvoiceController::class, 'downloadPdf'])->name('pdf');
         });
 
-        // Help and Support
-        Route::get('/help/videos', [HelpController::class, 'videos'])->name('tenant.help.videos');
-        Route::get('/help/articles', [HelpController::class, 'articles'])->name('tenant.help.articles');
-        Route::get('/support', [SupportController::class, 'index'])->name('tenant.support');
-        Route::post('/support', [SupportController::class, 'store'])->name('tenant.support.store');
-        Route::get('/community', [CommunityController::class, 'index'])->name('tenant.community');
+        // Inventory Routes
+        Route::prefix('inventory')->name('inventory.')->group(function () {
+            Route::get('/', [InventoryController::class, 'index'])->name('index');
+            Route::get('/products', [InventoryController::class, 'products'])->name('products');
+            Route::get('/categories', [InventoryController::class, 'categories'])->name('categories');
+            Route::get('/suppliers', [InventoryController::class, 'suppliers'])->name('suppliers');
+            Route::get('/stock-movements', [InventoryController::class, 'stockMovements'])->name('stock-movements');
+            Route::get('/low-stock', [InventoryController::class, 'lowStock'])->name('low-stock');
+        });
+
+        // CRM Routes
+        Route::prefix('crm')->name('crm.')->group(function () {
+            Route::get('/', [CRMController::class, 'index'])->name('index');
+            Route::get('/customers', [CRMController::class, 'customers'])->name('customers');
+            Route::get('/leads', [CRMController::class, 'leads'])->name('leads');
+            Route::get('/sales-pipeline', [CRMController::class, 'salesPipeline'])->name('sales-pipeline');
+            Route::get('/contacts', [CRMController::class, 'contacts'])->name('contacts');
+            Route::get('/activities', [CRMController::class, 'activities'])->name('activities');
+        });
+
+        // POS Routes
+        Route::prefix('pos')->name('pos.')->group(function () {
+            Route::get('/', [POSController::class, 'index'])->name('index');
+            Route::get('/sales', [POSController::class, 'sales'])->name('sales');
+            Route::get('/receipts', [POSController::class, 'receipts'])->name('receipts');
+            Route::post('/process-sale', [POSController::class, 'processSale'])->name('process-sale');
+        });
+
+        // Payroll Routes
+        Route::prefix('payroll')->name('payroll.')->group(function () {
+            Route::get('/', [PayrollController::class, 'index'])->name('index');
+            Route::get('/employees', [PayrollController::class, 'employees'])->name('employees');
+            Route::get('/payslips', [PayrollController::class, 'payslips'])->name('payslips');
+            Route::get('/tax-reports', [PayrollController::class, 'taxReports'])->name('tax-reports');
+            Route::get('/pension-reports', [PayrollController::class, 'pensionReports'])->name('pension-reports');
+        });
+
+        // Reports Routes
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/', [ReportController::class, 'index'])->name('index');
+            Route::get('/financial', [ReportController::class, 'financial'])->name('financial');
+            Route::get('/sales', [ReportController::class, 'sales'])->name('sales');
+            Route::get('/inventory', [ReportController::class, 'inventory'])->name('inventory');
+            Route::get('/customer', [ReportController::class, 'customer'])->name('customer');
+            Route::get('/tax', [ReportController::class, 'tax'])->name('tax');
+        });
+
+        // Settings Routes
+        Route::prefix('settings')->name('settings.')->group(function () {
+            Route::get('/', [SettingsController::class, 'index'])->name('index');
+            Route::get('/company', [SettingsController::class, 'company'])->name('company');
+            Route::get('/users', [SettingsController::class, 'users'])->name('users');
+            Route::get('/roles', [SettingsController::class, 'roles'])->name('roles');
+            Route::get('/integrations', [SettingsController::class, 'integrations'])->name('integrations');
+            Route::get('/billing', [SettingsController::class, 'billing'])->name('billing');
+            Route::get('/security', [SettingsController::class, 'security'])->name('security');
+        });
     });
 });
-
-// Public routes (accessible without authentication)
-Route::get('/', function () {
-    return redirect()->route('tenant.login', ['tenant' => request()->route('tenant')]);
-})->name('tenant.home');
