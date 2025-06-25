@@ -258,7 +258,6 @@ class OnboardingController extends Controller
      */
     public function complete(Request $request, Tenant $tenant)
     {
-
         // Update tenant to mark onboarding as complete
         $tenant->update([
             'onboarding_completed_at' => now(),
@@ -271,7 +270,7 @@ class OnboardingController extends Controller
         ]);
 
         // Log the completion
-        Log::info("Tenant {$tenant->id} ({$tenant->name}) completed onboarding", [
+        \Log::info("Tenant {$tenant->id} ({$tenant->name}) completed onboarding", [
             'tenant_id' => $tenant->id,
             'user_id' => auth()->id()
         ]);

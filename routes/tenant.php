@@ -50,9 +50,10 @@ Route::middleware(['auth'])->group(function () {
     // Onboarding routes
     Route::prefix('onboarding')->name('tenant.onboarding.')->group(function () {
         Route::get('/', [OnboardingController::class, 'index'])->name('index');
+        Route::post('/complete', [OnboardingController::class, 'complete'])->name('complete');
         Route::get('/{step}', [OnboardingController::class, 'showStep'])->name('step');
         Route::post('/{step}', [OnboardingController::class, 'saveStep'])->name('save-step');
-        Route::post('/complete', [OnboardingController::class, 'complete'])->name('complete');
+
         Route::get('/show-step', [OnboardingController::class, 'showStep'])->name('show-step');
     });
 

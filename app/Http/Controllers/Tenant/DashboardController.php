@@ -13,6 +13,7 @@ class DashboardController extends Controller
      */
     public function index(Request $request, Tenant $tenant)
     {
+
         // Get current tenant from route parameter
         $currentTenant = $tenant;
 

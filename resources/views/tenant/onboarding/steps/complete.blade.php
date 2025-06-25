@@ -3,7 +3,7 @@
 @section('title', 'Setup Complete - Ballie Setup')
 
 @section('content')
-<div class="text-center mb-12">
+<div class="text-center ">
     <div class="inline-block p-4 bg-green-100 rounded-full mb-6">
         <svg class="w-16 h-16 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
