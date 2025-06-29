@@ -390,7 +390,7 @@
                 <span class="text-sm font-medium">Add Expense</span>
             </a>
 
-            <a href="{{ route('tenant.customers.index' , ['tenant' => tenant()->slug]) }}" class="quick-action-btn bg-gradient-to-br from-green-500 to-green-600 text-white p-4 rounded-xl text-center shadow-lg">
+            <a href="{{ route('tenant.customers.index', ['tenant' => tenant() ? tenant()->slug : 'tenant-not-found']) }}" class="bg-gradient-to-br from-green-500 to-green-600 text-white p-4 rounded-xl text-center shadow-lg">
                 <div class="w-8 h-8 mx-auto mb-2">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
@@ -1008,6 +1008,42 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 500);
     });
 });
+
+// Add click animations to quick action buttons
+const quickActionBtns = document.querySelectorAll('.quick-action-btn');
+quickActionBtns.forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        // Don't prevent default - let the link navigate
+        // e.preventDefault(); // Remove this line
+
+        // Create ripple effect
+        const ripple = document.createElement('span');
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        ripple.classList.add('ripple');
+
+        this.appendChild(ripple);
+
+        // If this is a link, navigate after the ripple effect
+        if (this.tagName === 'A' && this.href) {
+            e.preventDefault(); // Temporarily prevent default
+            setTimeout(() => {
+                window.location.href = this.href; // Navigate after ripple
+            }, 300); // Shorter than the ripple animation
+        }
+
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    });
+});
+
 </script>
 
 <style>
