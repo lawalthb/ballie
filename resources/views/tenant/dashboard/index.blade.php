@@ -273,12 +273,105 @@
                 </div>
             </div>
         </div>
+
+        <!-- Total Customers -->
+        <div class="metric-card rounded-2xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600 mb-1">Total Customers</p>
+                    <p class="text-3xl font-bold gradient-text">248</p>
+                    <div class="flex items-center mt-2">
+                        <span class="text-green-500 text-sm font-medium flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            +15.3%
+                        </span>
+                        <span class="text-gray-500 text-sm ml-2">vs last month</span>
+                    </div>
+                </div>
+                <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Vendors -->
+        <div class="metric-card rounded-2xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600 mb-1">Total Vendors</p>
+                    <p class="text-3xl font-bold gradient-text">56</p>
+                    <div class="flex items-center mt-2">
+                        <span class="text-green-500 text-sm font-medium flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            +7.8%
+                        </span>
+                        <span class="text-gray-500 text-sm ml-2">vs last month</span>
+                    </div>
+                </div>
+                <div class="w-16 h-16 bg-gradient-to-br from-teal-400 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Products -->
+        <div class="metric-card rounded-2xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600 mb-1">Total Products</p>
+                    <p class="text-3xl font-bold gradient-text">1,245</p>
+                    <div class="flex items-center mt-2">
+                        <span class="text-green-500 text-sm font-medium flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            +22.4%
+                        </span>
+                        <span class="text-gray-500 text-sm ml-2">vs last month</span>
+                    </div>
+                </div>
+                <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Low Stock Items -->
+        <div class="metric-card rounded-2xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600 mb-1">Low Stock Items</p>
+                    <p class="text-3xl font-bold gradient-text">18</p>
+                    <div class="flex items-center mt-2">
+                        <span class="text-yellow-500 text-sm font-medium flex items-center">
+                            <div class="w-2 h-2 bg-yellow-500 rounded-full mr-2 pulse-dot"></div>
+                            Needs attention
+                        </span>
+                    </div>
+                </div>
+                <div class="w-16 h-16 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Quick Actions -->
     <div class="bg-white rounded-2xl p-6 shadow-lg">
         <h3 class="text-xl font-bold text-gray-900 mb-6">Quick Actions</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-10 gap-4">
             <a href="#create-invoice" class="quick-action-btn bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl text-center shadow-lg">
                 <div class="w-8 h-8 mx-auto mb-2">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -331,6 +424,42 @@
                     </svg>
                 </div>
                 <span class="text-sm font-medium">View Reports</span>
+            </a>
+
+            <a href="#add-vendor" class="quick-action-btn bg-gradient-to-br from-indigo-500 to-indigo-600 text-white p-4 rounded-xl text-center shadow-lg">
+                <div class="w-8 h-8 mx-auto mb-2">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                </div>
+                <span class="text-sm font-medium">Add Vendor</span>
+            </a>
+
+            <a href="#stock-transfer" class="quick-action-btn bg-gradient-to-br from-pink-500 to-pink-600 text-white p-4 rounded-xl text-center shadow-lg">
+                <div class="w-8 h-8 mx-auto mb-2">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                    </svg>
+                </div>
+                <span class="text-sm font-medium">Stock Transfer</span>
+            </a>
+
+            <a href="#purchase-order" class="quick-action-btn bg-gradient-to-br from-cyan-500 to-cyan-600 text-white p-4 rounded-xl text-center shadow-lg">
+                <div class="w-8 h-8 mx-auto mb-2">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                    </svg>
+                </div>
+                <span class="text-sm font-medium">Purchase Order</span>
+            </a>
+
+            <a href="#backup-data" class="quick-action-btn bg-gradient-to-br from-gray-600 to-gray-700 text-white p-4 rounded-xl text-center shadow-lg">
+                <div class="w-8 h-8 mx-auto mb-2">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                    </svg>
+                </div>
+                <span class="text-sm font-medium">Backup Data</span>
             </a>
         </div>
     </div>
@@ -430,6 +559,14 @@
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2">
                         <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 h-2 rounded-full" style="width: 43%"></div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Inventory Turnover</span>
+                        <span class="text-sm font-semibold text-purple-600">3.2x</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full" style="width: 65%"></div>
                     </div>
                 </div>
             </div>
@@ -601,13 +738,13 @@
                 View Calendar
             </a>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div class="bg-gradient-to-br from-red-50 to-red-100 p-4 rounded-xl border-l-4 border-red-500">
                 <div class="flex items-center justify-between mb-2">
                     <span class="status-badge bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-full">Overdue</span>
                     <span class="text-sm text-red-600 font-medium">5 days ago</span>
                 </div>
-<h4 class="font-semibold text-gray-900 mb-1">Invoice #INV-2024-045</h4>
+                <h4 class="font-semibold text-gray-900 mb-1">Invoice #INV-2024-045</h4>
                 <p class="text-sm text-gray-600 mb-2">Emeka Trading Company</p>
                 <p class="text-lg font-bold text-red-600">₦89,500</p>
             </div>
@@ -630,6 +767,16 @@
                 <h4 class="font-semibold text-gray-900 mb-1">Rent Payment</h4>
                 <p class="text-sm text-gray-600 mb-2">Office Space Rental</p>
                 <p class="text-lg font-bold text-blue-600">₦150,000</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-xl border-l-4 border-purple-500">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="status-badge bg-purple-500 text-white text-xs font-medium px-2 py-1 rounded-full">Upcoming</span>
+                    <span class="text-sm text-purple-600 font-medium">10 days</span>
+                </div>
+                <h4 class="font-semibold text-gray-900 mb-1">Staff Payroll</h4>
+                <p class="text-sm text-gray-600 mb-2">Monthly Salaries</p>
+                <p class="text-lg font-bold text-purple-600">₦875,000</p>
             </div>
         </div>
     </div>
@@ -668,6 +815,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     fill: true,
                     tension: 0.4,
                     pointBackgroundColor: 'rgb(239, 68, 68)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                }, {
+                    label: 'Profit',
+                    data: [40000, 70000, 120000, 250000, 50000, 100000, 170000, 250000, 350000, 400000, 400000, 450000],
+                    borderColor: 'rgb(16, 185, 129)',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: 'rgb(16, 185, 129)',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
                     pointRadius: 6,
@@ -759,10 +919,11 @@ document.addEventListener('DOMContentLoaded', function() {
         threshold: 0.1
     });
 
-    metricCards.forEach((card) => {
+    metricCards.forEach((card, index) => {
         card.style.opacity = '0';
         card.style.transform = 'translateY(20px)';
         card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        card.style.transitionDelay = (index * 0.1) + 's';
         observer.observe(card);
     });
 
@@ -791,6 +952,61 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 600);
         });
     });
+
+    // Add animation to transaction rows
+    const transactionRows = document.querySelectorAll('.transaction-row');
+    transactionRows.forEach((row, index) => {
+        row.style.opacity = '0';
+        row.style.transform = 'translateX(-20px)';
+        row.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        row.style.transitionDelay = (index * 0.1) + 's';
+
+        setTimeout(() => {
+            row.style.opacity = '1';
+            row.style.transform = 'translateX(0)';
+        }, 300 + (index * 100));
+    });
+
+    // Add animation to activity items
+    const activityItems = document.querySelectorAll('.activity-item');
+    activityItems.forEach((item, index) => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateX(20px)';
+        item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        item.style.transitionDelay = (index * 0.1) + 's';
+
+        setTimeout(() => {
+            item.style.opacity = '1';
+            item.style.transform = 'translateX(0)';
+        }, 300 + (index * 100));
+    });
+
+    // Add counter animation to metric numbers
+    const animateCounter = (el, start, end, duration) => {
+        let startTime = null;
+        const step = (timestamp) => {
+            if (!startTime) startTime = timestamp;
+            const progress = Math.min((timestamp - startTime) / duration, 1);
+            const value = Math.floor(progress * (end - start) + start);
+            el.innerHTML = '₦' + value.toLocaleString();
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            } else {
+                el.innerHTML = '₦' + end.toLocaleString();
+            }
+        };
+        window.requestAnimationFrame(step);
+    };
+
+    // Get all metric values and animate them
+    const metricValues = document.querySelectorAll('.metric-card .gradient-text');
+    metricValues.forEach(value => {
+        const finalValue = parseInt(value.innerText.replace(/[^\d]/g, ''));
+        value.innerText = '₦0';
+        setTimeout(() => {
+            animateCounter(value, 0, finalValue, 1500);
+        }, 500);
+    });
 });
 </script>
 
@@ -808,6 +1024,46 @@ document.addEventListener('DOMContentLoaded', function() {
     to {
         transform: scale(4);
         opacity: 0;
+    }
+}
+
+/* Custom scrollbar for the dashboard */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(243, 244, 246, 0.8);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(107, 114, 128, 0.5);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(75, 85, 99, 0.7);
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .metric-card {
+        padding: 1rem;
+    }
+
+    .metric-card .text-3xl {
+        font-size: 1.5rem;
+    }
+
+    .quick-action-btn {
+        padding: 0.75rem;
+    }
+
+    .quick-action-btn .w-8 {
+        width: 1.5rem;
+        height: 1.5rem;
     }
 }
 </style>

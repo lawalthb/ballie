@@ -96,16 +96,6 @@
             transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .submenu-container {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .submenu-container.open {
-            max-height: 1000px;
-        }
-
         .glass-effect {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -186,7 +176,7 @@
     </style>
 </head>
 <body class="bg-gray-50">
-    <div class="flex h-screen">
+    <div class="flex min-h-screen flex-col">
         <!-- Sidebar -->
         <aside id="sidebar" class="sidebar sidebar-expanded text-white h-screen fixed shadow-2xl z-30 transform md:transform-none transition-all duration-300">
             <!-- Sidebar Header -->
@@ -203,7 +193,7 @@
                     </div>
                 </div>
                 <button id="sidebarCollapseBtn" class="p-2 rounded-lg hover:bg-white hover:bg-opacity-10 md:block hidden transition-all duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 collapse-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
                     </svg>
                 </button>
@@ -229,117 +219,64 @@
                         </a>
                     </li>
 
-                    <!-- Masters -->
+                    <!-- Accounting -->
                     <li>
-                        <button class="menu-item w-full flex items-center justify-between px-4 py-3 rounded-xl group" data-submenu="masters">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 w-6 h-6 mr-4 text-blue-400 group-hover:scale-110 transition-transform duration-200">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                    </svg>
-                                </div>
-                                <span class="menu-title whitespace-nowrap font-medium">Masters</span>
+                        <a href="#accounting" class="menu-item flex items-center px-4 py-3 rounded-xl group">
+                            <div class="flex-shrink-0 w-6 h-6 mr-4 text-blue-400 group-hover:scale-110 transition-transform duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                                </svg>
                             </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="submenu-arrow h-4 w-4 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <div class="submenu-container pl-12 pr-4 mt-2" id="masters-submenu">
-                            <ul class="space-y-1">
-                                <li>
-                                    <a href="#account-info" class="block py-2 px-4 rounded-lg hover:bg-white hover:bg-opacity-10 text-sm text-gray-300 hover:text-white transition-all duration-200">
-                                        Account Info
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#payroll-info" class="block py-2 px-4 rounded-lg hover:bg-white hover:bg-opacity-10 text-sm text-gray-300 hover:text-white transition-all duration-200">
-                                        Payroll Info
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#inventory" class="block py-2 px-4 rounded-lg hover:bg-white hover:bg-opacity-10 text-sm text-gray-300 hover:text-white transition-all duration-200">
-                                        Inventory
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                            <span class="menu-title whitespace-nowrap font-medium">Accounting</span>
+                        </a>
                     </li>
 
-                    <!-- Transactions -->
+                    <!-- Inventory -->
                     <li>
-                        <button class="menu-item w-full flex items-center justify-between px-4 py-3 rounded-xl group" data-submenu="transactions">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 w-6 h-6 mr-4 text-green-400 group-hover:scale-110 transition-transform duration-200">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                                    </svg>
-                                </div>
-                                <span class="menu-title whitespace-nowrap font-medium">Transactions</span>
+                        <a href="#inventory" class="menu-item flex items-center px-4 py-3 rounded-xl group">
+                            <div class="flex-shrink-0 w-6 h-6 mr-4 text-green-400 group-hover:scale-110 transition-transform duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                </svg>
                             </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="submenu-arrow h-4 w-4 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <div class="submenu-container pl-12 pr-4 mt-2" id="transactions-submenu">
-                            <ul class="space-y-1">
-                                <li>
-                                    <a href="#invoices" class="block py-2 px-4 rounded-lg hover:bg-white hover:bg-opacity-10 text-sm text-gray-300 hover:text-white transition-all duration-200">
-                                        Invoices
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#receipts" class="block py-2 px-4 rounded-lg hover:bg-white hover:bg-opacity-10 text-sm text-gray-300 hover:text-white transition-all duration-200">
-                                        Receipts
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#payments" class="block py-2 px-4 rounded-lg hover:bg-white hover:bg-opacity-10 text-sm text-gray-300 hover:text-white transition-all duration-200">
-                                        Payments
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#expenses" class="block py-2 px-4 rounded-lg hover:bg-white hover:bg-opacity-10 text-sm text-gray-300 hover:text-white transition-all duration-200">
-                                        Expenses
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                            <span class="menu-title whitespace-nowrap font-medium">Inventory</span>
+                        </a>
+                    </li>
+
+                    <!-- CRM -->
+                    <li>
+                        <a href="#crm" class="menu-item flex items-center px-4 py-3 rounded-xl group">
+                            <div class="flex-shrink-0 w-6 h-6 mr-4 text-purple-400 group-hover:scale-110 transition-transform duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                            </div>
+                            <span class="menu-title whitespace-nowrap font-medium">CRM</span>
+                        </a>
+                    </li>
+
+                    <!-- POS -->
+                    <li>
+                        <a href="#pos" class="menu-item flex items-center px-4 py-3 rounded-xl group">
+                            <div class="flex-shrink-0 w-6 h-6 mr-4 text-teal-400 group-hover:scale-110 transition-transform duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <span class="menu-title whitespace-nowrap font-medium">POS</span>
+                        </a>
                     </li>
 
                     <!-- Reports -->
                     <li>
-                        <button class="menu-item w-full flex items-center justify-between px-4 py-3 rounded-xl group" data-submenu="reports">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 w-6 h-6 mr-4 text-purple-400 group-hover:scale-110 transition-transform duration-200">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                    </svg>
-                                </div>
-                                <span class="menu-title whitespace-nowrap font-medium">Reports</span>
+                        <a href="#reports" class="menu-item flex items-center px-4 py-3 rounded-xl group">
+                            <div class="flex-shrink-0 w-6 h-6 mr-4 text-lavender group-hover:scale-110 transition-transform duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
                             </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="submenu-arrow h-4 w-4 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <div class="submenu-container pl-12 pr-4 mt-2" id="reports-submenu">
-                            <ul class="space-y-1">
-                                <li>
-                                    <a href="#financial-reports" class="block py-2 px-4 rounded-lg hover:bg-white hover:bg-opacity-10 text-sm text-gray-300 hover:text-white transition-all duration-200">
-                                        Financial Reports
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#tax-reports" class="block py-2 px-4 rounded-lg hover:bg-white hover:bg-opacity-10 text-sm text-gray-300 hover:text-white transition-all duration-200">
-                                        Tax Reports
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#inventory-reports" class="block py-2 px-4 rounded-lg hover:bg-white hover:bg-opacity-10 text-sm text-gray-300 hover:text-white transition-all duration-200">
-                                        Inventory Reports
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                            <span class="menu-title whitespace-nowrap font-medium">Reports</span>
+                        </a>
                     </li>
 
                     <!-- Settings -->
@@ -355,24 +292,24 @@
                         </a>
                     </li>
                 </ul>
+            </nav>
 
-                <!-- User Profile Section -->
-                <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-white border-opacity-10">
-                    <div class="flex items-center space-x-3 p-3 rounded-xl bg-white bg-opacity-10 backdrop-blur-sm">
-                        <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                            {{ substr(auth()->user()->name ?? 'U', 0, 1) }}
-                        </div>
-                        <div class="sidebar-title overflow-hidden">
-                            <div class="text-sm font-medium text-white truncate">{{ auth()->user()->name ?? 'User' }}</div>
-                            <div class="text-xs text-gray-300 truncate">{{ auth()->user()->email ?? 'user@example.com' }}</div>
-                        </div>
+            <!-- User Profile Section -->
+            <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-white border-opacity-10">
+                <div class="flex items-center space-x-3 p-3 rounded-xl bg-white bg-opacity-10 backdrop-blur-sm">
+                    <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                        {{ substr(auth()->user()->name ?? 'U', 0, 1) }}
+                    </div>
+                    <div class="sidebar-title overflow-hidden">
+                        <div class="text-sm font-medium text-white truncate">{{ auth()->user()->name ?? 'User' }}</div>
+                        <div class="text-xs text-gray-300 truncate">{{ auth()->user()->email ?? 'user@example.com' }}</div>
                     </div>
                 </div>
-            </nav>
+            </div>
         </aside>
 
         <!-- Main Content -->
-        <div class="content-area flex-1 flex flex-col overflow-hidden ml-0 md:ml-72 transition-all duration-300">
+        <div id="contentArea" class="content-area flex-1 flex flex-col overflow-hidden ml-0 md:ml-72 transition-all duration-300">
             <!-- Top Navigation -->
             <header class="glass-effect shadow-sm border-b border-gray-200 h-20 flex items-center justify-between px-6 sticky top-0 z-20">
                 <div class="flex items-center space-x-4">
@@ -430,6 +367,18 @@
             <main class="flex-1 overflow-y-auto p-6 custom-scrollbar">
                 @yield('content')
             </main>
+
+            <!-- Footer -->
+            <footer class="main-footer text-center md:text-left">
+                <div class="container mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center">
+                    <div class="text-sm text-gray-300">
+                        &copy; {{ date('Y') }} All Rights Reserved. Ballie Tech Solution
+                    </div>
+                    <div class="text-xs text-gray-400 mt-2 md:mt-0">
+                        Version 1.0.0
+                    </div>
+                </div>
+            </footer>
         </div>
     </div>
 
@@ -443,28 +392,47 @@
             const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
             const mobileSidebarClose = document.getElementById('mobileSidebarClose');
             const sidebarOverlay = document.getElementById('sidebarOverlay');
-            const contentArea = document.querySelector('.content-area');
+            const contentArea = document.getElementById('contentArea');
             const sidebarTitles = document.querySelectorAll('.sidebar-title');
             const menuTitles = document.querySelectorAll('.menu-title');
+            const collapseIcon = document.querySelector('.collapse-icon');
+
+            // Check if sidebar is collapsed in localStorage
+            const isSidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+
+            // Apply saved state on page load
+            if (isSidebarCollapsed) {
+                sidebar.classList.remove('sidebar-expanded');
+                sidebar.classList.add('sidebar-collapsed');
+                contentArea.classList.add('collapsed');
+                sidebarTitles.forEach(title => title.style.opacity = '0');
+                menuTitles.forEach(title => title.style.opacity = '0');
+                if (collapseIcon) collapseIcon.style.transform = 'rotate(180deg)';
+            }
 
             // Desktop sidebar collapse/expand
             if (sidebarCollapseBtn) {
                 sidebarCollapseBtn.addEventListener('click', function() {
                     if (sidebar.classList.contains('sidebar-expanded')) {
+                        // Collapse sidebar
                         sidebar.classList.remove('sidebar-expanded');
                         sidebar.classList.add('sidebar-collapsed');
-                        contentArea.style.marginLeft = '5rem';
+                        contentArea.classList.add('collapsed');
 
                         // Hide titles
                         sidebarTitles.forEach(title => title.style.opacity = '0');
                         menuTitles.forEach(title => title.style.opacity = '0');
 
-                        // Rotate collapse button
-                        sidebarCollapseBtn.style.transform = 'rotate(180deg)';
+                        // Rotate collapse button to show expand icon
+                        collapseIcon.style.transform = 'rotate(180deg)';
+
+                        // Save state
+                        localStorage.setItem('sidebarCollapsed', 'true');
                     } else {
+                        // Expand sidebar
                         sidebar.classList.remove('sidebar-collapsed');
                         sidebar.classList.add('sidebar-expanded');
-                        contentArea.style.marginLeft = '17rem';
+                        contentArea.classList.remove('collapsed');
 
                         // Show titles
                         setTimeout(() => {
@@ -473,7 +441,10 @@
                         }, 150);
 
                         // Reset collapse button rotation
-                        sidebarCollapseBtn.style.transform = 'rotate(0deg)';
+                        collapseIcon.style.transform = 'rotate(0deg)';
+
+                        // Save state
+                        localStorage.setItem('sidebarCollapsed', 'false');
                     }
                 });
             }
@@ -505,33 +476,6 @@
                 });
             }
 
-            // Submenu functionality
-            const submenuButtons = document.querySelectorAll('[data-submenu]');
-            submenuButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const submenuId = this.getAttribute('data-submenu') + '-submenu';
-                    const submenu = document.getElementById(submenuId);
-                    const arrow = this.querySelector('.submenu-arrow');
-
-                    if (submenu.classList.contains('open')) {
-                        submenu.classList.remove('open');
-                        arrow.style.transform = 'rotate(0deg)';
-                    } else {
-                        // Close all other submenus
-                        document.querySelectorAll('.submenu-container').forEach(menu => {
-                            menu.classList.remove('open');
-                        });
-                        document.querySelectorAll('.submenu-arrow').forEach(arr => {
-                            arr.style.transform = 'rotate(0deg)';
-                        });
-
-                        // Open clicked submenu
-                        submenu.classList.add('open');
-                        arrow.style.transform = 'rotate(180deg)';
-                    }
-                });
-            });
-
             // Handle window resize
             window.addEventListener('resize', function() {
                 if (window.innerWidth >= 768) {
@@ -539,6 +483,29 @@
                     sidebarOverlay.classList.add('hidden');
                     document.body.style.overflow = 'auto';
                 }
+            });
+
+            // Make sure sidebar is fully visible on mobile when expanded
+            if (window.innerWidth < 768) {
+                sidebar.classList.remove('sidebar-collapsed');
+                sidebar.classList.add('sidebar-expanded');
+                sidebarTitles.forEach(title => title.style.opacity = '1');
+                menuTitles.forEach(title => title.style.opacity = '1');
+            }
+
+            // Fix for sidebar icons in collapsed state
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    if (sidebar.classList.contains('sidebar-collapsed')) {
+                        // Show tooltip or highlight
+                        this.classList.add('z-50');
+                    }
+                });
+
+                item.addEventListener('mouseleave', function() {
+                    this.classList.remove('z-50');
+                });
             });
         });
     </script>
