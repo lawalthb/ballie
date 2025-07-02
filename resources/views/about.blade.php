@@ -433,7 +433,7 @@
                 <div class="team-avatar w-32 h-32 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-2xl font-bold">
                     AJ
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">Adebayo Johnson</h3>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Name Name</h3>
                 <p class="text-brand-blue mb-4 font-medium">CEO & Co-Founder</p>
                 <p class="text-gray-600 text-sm mb-6">Former McKinsey consultant with 10+ years experience helping Nigerian businesses scale. Passionate about technology and entrepreneurship.</p>
                 <div class="flex justify-center space-x-4">
@@ -454,7 +454,7 @@
                 <div class="team-avatar w-32 h-32 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-2xl font-bold" style="background: linear-gradient(135deg, var(--color-teal), var(--color-green));">
                     KO
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">Kemi Okafor</h3>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Name Name</h3>
                 <p class="text-brand-teal mb-4 font-medium">CTO & Co-Founder</p>
                 <p class="text-gray-600 text-sm mb-6">Software architect with experience at Google and Microsoft, passionate about African tech innovation and scalable systems.</p>
                 <div class="flex justify-center space-x-4">
@@ -475,7 +475,7 @@
                 <div class="team-avatar w-32 h-32 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-2xl font-bold" style="background: linear-gradient(135deg, var(--color-purple), var(--color-lavender));">
                     EN
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">Emeka Nwankwo</h3>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Name Name</h3>
                 <p class="text-brand-purple mb-4 font-medium">Head of Product</p>
                 <p class="text-gray-600 text-sm mb-6">Product manager with deep understanding of Nigerian business processes and pain points. Expert in user experience design.</p>
                 <div class="flex justify-center space-x-4">
@@ -496,7 +496,7 @@
                 <div class="team-avatar w-32 h-32 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-2xl font-bold" style="background: linear-gradient(135deg, var(--color-green), var(--color-teal));">
                     FA
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">Funmi Adebayo</h3>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Name Name</h3>
                 <p class="text-brand-green mb-4 font-medium">Head of Customer Success</p>
                 <p class="text-gray-600 text-sm mb-6">Customer success expert with 8+ years helping Nigerian businesses optimize their operations and achieve growth.</p>
                 <div class="flex justify-center space-x-4">
@@ -517,7 +517,7 @@
                 <div class="team-avatar w-32 h-32 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-2xl font-bold" style="background: linear-gradient(135deg, var(--color-light-blue), var(--color-blue));">
                     OI
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">Olumide Ibrahim</h3>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Name Name</h3>
                 <p class="text-brand-light-blue mb-4 font-medium">Lead Developer</p>
                 <p class="text-gray-600 text-sm mb-6">Full-stack developer with expertise in Laravel, React, and cloud infrastructure. Passionate about building scalable solutions.</p>
                 <div class="flex justify-center space-x-4">
@@ -538,7 +538,7 @@
                 <div class="team-avatar w-32 h-32 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-2xl font-bold" style="background: linear-gradient(135deg, var(--color-gold), var(--color-purple));">
                     AA
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">Aisha Abdullahi</h3>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Name Name</h3>
                 <p class="text-brand-gold mb-4 font-medium">Head of Marketing</p>
                 <p class="text-gray-600 text-sm mb-6">Marketing strategist with deep knowledge of the Nigerian SME landscape and expertise in digital marketing and brand building.</p>
                 <div class="flex justify-center space-x-4">

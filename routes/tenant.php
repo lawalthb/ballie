@@ -74,7 +74,6 @@ Route::middleware(['auth'])->group(function () {
         });
 
         // Customers
-
         Route::prefix('customers')->name('tenant.customers.')->group(function () {
             Route::get('/', [CustomerController::class, 'index'])->name('index');
             Route::get('/create', [CustomerController::class, 'create'])->name('create');
@@ -83,7 +82,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{customer}/edit', [CustomerController::class, 'edit'])->name('edit');
             Route::put('/{customer}', [CustomerController::class, 'update'])->name('update');
             Route::delete('/{customer}', [CustomerController::class, 'destroy'])->name('destroy');
-
+        });
 
         // Invoices
         Route::prefix('invoices')->name('tenant.invoices.')->group(function () {
@@ -106,9 +105,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/community', [CommunityController::class, 'index'])->name('tenant.community');
     });
 });
-});
 
-// // Public routes (accessible without authentication)
-// Route::get('/', function () {
-//     return redirect()->route('tenant.login', ['tenant' => request()->route('tenant')]);
-// })->name('tenant.home');
+// Public routes (accessible without authentication)
+Route::get('/', function () {
+    return redirect()->route('tenant.login', ['tenant' => request()->route('tenant')]);
+})->name('tenant.home');

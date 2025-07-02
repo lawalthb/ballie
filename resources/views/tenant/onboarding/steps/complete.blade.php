@@ -65,7 +65,7 @@
                 </div>
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Create Your First Invoice</h3>
                 <p class="text-gray-600 mb-4">Start generating professional invoices for your customers.</p>
-                <a href="{{ route('tenant.invoices.create', ['tenant' => $currentTenant->slug]) }}" class="inline-block bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                <a href="#" class="inline-block bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
                     Create Invoice
                 </a>
             </div>
@@ -89,7 +89,7 @@
                 <div>
                     <h3 class="text-lg font-semibold text-gray-900 mb-2">Video Tutorials</h3>
                     <p class="text-gray-600 mb-3">Watch our video tutorials to learn how to use Ballie effectively.</p>
-                    <a href="{{ route('tenant.help.videos', ['tenant' => $currentTenant->slug]) }}" class="text-blue-600 hover:text-blue-800 font-medium">
+                    <a href="#" class="text-blue-600 hover:text-blue-800 font-medium">
                         Watch Tutorials →
                     </a>
                 </div>
@@ -105,7 +105,7 @@
                 <div>
                     <h3 class="text-lg font-semibold text-gray-900 mb-2">Help Center</h3>
                     <p class="text-gray-600 mb-3">Browse our knowledge base for answers to common questions.</p>
-                    <a href="{{ route('tenant.help.articles', ['tenant' => $currentTenant->slug]) }}" class="text-blue-600 hover:text-blue-800 font-medium">
+                    <a href="#" class="text-blue-600 hover:text-blue-800 font-medium">
                         Visit Help Center →
                     </a>
                 </div>
@@ -121,7 +121,7 @@
                 <div>
                     <h3 class="text-lg font-semibold text-gray-900 mb-2">Contact Support</h3>
                     <p class="text-gray-600 mb-3">Need help? Our support team is ready to assist you.</p>
-                    <a href="{{ route('tenant.support', ['tenant' => $currentTenant->slug]) }}" class="text-blue-600 hover:text-blue-800 font-medium">
+                    <a href="#" class="text-blue-600 hover:text-blue-800 font-medium">
                         Contact Support →
                     </a>
                 </div>
@@ -137,7 +137,7 @@
                 <div>
                     <h3 class="text-lg font-semibold text-gray-900 mb-2">Community Forum</h3>
                     <p class="text-gray-600 mb-3">Connect with other Ballie users to share tips and best practices.</p>
-                    <a href="{{ route('tenant.community', ['tenant' => $currentTenant->slug]) }}" class="text-blue-600 hover:text-blue-800 font-medium">
+                    <a href=:#" class="text-blue-600 hover:text-blue-800 font-medium">
                         Join Community →
                     </a>
                 </div>
