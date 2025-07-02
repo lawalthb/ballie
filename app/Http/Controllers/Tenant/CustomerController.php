@@ -100,8 +100,8 @@ class CustomerController extends Controller
         $customer->status = 'active';
         $customer->save();
 
-        return redirect()->route('tenant.customers.index')
-            ->with('success', 'Customer created successfully.');
+        return redirect()->route('tenant.customers.index', ['tenant' => tenant()->slug])
+            ->with('success', 'Customer created successfully with ledger account.');
     }
 
     /**

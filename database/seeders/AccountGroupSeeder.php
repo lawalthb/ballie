@@ -9,6 +9,12 @@ class AccountGroupSeeder extends Seeder
 {
     public static function seedForTenant($tenantId)
     {
+        // Check if account groups already exist for this tenant
+        $existingGroups = AccountGroup::where('tenant_id', $tenantId)->count();
+        if ($existingGroups > 0) {
+            return; // Skip seeding if groups already exist
+        }
+
         $accountGroups = [
             // Assets
             [

@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('tenant_id');
             $table->string('name'); // Journal, Payment, Receipt, Sales, Purchase, Contra
-            $table->string('code', 10); // JV, PV, RV, SV, PUR, CV
+            $table->string('code', 30); // JV, PV, RV, SV, PUR, CV
             $table->string('abbreviation', 5); // J, P, R, S, PU, C
             $table->text('description')->nullable();
             $table->string('numbering_method')->default('auto'); // auto, manual

@@ -16,13 +16,16 @@ class OnboardingCompleted
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $tenantSlug = $request->route('tenant');
+        $tenant = $request->route('tenant');
 
-        // If $tenantSlug is a string, fetch the Tenant model
-        if (is_string($tenantSlug)) {
-            $tenant = Tenant::where('slug', $tenantSlug)->firstOrFail();
-        } else {
-            $tenant = $tenantSlug;
+        // If tenant is a string (slug), fetch the Tenant model
+        if (is_string($tenant)) {
+            $tenant = Tenant::where('slug', $tenant)->firstOrFail();
+        }
+
+        // Check if tenant is a Tenant model instance
+        if (!$tenant instanceof Tenant) {
+            abort(404, 'Tenant not found');
         }
 
         if (!$tenant->onboarding_completed_at) {

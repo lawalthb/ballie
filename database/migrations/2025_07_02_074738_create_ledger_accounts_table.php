@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('tenant_id');
             $table->string('name');
-            $table->string('code')->unique();
+            $table->string('code'); // Remove ->unique() from here
             $table->unsignedBigInteger('account_group_id');
             $table->decimal('opening_balance', 15, 2)->default(0);
             $table->enum('balance_type', ['dr', 'cr'])->default('dr');
@@ -24,6 +24,10 @@ return new class extends Migration
 
             $table->foreign('tenant_id')->references('id')->on('tenants');
             $table->foreign('account_group_id')->references('id')->on('account_groups');
+
+            // Add composite unique constraint (tenant_id + code)
+            $table->unique(['tenant_id', 'code']);
+            $table->index(['tenant_id', 'is_active']);
         });
     }
 

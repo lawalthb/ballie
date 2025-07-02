@@ -12,6 +12,7 @@ use App\Http\Controllers\Tenant\InvoiceController;
 use App\Http\Controllers\Tenant\HelpController;
 use App\Http\Controllers\Tenant\SupportController;
 use App\Http\Controllers\Tenant\CommunityController;
+use App\Http\Controllers\Tenant\VendorController;
 use App\Models\Tenant;
 
 /*
@@ -119,6 +120,19 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{customer}', [CustomerController::class, 'update'])->name('update');
             Route::delete('/{customer}', [CustomerController::class, 'destroy'])->name('destroy');
         });
+
+          // Vendors
+    Route::prefix('vendors')->name('tenant.vendors.')->group(function () {
+        Route::get('/', [VendorController::class, 'index'])->name('index');
+        Route::get('/create', [VendorController::class, 'create'])->name('create');
+        Route::post('/', [VendorController::class, 'store'])->name('store');
+        Route::get('/{vendor}', [VendorController::class, 'show'])->name('show');
+        Route::get('/{vendor}/edit', [VendorController::class, 'edit'])->name('edit');
+        Route::put('/{vendor}', [VendorController::class, 'update'])->name('update');
+        Route::delete('/{vendor}', [VendorController::class, 'destroy'])->name('destroy');
+    });
+
+
 
         // Invoices
         Route::prefix('invoices')->name('tenant.invoices.')->group(function () {

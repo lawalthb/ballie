@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\LedgerAccount;
+use App\Models\AccountGroup;
 
 class Customer extends Model
 {
@@ -17,6 +19,7 @@ class Customer extends Model
      */
     protected $fillable = [
         'tenant_id',
+        'ledger_account_id',
         'customer_type',
         'first_name',
         'last_name',
@@ -34,6 +37,7 @@ class Customer extends Model
         'currency',
         'payment_terms',
         'total_spent',
+        'outstanding_balance',
         'last_invoice_date',
         'last_invoice_number',
         'notes',
@@ -48,7 +52,28 @@ class Customer extends Model
     protected $casts = [
         'last_invoice_date' => 'datetime',
         'total_spent' => 'decimal:2',
+        'outstanding_balance' => 'decimal:2',
     ];
+
+    // Boot method to auto-create ledger account
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($customer) {
+            $customer->createLedgerAccount();
+        });
+
+        static::updated(function ($customer) {
+            $customer->syncLedgerAccount();
+        });
+
+        static::deleting(function ($customer) {
+            if ($customer->ledgerAccount && $customer->ledgerAccount->getCurrentBalance() == 0) {
+                $customer->ledgerAccount->update(['is_active' => false]);
+            }
+        });
+    }
 
     /**
      * Get the tenant that owns the customer.
@@ -56,6 +81,11 @@ class Customer extends Model
     public function tenant()
     {
         return $this->belongsTo(Tenant::class);
+    }
+
+    public function ledgerAccount()
+    {
+        return $this->belongsTo(LedgerAccount::class);
     }
 
     /**
@@ -66,6 +96,64 @@ class Customer extends Model
         return $this->hasMany(Invoice::class);
     }
 
+    // Create ledger account for customer
+    public function createLedgerAccount()
+    {
+        if ($this->ledgerAccount) {
+            return $this->ledgerAccount;
+        }
+
+        // Find or create Accounts Receivable group
+        $arGroup = AccountGroup::where('tenant_id', $this->tenant_id)
+            ->where('code', 'AR')
+            ->first();
+
+        if (!$arGroup) {
+            // Create AR group if it doesn't exist
+            $currentAssetsGroup = AccountGroup::where('tenant_id', $this->tenant_id)
+                ->where('code', 'CA')
+                ->first();
+
+            $arGroup = AccountGroup::create([
+                'tenant_id' => $this->tenant_id,
+                'name' => 'Accounts Receivable',
+                'code' => 'AR',
+                'nature' => 'assets',
+                'parent_id' => $currentAssetsGroup?->id,
+            ]);
+        }
+
+        // Create ledger account
+        $ledgerAccount = LedgerAccount::create([
+            'tenant_id' => $this->tenant_id,
+            'name' => $this->getFullNameAttribute(),
+            'code' => 'CUST-' . str_pad($this->id, 4, '0', STR_PAD_LEFT),
+            'account_group_id' => $arGroup->id,
+            'opening_balance' => 0,
+            'balance_type' => 'dr', // Customers are assets, so debit balance
+            'address' => $this->getFullAddressAttribute(),
+            'phone' => $this->phone,
+            'email' => $this->email,
+        ]);
+
+        $this->update(['ledger_account_id' => $ledgerAccount->id]);
+
+        return $ledgerAccount;
+    }
+
+    // Sync ledger account when customer is updated
+    public function syncLedgerAccount()
+    {
+        if ($this->ledgerAccount) {
+            $this->ledgerAccount->update([
+                'name' => $this->getFullNameAttribute(),
+                'address' => $this->getFullAddressAttribute(),
+                'phone' => $this->phone,
+                'email' => $this->email,
+            ]);
+        }
+    }
+
     /**
      * Get the full name of the customer.
      *
@@ -74,9 +162,8 @@ class Customer extends Model
     public function getFullNameAttribute()
     {
         if ($this->customer_type === 'individual') {
-            return $this->first_name . ' ' . $this->last_name;
+            return trim($this->first_name . ' ' . $this->last_name);
         }
-
         return $this->company_name;
     }
 
@@ -121,16 +208,22 @@ class Customer extends Model
         return implode(', ', $address);
     }
 
-    /**
-     * Get the outstanding balance for the customer.
-     *
-     * @return float
-     */
-    public function getOutstandingBalanceAttribute()
+    // Get current balance from ledger
+    public function getLedgerBalance()
     {
-        return $this->invoices()
-            ->whereIn('status', ['sent', 'overdue', 'partial'])
-            ->sum('balance_due');
+        if (!$this->ledgerAccount) {
+            return 0;
+        }
+
+        return $this->ledgerAccount->getCurrentBalance();
+    }
+
+    // Update outstanding balance from ledger
+    public function updateOutstandingBalance()
+    {
+        $ledgerBalance = $this->getLedgerBalance();
+        $this->update(['outstanding_balance' => $ledgerBalance]);
+        return $ledgerBalance;
     }
 
     /**
@@ -176,23 +269,5 @@ class Customer extends Model
     public function scopeBusinesses($query)
     {
         return $query->where('customer_type', 'business');
-    }
-
-    /**
-     * Update the customer's total spent amount and last invoice information.
-     *
-     * @param  \App\Models\Invoice  $invoice
-     * @return void
-     */
-    public function updateInvoiceStats(Invoice $invoice)
-    {
-        // Only update if the invoice is paid
-        if ($invoice->status === 'paid') {
-            $this->total_spent = $this->total_spent + $invoice->total_amount;
-        }
-
-        $this->last_invoice_date = $invoice->invoice_date;
-        $this->last_invoice_number = $invoice->invoice_number;
-        $this->save();
     }
 }
