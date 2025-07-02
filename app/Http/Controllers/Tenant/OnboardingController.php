@@ -258,6 +258,14 @@ class OnboardingController extends Controller
      */
     public function complete(Request $request, Tenant $tenant)
     {
+        $tenant = $request->route('tenant');
+
+
+    // Setup accounting structure
+    \Database\Seeders\AccountGroupSeeder::seedForTenant($tenant->id);
+    \Database\Seeders\VoucherTypeSeeder::seedForTenant($tenant->id);
+
+    
         // Update tenant to mark onboarding as complete
         $tenant->update([
             'onboarding_completed_at' => now(),
@@ -269,7 +277,7 @@ class OnboardingController extends Controller
             ]
         ]);
 
-    
+
         // Redirect to dashboard
         return redirect()->route('tenant.dashboard', ['tenant' => $tenant->slug])
             ->with('success', 'Welcome to Ballie! Your account is now fully set up and ready to use.');

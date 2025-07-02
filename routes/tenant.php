@@ -62,6 +62,42 @@ Route::middleware(['auth'])->group(function () {
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('tenant.dashboard');
 
+        // Accounting Routes
+        Route::prefix('accounting')->name('tenant.accounting.')->group(function () {
+            Route::get('/chart-of-accounts', [AccountingController::class, 'chartOfAccounts'])->name('chart-of-accounts');
+            Route::get('/ledger/create', [AccountingController::class, 'createLedgerAccount'])->name('ledger.create');
+            Route::post('/ledger', [AccountingController::class, 'storeLedgerAccount'])->name('ledger.store');
+            Route::get('/ledger/{id}/edit', [AccountingController::class, 'editLedgerAccount'])->name('ledger.edit');
+            Route::put('/ledger/{id}', [AccountingController::class, 'updateLedgerAccount'])->name('ledger.update');
+        });
+
+        // Voucher Routes
+        Route::prefix('vouchers')->name('tenant.vouchers.')->group(function () {
+            Route::get('/', [VoucherController::class, 'index'])->name('index');
+            Route::get('/create/{type?}', [VoucherController::class, 'create'])->name('create');
+            Route::post('/', [VoucherController::class, 'store'])->name('store');
+            Route::get('/{voucher}', [VoucherController::class, 'show'])->name('show');
+            Route::get('/{voucher}/edit', [VoucherController::class, 'edit'])->name('edit');
+            Route::put('/{voucher}', [VoucherController::class, 'update'])->name('update');
+            Route::post('/{voucher}/post', [VoucherController::class, 'post'])->name('post');
+            Route::post('/{voucher}/unpost', [VoucherController::class, 'unpost'])->name('unpost');
+            Route::delete('/{voucher}', [VoucherController::class, 'destroy'])->name('destroy');
+        });
+
+        // Ledger Routes
+        Route::prefix('ledger')->name('tenant.ledger.')->group(function () {
+            Route::get('/', [LedgerController::class, 'index'])->name('index');
+            Route::get('/{ledger}', [LedgerController::class, 'show'])->name('show');
+        });
+
+        // Reports Routes
+        Route::prefix('reports')->name('tenant.reports.')->group(function () {
+            Route::get('/trial-balance', [ReportsController::class, 'trialBalance'])->name('trial-balance');
+            Route::get('/day-book', [ReportsController::class, 'dayBook'])->name('day-book');
+            Route::get('/profit-loss', [ReportsController::class, 'profitLoss'])->name('profit-loss');
+            Route::get('/balance-sheet', [ReportsController::class, 'balanceSheet'])->name('balance-sheet');
+        });
+
         // Products
         Route::prefix('products')->name('tenant.products.')->group(function () {
             Route::get('/', [ProductController::class, 'index'])->name('index');

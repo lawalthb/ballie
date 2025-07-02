@@ -221,4 +221,24 @@ class Tenant extends Model
 
         return (int) (($completedSteps / $totalSteps) * 100);
     }
+
+    public function accountGroups()
+    {
+        return $this->hasMany(AccountGroup::class);
+    }
+
+    public function ledgerAccounts()
+    {
+        return $this->hasMany(LedgerAccount::class);
+    }
+
+    public function voucherTypes()
+    {
+        return $this->hasMany(VoucherType::class);
+    }
+
+    public function vouchers()
+    {
+        return $this->hasMany(Voucher::class);
+    }
 }
