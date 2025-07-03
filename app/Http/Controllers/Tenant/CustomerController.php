@@ -15,6 +15,7 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
+
         $query = Customer::where('tenant_id', tenant()->id);
 
         // Search functionality
@@ -63,14 +64,14 @@ class CustomerController extends Controller
         // Calculate statistics
         $totalCustomers = Customer::where('tenant_id', tenant()->id)->count();
         $totalRevenue = Customer::where('tenant_id', tenant()->id)->sum('total_spent');
-        $activeCustomers = Customer::where('tenant_id', tenant()->id)->where('status', 'active')->count();
+        $activeCustomers = Customer::where('tenant_id', tenant()->id)->where('status', 1)->count();
         $newCustomersThisMonth = Customer::where('tenant_id', tenant()->id)
             ->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])
             ->count();
 
         // Top customers
         $topCustomers = Customer::where('tenant_id', tenant()->id)
-            ->where('total_spent', '>', 0)
+            ->where('status', 'active')
             ->orderBy('total_spent', 'desc')
             ->limit(5)
             ->get();
@@ -95,15 +96,19 @@ class CustomerController extends Controller
 
     /**
      * Store a newly created customer in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
+        // Validate the request data
         $validator = Validator::make($request->all(), [
             'customer_type' => 'required|in:individual,business',
             'first_name' => 'required_if:customer_type,individual|string|max:255',
             'last_name' => 'required_if:customer_type,individual|string|max:255',
-            'company_name' => 'required_if:customer_type,business|string|max:255',
-            'email' => 'required|email|max:255|unique:customers,email,NULL,id,tenant_id,' . tenant()->id,
+            'company_name' => 'nullable|string|max:255',
+            'email' => 'required|email|max:255',
             'phone' => 'nullable|string|max:20',
             'mobile' => 'nullable|string|max:20',
             'address_line1' => 'nullable|string|max:255',
@@ -117,31 +122,31 @@ class CustomerController extends Controller
             'notes' => 'nullable|string',
         ]);
 
+        // If validation fails, redirect back with errors and input
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
-                ->withInput()
-                ->with('error', 'Please correct the errors below.');
+                ->withInput();
         }
 
         try {
-            DB::beginTransaction();
-
+            // Create the new customer
             $customer = new Customer($request->all());
             $customer->tenant_id = tenant()->id;
             $customer->status = 'active';
             $customer->save();
 
-            DB::commit();
-
+            // Redirect with success message
             return redirect()->route('tenant.customers.index', ['tenant' => tenant()->slug])
                 ->with('success', 'Customer created successfully.');
         } catch (\Exception $e) {
-            DB::rollBack();
+            // Log the error
+            \Log::error('Error creating customer: ' . $e->getMessage());
 
+            // Redirect back with error message
             return redirect()->back()
-                ->withInput()
-                ->with('error', 'Failed to create customer. Please try again.');
+                ->with('error', 'An error occurred while creating the customer. Please try again.')
+                ->withInput();
         }
     }
 

@@ -796,7 +796,7 @@
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Chart data
-        const chartData = @json($chartData);
+   const chartData = @json($chartData);
         // Financial Overview Chart
         const ctx = document.getElementById('financialChart');
         if (ctx) {
