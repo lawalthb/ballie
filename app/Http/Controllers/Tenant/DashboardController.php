@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Tenant;
+use App\Models\Customer;
+use App\Models\Product;
 
 class DashboardController extends Controller
 {
@@ -20,27 +22,32 @@ class DashboardController extends Controller
         // Get authenticated user
         $user = auth()->user();
 
-        // Sample chart data (in a real app, this would come from your database)
+        // Get dashboard statistics
+        $customerCount = Customer::where('tenant_id', $currentTenant->id)->count();
+        $activeCustomers = Customer::where('tenant_id', $currentTenant->id)
+            ->where('status', 'active')
+            ->count();
+
+        // You can add more statistics as needed
+        // $productCount = Product::where('tenant_id', $currentTenant->id)->count();
+        // $invoiceCount = Invoice::where('tenant_id', $currentTenant->id)->count();
+        // $totalRevenue = Invoice::where('tenant_id', $currentTenant->id)->sum('total');
+
+        // Sample chart data - replace with actual data from your models
         $chartData = [
             'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             'revenue' => [120000, 190000, 300000, 500000, 200000, 300000, 450000, 600000, 750000, 850000, 900000, 1000000],
             'expenses' => [80000, 120000, 180000, 250000, 150000, 200000, 280000, 350000, 400000, 450000, 500000, 550000]
         ];
 
-        // You would typically load dashboard data here
-        // For example:
-        // $invoiceCount = Invoice::count();
-        // $customerCount = Customer::count();
-        // $productCount = Product::count();
-        // $recentInvoices = Invoice::latest()->take(5)->get();
-        // $recentCustomers = Customer::latest()->take(5)->get();
-
         return view('tenant.dashboard.index', [
             'currentTenant' => $currentTenant,
             'user' => $user,
             'tenant' => $currentTenant,
+            'customerCount' => $customerCount,
+            'activeCustomers' => $activeCustomers,
             'chartData' => $chartData,
-            // Pass other data as needed
+            // Add other data as needed
         ]);
     }
 }

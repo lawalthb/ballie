@@ -20,14 +20,14 @@ Route::get('/demo', [HomeController::class, 'demo'])->name('demo');
 Route::get('/demo2', [HomeController::class, 'demo'])->name('profile.edit');
 
 // Social Authentication Routes
-Route::middleware('guest')->group(function () {
-    Route::get('/auth/{provider}', [SocialAuthController::class, 'redirect'])->name('auth.redirect');
-    Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'])->name('auth.callback');
+// Route::middleware('guest')->group(function () {
+//     Route::get('/auth/{provider}', [SocialAuthController::class, 'redirect'])->name('auth.redirect');
+//     Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'])->name('auth.callback');
 
-    // Named routes for specific providers
-    Route::get('/auth/google', [SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
-    Route::get('/auth/facebook', [SocialAuthController::class, 'redirectToFacebook'])->name('auth.facebook');
-});
+//     // Named routes for specific providers
+//     Route::get('/auth/google', [SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
+//     Route::get('/auth/facebook', [SocialAuthController::class, 'redirectToFacebook'])->name('auth.facebook');
+// });
 
 
 
