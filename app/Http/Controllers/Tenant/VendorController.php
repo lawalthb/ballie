@@ -5,13 +5,14 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
+use App\Models\Tenant;
 use Illuminate\Support\Facades\Validator;
 
 class VendorController extends Controller
 {
-    public function index()
+    public function index(Tenant $tenant)
     {
-        $vendors = Vendor::where('tenant_id', tenant()->id)
+        $vendors = Vendor::where('tenant_id', $tenant->id)
             ->with('ledgerAccount')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
@@ -30,18 +31,18 @@ class VendorController extends Controller
         ));
     }
 
-    public function create()
+    public function create(Tenant $tenant)
     {
         return view('tenant.vendors.create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Tenant $tenant)
     {
         $validator = Validator::make($request->all(), [
             'vendor_type' => 'required|in:individual,business',
-            'first_name' => 'required_if:vendor_type,individual|string|max:255',
-            'last_name' => 'required_if:vendor_type,individual|string|max:255',
-            'company_name' => 'required_if:vendor_type,business|string|max:255',
+            'first_name' => 'nullable|string|max:255',
+            'last_name' => 'nullable|string|max:255',
+            'company_name' => 'nullable|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'nullable|string|max:20',
             'mobile' => 'nullable|string|max:20',
@@ -77,9 +78,9 @@ class VendorController extends Controller
             ->with('success', 'Vendor created successfully with ledger account.');
     }
 
-    public function show($id)
+    public function show(Tenant $tenant, $id)
     {
-        $vendor = Vendor::where('tenant_id', tenant()->id)
+        $vendor = Vendor::where('tenant_id', $tenant->id)
             ->with(['ledgerAccount.accountGroup'])
             ->findOrFail($id);
 
@@ -89,9 +90,9 @@ class VendorController extends Controller
         return view('tenant.vendors.show', compact('vendor'));
     }
 
-    public function edit($id)
+    public function edit(Tenant $tenant, $id)
     {
-        $vendor = Vendor::where('tenant_id', tenant()->id)
+        $vendor = Vendor::where('tenant_id', $tenant->id)
             ->findOrFail($id);
 
         return view('tenant.vendors.edit', compact('vendor'));
