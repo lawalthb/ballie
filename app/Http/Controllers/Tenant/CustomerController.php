@@ -55,10 +55,10 @@ class CustomerController extends Controller
     public function store(Request $request, Tenant $tenant)
     {
         $validator = Validator::make($request->all(), [
-            'customer_type' => 'required|in:individual,business',
-            'first_name' => 'required_if:customer_type,individual|string|max:255',
-            'last_name' => 'required_if:customer_type,individual|string|max:255',
-            'company_name' => 'required_if:customer_type,business|string|max:255',
+            'customer_type' => 'nullable|in:individual,business',
+            'first_name' => 'nullable:customer_type,individual|string|max:255',
+            'last_name' => 'nullable:customer_type,individual|string|max:255',
+            'company_name' => 'nullable:customer_type,business|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'nullable|string|max:20',
             'mobile' => 'nullable|string|max:20',
@@ -71,6 +71,8 @@ class CustomerController extends Controller
             'currency' => 'nullable|string|max:3',
             'payment_terms' => 'nullable|string|max:50',
             'notes' => 'nullable|string',
+            'tax_id' => 'nullable|string|max:50',
+            'save_and_new' => 'nullable|boolean',
         ]);
 
         if ($validator->fails()) {
@@ -80,10 +82,16 @@ class CustomerController extends Controller
         }
 
         try {
-            $customer = new Customer($request->all());
+            $customer = new Customer($request->except(['save_and_new']));
             $customer->tenant_id = $tenant->id;
             $customer->status = 'active';
             $customer->save();
+
+            // Determine redirect based on save_and_new parameter
+            if ($request->has('save_and_new') && $request->save_and_new) {
+                return redirect()->route('tenant.customers.create', ['tenant' => $tenant->slug])
+                    ->with('success', 'Customer created successfully. You can now add another customer.');
+            }
 
             return redirect()->route('tenant.customers.index', ['tenant' => $tenant->slug])
                 ->with('success', 'Customer created successfully.');
@@ -163,6 +171,8 @@ class CustomerController extends Controller
             'payment_terms' => 'nullable|string|max:50',
             'notes' => 'nullable|string',
             'status' => 'nullable|in:active,inactive',
+            'tax_id' => 'nullable|string|max:50',
+            'save_and_new' => 'nullable|boolean',
         ]);
 
         if ($validator->fails()) {
@@ -172,7 +182,13 @@ class CustomerController extends Controller
         }
 
         try {
-            $customer->update($request->all());
+            $customer->update($request->except(['save_and_new']));
+
+            // Determine redirect based on save_and_new parameter
+            if ($request->has('save_and_new') && $request->save_and_new) {
+                return redirect()->route('tenant.customers.create', ['tenant' => $tenant->slug])
+                    ->with('success', 'Customer updated successfully. You can now add a new customer.');
+            }
 
             return redirect()->route('tenant.customers.index', ['tenant' => $tenant->slug])
                 ->with('success', 'Customer updated successfully.');
