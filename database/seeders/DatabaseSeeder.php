@@ -15,6 +15,9 @@ class DatabaseSeeder extends Seeder
             SharedResourcesSeeder::class,
             SuperAdminSeeder::class,
             PlanSeeder::class,
+          
+            UnitsSeeder::class,
+            ProductCategoriesSeeder::class,
         ]);
     }
 }

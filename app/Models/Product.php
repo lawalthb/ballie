@@ -14,6 +14,8 @@ class Product extends Model
 
     protected $fillable = [
         'tenant_id',
+        'category_id',
+        'unit_id',
         'type',
         'name',
         'sku',
@@ -89,6 +91,23 @@ class Product extends Model
     public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);
+    }
+
+       /**
+     * Get the category that the product belongs to.
+     */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(ProductCategory::class, 'category_id');
+    }
+
+
+        /**
+     * Get the unit of measurement for the product.
+     */
+    public function unit(): BelongsTo
+    {
+        return $this->belongsTo(Unit::class);
     }
 
     /**
@@ -189,6 +208,15 @@ class Product extends Model
     {
         return $query->where('is_active', true);
     }
+
+        /**
+     * Scope a query to only include products in a specific category.
+     */
+    public function scopeInCategory($query, $categoryId)
+    {
+        return $query->where('category_id', $categoryId);
+    }
+
 
     /**
      * Scope a query to only include saleable products.

@@ -11,24 +11,28 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('units', function (Blueprint $table) {
+        Schema::create('product_categories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tenant_id')->constrained('tenants')->onDelete('cascade');
             $table->string('name');
-            $table->string('symbol', 10);
+            $table->string('slug');
             $table->text('description')->nullable();
-            $table->foreignId('base_unit_id')->nullable()->constrained('units')->onDelete('cascade');
-            $table->decimal('conversion_factor', 10, 6)->default(1.000000);
-            $table->boolean('is_base_unit')->default(true);
+            $table->foreignId('parent_id')->nullable()->constrained('product_categories')->onDelete('cascade');
+            $table->string('image')->nullable();
+            $table->integer('sort_order')->default(0);
             $table->boolean('is_active')->default(true);
+            $table->string('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             // Indexes
             $table->index(['tenant_id', 'is_active']);
-            $table->index(['tenant_id', 'is_base_unit']);
+            $table->index(['tenant_id', 'parent_id']);
+            $table->index(['tenant_id', 'slug']);
+            $table->index('sort_order');
             $table->unique(['tenant_id', 'name']);
-            $table->unique(['tenant_id', 'symbol']);
+            $table->unique(['tenant_id', 'slug']);
         });
     }
 
@@ -37,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('units');
+        Schema::dropIfExists('product_categories');
     }
 };

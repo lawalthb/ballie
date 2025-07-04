@@ -241,4 +241,159 @@ class Tenant extends Model
     {
         return $this->hasMany(Voucher::class);
     }
+
+
+      /**
+     * Get default units data.
+     */
+    private function getDefaultUnitsData(): array
+    {
+        return [
+            // Basic counting units
+            ['name' => 'Piece', 'symbol' => 'pcs', 'description' => 'Individual pieces or items', 'is_base_unit' => true],
+            ['name' => 'Dozen', 'symbol' => 'doz', 'description' => 'Dozen - 12 pieces', 'is_base_unit' => true],
+            ['name' => 'Box', 'symbol' => 'box', 'description' => 'Box or carton', 'is_base_unit' => true],
+            ['name' => 'Pack', 'symbol' => 'pack', 'description' => 'Pack or package', 'is_base_unit' => true],
+            ['name' => 'Set', 'symbol' => 'set', 'description' => 'Set of items', 'is_base_unit' => true],
+
+            // Weight units
+            ['name' => 'Kilogram', 'symbol' => 'kg', 'description' => 'Base unit for weight measurement', 'is_base_unit' => true],
+            ['name' => 'Gram', 'symbol' => 'g', 'description' => 'Gram - 1/1000 of a kilogram', 'is_base_unit' => true],
+
+            // Volume units
+            ['name' => 'Liter', 'symbol' => 'L', 'description' => 'Base unit for volume measurement', 'is_base_unit' => true],
+            ['name' => 'Milliliter', 'symbol' => 'mL', 'description' => 'Milliliter - 1/1000 of a liter', 'is_base_unit' => true],
+
+            // Length units
+            ['name' => 'Meter', 'symbol' => 'm', 'description' => 'Base unit for length measurement', 'is_base_unit' => true],
+            ['name' => 'Centimeter', 'symbol' => 'cm', 'description' => 'Centimeter - 1/100 of a meter', 'is_base_unit' => true],
+
+            // Time units
+            ['name' => 'Hour', 'symbol' => 'hr', 'description' => 'Hour - unit of time', 'is_base_unit' => true],
+            ['name' => 'Day', 'symbol' => 'day', 'description' => 'Day - unit of time', 'is_base_unit' => true],
+        ];
+    }
+
+    /**
+     * Get default categories data.
+     */
+    private function getDefaultCategoriesData(): array
+    {
+        return [
+            [
+                'name' => 'General',
+                'slug' => 'general',
+                'description' => 'General products and miscellaneous items',
+                'sort_order' => 1,
+                'meta_title' => 'General Products',
+                'meta_description' => 'General products and miscellaneous items',
+            ],
+            [
+                'name' => 'Electronics',
+                'slug' => 'electronics',
+                'description' => 'Electronic devices and accessories',
+                'sort_order' => 2,
+                'meta_title' => 'Electronics - Electronic Devices and Accessories',
+                'meta_description' => 'Browse our wide range of electronic devices and accessories',
+                'subcategories' => [
+                    [
+                        'name' => 'Computers & Laptops',
+                        'slug' => 'computers-laptops',
+                        'description' => 'Desktop computers, laptops, and accessories',
+                        'sort_order' => 1,
+                    ],
+                    [
+                        'name' => 'Mobile Phones',
+                        'slug' => 'mobile-phones',
+                        'description' => 'Smartphones and mobile accessories',
+                        'sort_order' => 2,
+                    ],
+                    [
+                        'name' => 'Audio & Video',
+                        'slug' => 'audio-video',
+                        'description' => 'Speakers, headphones, cameras, and video equipment',
+                        'sort_order' => 3,
+                    ],
+                ]
+            ],
+            [
+                'name' => 'Clothing & Fashion',
+                'slug' => 'clothing-fashion',
+                'description' => 'Clothing, shoes, and fashion accessories',
+                'sort_order' => 3,
+                'meta_title' => 'Clothing & Fashion - Apparel and Accessories',
+                'meta_description' => 'Discover the latest fashion trends and clothing styles',
+                'subcategories' => [
+                    [
+                        'name' => 'Men\'s Clothing',
+                        'slug' => 'mens-clothing',
+                        'description' => 'Men\'s shirts, pants, suits, and casual wear',
+                        'sort_order' => 1,
+                    ],
+                    [
+                        'name' => 'Women\'s Clothing',
+                        'slug' => 'womens-clothing',
+                        'description' => 'Women\'s dresses, tops, pants, and formal wear',
+                        'sort_order' => 2,
+                    ],
+                    [
+                        'name' => 'Shoes & Footwear',
+                        'slug' => 'shoes-footwear',
+                        'description' => 'Shoes, sandals, boots, and footwear accessories',
+                        'sort_order' => 3,
+                    ],
+                ]
+            ],
+            [
+                'name' => 'Home & Garden',
+                'slug' => 'home-garden',
+                'description' => 'Home improvement, furniture, and garden supplies',
+                'sort_order' => 4,
+                'meta_title' => 'Home & Garden - Furniture and Home Improvement',
+                'meta_description' => 'Everything you need for your home and garden',
+                'subcategories' => [
+                    [
+                        'name' => 'Furniture',
+                        'slug' => 'furniture',
+                        'description' => 'Living room, bedroom, office, and outdoor furniture',
+                        'sort_order' => 1,
+                    ],
+                    [
+                        'name' => 'Home Decor',
+                        'slug' => 'home-decor',
+                        'description' => 'Decorative items, artwork, and home accessories',
+                        'sort_order' => 2,
+                    ],
+                    [
+                        'name' => 'Kitchen & Dining',
+                        'slug' => 'kitchen-dining',
+                        'description' => 'Cookware, dinnerware, and kitchen accessories',
+                        'sort_order' => 3,
+                    ],
+                ]
+            ],
+            [
+                'name' => 'Office & Stationery',
+                'slug' => 'office-stationery',
+                'description' => 'Office supplies, stationery, and business equipment',
+                'sort_order' => 5,
+                'meta_title' => 'Office & Stationery - Business Supplies and Equipment',
+                'meta_description' => 'Professional office supplies and stationery items',
+                'subcategories' => [
+                    [
+                        'name' => 'Writing Instruments',
+                        'slug' => 'writing-instruments',
+                        'description' => 'Pens, pencils, markers, and writing accessories',
+                        'sort_order' => 1,
+                    ],
+                    [
+                        'name' => 'Paper Products',
+                        'slug' => 'paper-products',
+                        'description' => 'Notebooks, printing paper, and paper supplies',
+                        'sort_order' => 2,
+                    ],
+                ]
+            ],
+        ];
+    }
 }
