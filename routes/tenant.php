@@ -46,7 +46,7 @@ Route::bind('tenant', function ($value) {
 // Authenticated routes
 Route::middleware(['auth'])->group(function () {
     // Logout route
-  //  Route::post('/logout', [AuthController::class, 'logout'])->name('tenant.logout');
+   Route::post('/logout', [AuthController::class, 'logout'])->name('tenant.logout');
 
     // Onboarding routes
     Route::prefix('onboarding')->name('tenant.onboarding.')->group(function () {
