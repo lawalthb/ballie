@@ -7,9 +7,33 @@ use App\Models\AccountGroup;
 use App\Models\LedgerAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Tenant;
 
 class AccountingController extends Controller
 {
+
+     /**
+     * Display the accounting dashboard
+     */
+    public function index(Request $request, Tenant $tenant)
+    {
+        $currentTenant = $tenant;
+        $user = auth()->user();
+
+        // You would typically load accounting data here
+        // For example:
+        // $totalRevenue = Invoice::where('tenant_id', $tenant->id)->sum('total');
+        // $totalExpenses = Expense::where('tenant_id', $tenant->id)->sum('amount');
+        // $recentInvoices = Invoice::where('tenant_id', $tenant->id)->latest()->take(5)->get();
+
+        return view('tenant.accounting.index', [
+            'currentTenant' => $currentTenant,
+            'user' => $user,
+            'tenant' => $currentTenant,
+        ]);
+    }
+
+    
     public function chartOfAccounts()
     {
         $accountGroups = AccountGroup::where('tenant_id', tenant()->id)
@@ -99,5 +123,26 @@ class AccountingController extends Controller
 
         return redirect()->route('tenant.accounting.chart-of-accounts', ['tenant' => tenant()->slug])
             ->with('success', 'Ledger account updated successfully.');
+    }
+
+    public function invoicesIndex(Request $request, Tenant $tenant)
+    {
+        return view('tenant.accounting.invoices.index', [
+            'tenant' => $tenant
+        ]);
+    }
+
+    public function createInvoice(Request $request, Tenant $tenant)
+    {
+        return view('tenant.accounting.invoices.create', [
+            'tenant' => $tenant
+        ]);
+    }
+
+    public function storeInvoice(Request $request, Tenant $tenant)
+    {
+        // Handle invoice creation logic here
+        return redirect()->route('tenant.accounting.invoices.index', ['tenant' => $tenant->slug])
+            ->with('success', 'Invoice created successfully.');
     }
 }

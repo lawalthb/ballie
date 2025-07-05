@@ -7,9 +7,31 @@ use App\Models\LedgerAccount;
 use App\Models\AccountGroup;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Models\Tenant;
 
 class ReportsController extends Controller
 {
+    /**
+     * Display the reports dashboard
+     */
+    public function index(Request $request, Tenant $tenant)
+    {
+        $currentTenant = $tenant;
+        $user = auth()->user();
+
+        // You would typically load reports data here
+        // For example:
+        // $availableReports = ['Financial', 'Sales', 'Inventory', 'Customer', 'Tax'];
+        // $recentReports = Report::where('tenant_id', $tenant->id)->latest()->take(5)->get();
+        // $scheduledReports = Report::where('tenant_id', $tenant->id)->where('is_scheduled', true)->get();
+
+        return view('tenant.reports.index', [
+            'currentTenant' => $currentTenant,
+            'user' => $user,
+            'tenant' => $currentTenant,
+        ]);
+    }
+
     public function trialBalance(Request $request)
     {
         $asOfDate = $request->as_of_date ? Carbon::parse($request->as_of_date) : Carbon::now();

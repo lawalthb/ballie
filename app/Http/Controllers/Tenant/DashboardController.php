@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Tenant;
 use App\Models\Customer;
+use App\Models\Product;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -17,6 +18,9 @@ class DashboardController extends Controller
     {
         // Get current tenant from route parameter
         $currentTenant = $tenant;
+      // Load dashboard data
+
+      $totalProducts = Product::where('tenant_id', $tenant->id)->count();
 
         // Get authenticated user
         $user = auth()->user();
@@ -176,7 +180,8 @@ class DashboardController extends Controller
             'totalCustomers' => $totalCustomers,
             'totalRevenue' => $totalRevenue,
             'openInvoices' => $openInvoices,
-            'avgPaymentDays' => $avgPaymentDays
+            'avgPaymentDays' => $avgPaymentDays,
+            'totalProducts' => $totalProducts,
         ]);
     }
 }
