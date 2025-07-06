@@ -93,7 +93,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('inventory')->name('tenant.inventory.')->group(function () {
             Route::get('/', [InventoryController::class, 'index'])->name('index');
 
-            // Products (moved from root level)
+            // Products
             Route::prefix('products')->name('products.')->group(function () {
                 Route::get('/', [ProductController::class, 'index'])->name('index');
                 Route::get('/create', [ProductController::class, 'create'])->name('create');

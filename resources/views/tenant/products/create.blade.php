@@ -7,7 +7,7 @@
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6">
     <div class="bg-white rounded-2xl shadow-lg p-6">
-        <form action="{{ route('tenant.products.store', ['tenant' => $tenant->slug]) }}" method="POST" enctype="multipart/form-data" id="productForm">
+        <form action="{{ route('tenant.inventory.products.store', ['tenant' => $tenant->slug]) }}" method="POST" enctype="multipart/form-data" id="productForm">
             @csrf
 
             <!-- Product Type Selection -->
@@ -391,7 +391,7 @@
 
             <!-- Form Actions -->
             <div class="flex items-center justify-end space-x-4">
-                <a href="{{ route('tenant.products.index', ['tenant' => $tenant->slug]) }}"
+                <a href="{{ route('tenant.inventory.products.index', ['tenant' => $tenant->slug]) }}"
                    class="px-6 py-2 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200">
                     Cancel
                 </a>
