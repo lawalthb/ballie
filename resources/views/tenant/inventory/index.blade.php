@@ -48,9 +48,10 @@
                 <span class="text-sm font-medium">View Products</span>
             </a>
 
-            <a href="#" class="quick-action-btn bg-gradient-to-br from-red-500 to-red-600 text-white p-4 rounded-xl text-center shadow-lg">
+            <a href="{{ route('tenant.inventory.categories.index', ['tenant' => tenant()->slug]) }}" class="quick-action-btn bg-gradient-to-br from-red-500 to-red-600 text-white p-4 rounded-xl text-center shadow-lg">
                 <div class="w-8 h-8 mx-auto mb-2">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>

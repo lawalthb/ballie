@@ -18,41 +18,43 @@ return new class extends Migration
             // Basic Information
             $table->enum('type', ['item', 'service'])->default('item');
             $table->string('name');
-            $table->string('sku')->unique()->nullable();
+            $table->string('sku')->nullable();
             $table->text('description')->nullable();
-            $table->string('category')->nullable();
+
+            // Category relationship
+            $table->foreignId('category_id')->nullable()->constrained('product_categories')->onDelete('set null');
+
             $table->string('brand')->nullable();
-            $table->string('model')->nullable();
             $table->string('hsn_code')->nullable();
 
             // Pricing
             $table->decimal('purchase_rate', 15, 2)->default(0);
             $table->decimal('sales_rate', 15, 2)->default(0);
             $table->decimal('mrp', 15, 2)->nullable();
-            $table->decimal('minimum_selling_price', 15, 2)->nullable();
 
-            // Units
-            $table->string('primary_unit')->default('Nos');
-            $table->string('secondary_unit')->nullable();
+            // Units - relationship with units table
+            $table->foreignId('primary_unit_id')->nullable()->constrained('units')->onDelete('set null');
+            $table->decimal('unit_conversion_factor', 12, 6)->default(1.000000);
 
             // Stock Management
             $table->decimal('opening_stock', 15, 2)->default(0);
             $table->decimal('current_stock', 15, 2)->default(0);
-            $table->decimal('available_stock', 15, 2)->default(0);
-            $table->decimal('allocated_stock', 15, 2)->default(0);
             $table->decimal('reorder_level', 15, 2)->nullable();
-            $table->decimal('maximum_stock', 15, 2)->nullable();
+
+            // Ledger Integration (Basic)
+            $table->foreignId('stock_asset_account_id')->nullable()->constrained('ledger_accounts')->onDelete('set null');
+            $table->foreignId('sales_account_id')->nullable()->constrained('ledger_accounts')->onDelete('set null');
+            $table->foreignId('purchase_account_id')->nullable()->constrained('ledger_accounts')->onDelete('set null');
+
+            // Stock Valuation
+            $table->decimal('opening_stock_value', 15, 2)->default(0);
+            $table->decimal('current_stock_value', 15, 2)->default(0);
 
             // Taxation
             $table->decimal('tax_rate', 5, 2)->default(0);
-            $table->string('tax_type')->nullable();
             $table->boolean('tax_inclusive')->default(false);
 
             // Physical Properties
-            $table->string('size')->nullable();
-            $table->string('color')->nullable();
-            $table->decimal('weight', 10, 3)->nullable();
-            $table->string('weight_unit')->nullable();
             $table->string('barcode')->nullable();
             $table->string('image_path')->nullable();
 
@@ -61,9 +63,6 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->boolean('is_saleable')->default(true);
             $table->boolean('is_purchasable')->default(true);
-            $table->boolean('track_serial_numbers')->default(false);
-            $table->boolean('track_batch_numbers')->default(false);
-            $table->boolean('perishable')->default(false);
 
             // Audit
             $table->foreignId('created_by')->nullable()->constrained('users');
@@ -73,13 +72,11 @@ return new class extends Migration
 
             // Indexes
             $table->index('tenant_id');
-            $table->index('type');
-            $table->index('category');
+            $table->index('category_id');
             $table->index('is_active');
-            $table->index('is_saleable');
-            $table->index('is_purchasable');
-            $table->index(['tenant_id', 'type']);
-            $table->index(['tenant_id', 'is_active']);
+            $table->index('sku');
+            $table->index('barcode');
+            $table->unique(['tenant_id', 'sku']);
         });
     }
 

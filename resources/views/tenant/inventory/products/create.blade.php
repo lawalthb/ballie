@@ -61,7 +61,7 @@
                 </div>
 
                 <div>
-                    <label for="sku" class="block text-sm font-medium text-gray-700 mb-2">SKU</label>
+                    <label for="sku" class="block text-sm font-medium text-gray-700 mb-2">SKU (Stock Keeping Unit)</label>
                     <input type="text" name="sku" id="sku" value="{{ old('sku') }}"
                            class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
                     <p class="mt-1 text-xs text-gray-500">Leave empty to auto-generate</p>

@@ -20,6 +20,7 @@ use App\Http\Controllers\Tenant\PayrollController;
 use App\Http\Controllers\Tenant\ReportsController;
 use App\Http\Controllers\Tenant\DocumentsController;
 use App\Http\Controllers\Tenant\ActivityController;
+use App\Http\Controllers\Tenant\ProductCategoryController;
 use App\Http\Controllers\Tenant\SettingsController;
 use App\Http\Controllers\Tenant\VendorController;
 use App\Http\Controllers\Tenant\UnitController;
@@ -117,6 +118,19 @@ Route::middleware(['auth'])->group(function () {
                     Route::delete('/{unit}', [UnitController::class, 'destroy'])->name('destroy');
                     Route::patch('/{unit}/toggle-status', [UnitController::class, 'toggleStatus'])->name('toggle-status');
                 });
+
+                // Categories
+    Route::prefix('categories')->name('categories.')->group(function () {
+        Route::get('/', [ProductCategoryController::class, 'index'])->name('index');
+        Route::get('/create', [ProductCategoryController::class, 'create'])->name('create');
+        Route::post('/', [ProductCategoryController::class, 'store'])->name('store');
+        Route::get('/{category}', [ProductCategoryController::class, 'show'])->name('show');
+        Route::get('/{category}/edit', [ProductCategoryController::class, 'edit'])->name('edit');
+        Route::put('/{category}', [ProductCategoryController::class, 'update'])->name('update');
+        Route::delete('/{category}', [ProductCategoryController::class, 'destroy'])->name('destroy');
+        Route::patch('/{category}/toggle-status', [ProductCategoryController::class, 'toggleStatus'])->name('toggle-status');
+    });
+
 
 
         });
