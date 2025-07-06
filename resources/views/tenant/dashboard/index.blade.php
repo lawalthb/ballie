@@ -35,7 +35,7 @@
                 </div>
                 <div class="ml-4">
                     <h3 class="text-lg font-semibold text-gray-900">Sales Reports</h3>
-                    <p class="text-sm text-gray-600">Revenue, Orders, Performance</p>
+                    <p class="text-sm text-gray-600">Revenue, Sales, Performance</p>
                 </div>
             </div>
         </a>
@@ -94,7 +94,7 @@
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-600">Total Orders</p>
+                    <p class="text-sm font-medium text-gray-600">Total Sales</p>
                     <p class="text-2xl font-bold text-gray-900">2,847</p>
                     <p class="text-sm text-green-600 flex items-center mt-1">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,7 +114,7 @@
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-600">Avg Order Value</p>
+                    <p class="text-sm font-medium text-gray-600">Avg Sales Value</p>
                     <p class="text-2xl font-bold text-gray-900">₦15,890</p>
                     <p class="text-sm text-red-600 flex items-center mt-1">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -275,7 +275,7 @@
                         </svg>
                     </div>
                     <p class="text-sm font-medium text-gray-900">Sales Report</p>
-                    <p class="text-xs text-gray-500">Revenue & Orders</p>
+                    <p class="text-xs text-gray-500">Revenue & Sales</p>
                 </button>
 
                 <button class="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left">
@@ -379,11 +379,11 @@
             <div class="space-y-4">
                 @php
                 $topCustomers = [
-                    ['name' => 'John Doe', 'orders' => 23, 'spent' => 2450000, 'growth' => 18.5],
-                    ['name' => 'Sarah Wilson', 'orders' => 19, 'spent' => 1890000, 'growth' => 12.3],
+                    ['name' => 'LawalVictor', 'orders' => 23, 'spent' => 2450000, 'growth' => 18.5],
+                    ['name' => 'Sarah Ade', 'orders' => 19, 'spent' => 1890000, 'growth' => 12.3],
                     ['name' => 'Mike Johnson', 'orders' => 15, 'spent' => 1650000, 'growth' => -5.2],
-                    ['name' => 'Jane Smith', 'orders' => 12, 'spent' => 1420000, 'growth' => 25.7],
-                    ['name' => 'David Brown', 'orders' => 11, 'spent' => 1180000, 'growth' => 8.9],
+                    ['name' => 'Janet Olu', 'orders' => 12, 'spent' => 1420000, 'growth' => 25.7],
+                    ['name' => 'Taiwo Adeyemi', 'orders' => 11, 'spent' => 1180000, 'growth' => 8.9],
                 ];
                 @endphp
 
