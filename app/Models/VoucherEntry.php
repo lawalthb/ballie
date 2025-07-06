@@ -21,7 +21,10 @@ class VoucherEntry extends Model
         'debit_amount' => 'decimal:2',
         'credit_amount' => 'decimal:2',
     ];
-
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
+    }
     // Relationships
     public function voucher()
     {
@@ -53,4 +56,13 @@ class VoucherEntry extends Model
     {
         return $this->credit_amount > 0;
     }
+    public function account()
+    {
+        return $this->belongsTo(LedgerAccount::class, 'ledger_account_id');
+    }
+    public function scopeForTenant($query, $tenantId)
+    {
+        return $query->where('tenant_id', $tenantId);
+    }
+
 }

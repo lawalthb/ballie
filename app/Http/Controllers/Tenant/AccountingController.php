@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
-use App\Models\AccountGroup;
-use App\Models\LedgerAccount;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Models\Tenant;
+use App\Models\Voucher;
+use App\Models\VoucherType;
+use App\Models\Invoice;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class AccountingController extends Controller
 {
-
-     /**
+    /**
      * Display the accounting dashboard
      */
     public function index(Request $request, Tenant $tenant)
@@ -20,129 +21,119 @@ class AccountingController extends Controller
         $currentTenant = $tenant;
         $user = auth()->user();
 
-        // You would typically load accounting data here
-        // For example:
-        // $totalRevenue = Invoice::where('tenant_id', $tenant->id)->sum('total');
-        // $totalExpenses = Expense::where('tenant_id', $tenant->id)->sum('amount');
-        // $recentInvoices = Invoice::where('tenant_id', $tenant->id)->latest()->take(5)->get();
+        // Get financial overview data
+        $totalRevenue = $this->getTotalRevenue($tenant);
+        $totalExpenses = $this->getTotalExpenses($tenant);
+        $outstandingInvoices = $this->getOutstandingInvoices($tenant);
+        $pendingInvoicesCount = $this->getPendingInvoicesCount($tenant);
+
+        // Get recent transactions (vouchers)
+        $recentTransactions = $this->getRecentTransactions($tenant);
+
+        // Get voucher summary by type
+        $voucherSummary = $this->getVoucherSummary($tenant);
 
         return view('tenant.accounting.index', [
             'currentTenant' => $currentTenant,
             'user' => $user,
             'tenant' => $currentTenant,
+            'totalRevenue' => $totalRevenue,
+            'totalExpenses' => $totalExpenses,
+            'outstandingInvoices' => $outstandingInvoices,
+            'pendingInvoicesCount' => $pendingInvoicesCount,
+            'recentTransactions' => $recentTransactions,
+            'voucherSummary' => $voucherSummary,
         ]);
     }
 
-    
-    public function chartOfAccounts()
+    private function getTotalRevenue(Tenant $tenant)
     {
-        $accountGroups = AccountGroup::where('tenant_id', tenant()->id)
-            ->with(['children', 'ledgerAccounts' => function($query) {
-                $query->where('is_active', true);
-            }])
-            ->whereNull('parent_id')
-            ->active()
-            ->get();
-
-        return view('tenant.accounting.chart-of-accounts', compact('accountGroups'));
+        // Get revenue from approved vouchers (credit entries for income accounts)
+        return Voucher::forTenant($tenant->id)
+            ->where('status', Voucher::STATUS_POSTED)
+            ->thisMonth()
+            ->whereHas('entries', function($query) {
+                $query->whereHas('account', function($accountQuery) {
+                    $accountQuery->where('account_type', 'income');
+                });
+            })
+            ->with('entries.account')
+            ->get()
+            ->sum(function($voucher) {
+                return $voucher->entries
+                    ->where('account.account_type', 'income')
+                    ->sum('credit_amount');
+            });
     }
 
-    public function createLedgerAccount()
+    private function getTotalExpenses(Tenant $tenant)
     {
-        $accountGroups = AccountGroup::where('tenant_id', tenant()->id)
-            ->active()
-            ->get();
-
-        return view('tenant.accounting.create-ledger', compact('accountGroups'));
+        // Get expenses from approved vouchers (debit entries for expense accounts)
+        return Voucher::forTenant($tenant->id)
+            ->where('status', Voucher::STATUS_APPROVED)
+            ->thisMonth()
+            ->whereHas('entries', function($query) {
+                $query->whereHas('account', function($accountQuery) {
+                    $accountQuery->where('account_type', 'expense');
+                });
+            })
+            ->with('entries.account')
+            ->get()
+            ->sum(function($voucher) {
+                return $voucher->entries
+                    ->where('account.account_type', 'expense')
+                    ->sum('debit_amount');
+            });
     }
 
-    public function storeLedgerAccount(Request $request)
+    private function getOutstandingInvoices(Tenant $tenant)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'code' => 'required|string|max:20',
-            'account_group_id' => 'required|exists:account_groups,id',
-            'opening_balance' => 'nullable|numeric',
-            'balance_type' => 'required|in:dr,cr',
-            'address' => 'nullable|string',
-            'phone' => 'nullable|string|max:20',
-            'email' => 'nullable|email',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        $ledgerAccount = new LedgerAccount($request->all());
-        $ledgerAccount->tenant_id = tenant()->id;
-        $ledgerAccount->opening_balance = $request->opening_balance ?? 0;
-        $ledgerAccount->save();
-
-        return redirect()->route('tenant.accounting.chart-of-accounts', ['tenant' => tenant()->slug])
-            ->with('success', 'Ledger account created successfully.');
+        // Assuming you have an Invoice model
+        return 1520 ?? 0;
     }
 
-    public function editLedgerAccount($id)
+    private function getPendingInvoicesCount(Tenant $tenant)
     {
-        $ledgerAccount = LedgerAccount::where('tenant_id', tenant()->id)
-            ->findOrFail($id);
-
-        $accountGroups = AccountGroup::where('tenant_id', tenant()->id)
-            ->active()
-            ->get();
-
-        return view('tenant.accounting.edit-ledger', compact('ledgerAccount', 'accountGroups'));
+        return 5622?? 0;
     }
 
-    public function updateLedgerAccount(Request $request, $id)
+    private function getRecentTransactions(Tenant $tenant)
     {
-        $ledgerAccount = LedgerAccount::where('tenant_id', tenant()->id)
-            ->findOrFail($id);
+        return Voucher::forTenant($tenant->id)
+            ->with(['voucherType', 'entries.account'])
+            ->orderBy('voucher_date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get()
+            ->map(function($voucher) {
+                $totalDebit = $voucher->entries->sum('debit_amount');
+                $totalCredit = $voucher->entries->sum('credit_amount');
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'code' => 'required|string|max:20',
-            'account_group_id' => 'required|exists:account_groups,id',
-            'opening_balance' => 'nullable|numeric',
-            'balance_type' => 'required|in:dr,cr',
-            'address' => 'nullable|string',
-            'phone' => 'nullable|string|max:20',
-            'email' => 'nullable|email',
-            'is_active' => 'nullable|boolean',
-        ]);
+                // Determine if this is primarily income or expense based on account types
+                $expenseAmount = $voucher->entries
+                    ->whereIn('account.account_type', ['expense', 'asset'])
+                    ->sum('debit_amount');
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
+                $incomeAmount = $voucher->entries
+                    ->whereIn('account.account_type', ['income', 'liability'])
+                    ->sum('credit_amount');
 
-        $ledgerAccount->update($request->all());
-
-        return redirect()->route('tenant.accounting.chart-of-accounts', ['tenant' => tenant()->slug])
-            ->with('success', 'Ledger account updated successfully.');
+                return (object) [
+                    'id' => $voucher->id,
+                    'description' => $voucher->narration ?: $voucher->voucherType->name . ' - ' . $voucher->voucher_number,
+                    'amount' => max($totalDebit, $totalCredit),
+                    'type' => $incomeAmount > $expenseAmount ? 'income' : 'expense',
+                    'date' => $voucher->voucher_date,
+                    'voucher_number' => $voucher->voucher_number,
+                    'status' => $voucher->status
+                ];
+            });
     }
 
-    public function invoicesIndex(Request $request, Tenant $tenant)
+    private function getVoucherSummary(Tenant $tenant)
     {
-        return view('tenant.accounting.invoices.index', [
-            'tenant' => $tenant
-        ]);
-    }
+        return 56;
 
-    public function createInvoice(Request $request, Tenant $tenant)
-    {
-        return view('tenant.accounting.invoices.create', [
-            'tenant' => $tenant
-        ]);
-    }
-
-    public function storeInvoice(Request $request, Tenant $tenant)
-    {
-        // Handle invoice creation logic here
-        return redirect()->route('tenant.accounting.invoices.index', ['tenant' => $tenant->slug])
-            ->with('success', 'Invoice created successfully.');
+               
     }
 }

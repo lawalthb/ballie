@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Voucher extends Model
 {
@@ -28,6 +29,11 @@ class Voucher extends Model
         'total_amount' => 'decimal:2',
         'posted_at' => 'datetime',
     ];
+
+    const STATUS_DRAFT = 'draft';
+    const STATUS_POSTED = 'posted';
+    const STATUS_APPROVED = 'approved';
+    const STATUS_CANCELLED = 'cancelled';
 
     // Relationships
     public function tenant()
@@ -77,6 +83,23 @@ class Voucher extends Model
     {
         return $query->whereBetween('voucher_date', [$fromDate, $toDate]);
     }
+
+    public function scopeByStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+
+    public function scopeByDateRange($query, $startDate, $endDate)
+    {
+        return $query->whereBetween('voucher_date', [$startDate, $endDate]);
+    }
+
+    public function scopeThisMonth($query)
+    {
+        return $query->whereMonth('voucher_date', now()->month)
+                    ->whereYear('voucher_date', now()->year);
+    }
+
 
     // Methods
     public function post($userId)
@@ -135,4 +158,21 @@ class Voucher extends Model
     {
         return $this->voucherType->abbreviation . '-' . $this->voucher_number;
     }
+
+    public function scopeForTenant($query, $tenantId)
+    {
+        return $query->where('tenant_id', $tenantId);
+    }
+
+    public function getStatusLabelAttribute()
+    {
+        return match($this->status) {
+            self::STATUS_DRAFT => 'Draft',
+            self::STATUS_POSTED => 'Posted',
+
+            self::STATUS_CANCELLED => 'Cancelled',
+            default => 'Unknown'
+        };
+    }
+
 }
