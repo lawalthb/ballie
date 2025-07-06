@@ -21,6 +21,7 @@ use App\Http\Controllers\Tenant\ReportsController;
 use App\Http\Controllers\Tenant\DocumentsController;
 use App\Http\Controllers\Tenant\ActivityController;
 use App\Http\Controllers\Tenant\SettingsController;
+use App\Http\Controllers\Tenant\VendorController;
 use App\Models\Tenant;
 
 /*
@@ -108,7 +109,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('crm')->name('tenant.crm.')->group(function () {
             Route::get('/', [CrmController::class, 'index'])->name('index');
 
-            // Customers (moved from root level)
+            // Customers
             Route::prefix('customers')->name('customers.')->group(function () {
                 Route::get('/', [CustomerController::class, 'index'])->name('index');
                 Route::get('/create', [CustomerController::class, 'create'])->name('create');
@@ -118,6 +119,20 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/{customer}', [CustomerController::class, 'update'])->name('update');
                 Route::delete('/{customer}', [CustomerController::class, 'destroy'])->name('destroy');
             });
+
+
+               // Vendor
+               Route::prefix('vendors')->name('vendors.')->group(function () {
+                Route::get('/', [VendorController::class, 'index'])->name('index');
+                Route::get('/create', [VendorController::class, 'create'])->name('create');
+                Route::post('/', [VendorController::class, 'store'])->name('store');
+                Route::get('/{vendor}', [VendorController::class, 'show'])->name('show');
+                Route::get('/{vendor}/edit', [VendorController::class, 'edit'])->name('edit');
+                Route::put('/{vendor}', [VendorController::class, 'update'])->name('update');
+                Route::delete('/{vendor}', [VendorController::class, 'destroy'])->name('destroy');
+            });
+
+
         });
 
         // POS Module

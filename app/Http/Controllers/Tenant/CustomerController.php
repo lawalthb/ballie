@@ -26,7 +26,7 @@ class CustomerController extends Controller
         $openInvoices = 0; // This would come from your Invoice model
         $avgPaymentDays = 0; // This would be calculated from your payment data
 
-        return view('tenant.customers.index', compact(
+        return view('tenant.crm.customers.index', compact(
             'customers',
             'totalCustomers',
             'totalRevenue',
@@ -43,7 +43,7 @@ class CustomerController extends Controller
      */
     public function create(Tenant $tenant)
     {
-        return view('tenant.customers.create', compact('tenant'));
+        return view('tenant.crm.customers.create', compact('tenant'));
     }
 
     /**
@@ -89,7 +89,7 @@ class CustomerController extends Controller
 
             // Determine redirect based on save_and_new parameter
             if ($request->has('save_and_new') && $request->save_and_new) {
-                return redirect()->route('tenant.customers.create', ['tenant' => $tenant->slug])
+                return redirect()->route('tenant.crm.customers.create', ['tenant' => $tenant->slug])
                     ->with('success', 'Customer created successfully. You can now add another customer.');
             }
 
@@ -186,7 +186,7 @@ class CustomerController extends Controller
 
             // Determine redirect based on save_and_new parameter
             if ($request->has('save_and_new') && $request->save_and_new) {
-                return redirect()->route('tenant.customers.create', ['tenant' => $tenant->slug])
+                return redirect()->route('tenant.crm.customers.create', ['tenant' => $tenant->slug])
                     ->with('success', 'Customer updated successfully. You can now add a new customer.');
             }
 

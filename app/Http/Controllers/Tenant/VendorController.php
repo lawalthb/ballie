@@ -22,7 +22,7 @@ class VendorController extends Controller
         $totalOutstanding = Vendor::where('tenant_id', tenant()->id)->sum('outstanding_balance');
         $avgPaymentDays = 0; // Calculate based on your payment data
 
-        return view('tenant.vendors.index', compact(
+        return view('tenant.crm.vendors.index', compact(
             'vendors',
             'totalVendors',
             'totalPurchases',
@@ -33,7 +33,7 @@ class VendorController extends Controller
 
     public function create(Tenant $tenant)
     {
-        return view('tenant.vendors.create');
+        return view('tenant.crm.vendors.create', compact('tenant'));
     }
 
     public function store(Request $request, Tenant $tenant)
@@ -74,7 +74,7 @@ class VendorController extends Controller
         $vendor->status = 'active';
         $vendor->save();
 
-        return redirect()->route('tenant.vendors.index', ['tenant' => tenant()->slug])
+        return redirect()->route('tenant.crm.vendors.index', ['tenant' => tenant()->slug])
             ->with('success', 'Vendor created successfully with ledger account.');
     }
 
@@ -137,7 +137,7 @@ class VendorController extends Controller
 
         $vendor->update($request->all());
 
-        return redirect()->route('tenant.vendors.index', ['tenant' => tenant()->slug])
+        return redirect()->route('tenant.crm.vendors.index', ['tenant' => tenant()->slug])
             ->with('success', 'Vendor updated successfully.');
     }
 
@@ -148,13 +148,13 @@ class VendorController extends Controller
 
         // Check if vendor has outstanding balance
         if ($vendor->outstanding_balance > 0) {
-            return redirect()->route('tenant.vendors.index', ['tenant' => tenant()->slug])
+            return redirect()->route('tenant.crm.vendors.index', ['tenant' => tenant()->slug])
                 ->with('error', 'Cannot delete vendor with outstanding balance.');
         }
 
         $vendor->delete();
 
-        return redirect()->route('tenant.vendors.index', ['tenant' => tenant()->slug])
+        return redirect()->route('tenant.crm.vendors.index', ['tenant' => tenant()->slug])
             ->with('success', 'Vendor deleted successfully.');
     }
 }

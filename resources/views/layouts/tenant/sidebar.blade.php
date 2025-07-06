@@ -31,7 +31,7 @@
         <ul class="space-y-2 px-4">
             <!-- Dashboard -->
             <li>
-                <a href="{{ route('tenant.dashboard', ['tenant' => $tenant->slug]) }}"
+                <a href="{{ route('tenant.dashboard', ['tenant' => tenant()->slug]) }}"
                    class="menu-item flex items-center px-4 py-3 rounded-xl group {{ request()->routeIs('tenant.dashboard') ? 'active' : '' }}">
                     <div class="flex-shrink-0 w-6 h-6 mr-4 text-yellow-400 group-hover:scale-110 transition-transform duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -44,7 +44,7 @@
 
             <!-- Accounting -->
             <li>
-                <a href="{{ route('tenant.accounting.index', ['tenant' => $tenant->slug]) }}"
+                <a href="{{ route('tenant.accounting.index', ['tenant' => tenant()->slug]) }}"
                    class="menu-item flex items-center px-4 py-3 rounded-xl group {{ request()->routeIs('tenant.accounting.*') ? 'active' : '' }}">
                     <div class="flex-shrink-0 w-6 h-6 mr-4 text-green-400 group-hover:scale-110 transition-transform duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -58,7 +58,7 @@
 
             <!-- Inventory -->
             <li>
-                <a href="{{ route('tenant.inventory.index', ['tenant' => $tenant->slug]) }}"
+                <a href="{{ route('tenant.inventory.index', ['tenant' => tenant()->slug]) }}"
                    class="menu-item flex items-center px-4 py-3 rounded-xl group {{ request()->routeIs('tenant.inventory.*') ? 'active' : '' }}">
                     <div class="flex-shrink-0 w-6 h-6 mr-4 text-purple-400 group-hover:scale-110 transition-transform duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -69,22 +69,11 @@
                 </a>
             </li>
 
-            <!-- Products -->
-            <li>
-                <a href="{{ route('tenant.inventory.products.index', ['tenant' => $tenant->slug]) }}"
-                   class="menu-item flex items-center px-4 py-3 rounded-xl group {{ request()->routeIs('tenant.inventory.products.*') ? 'active' : '' }}">
-                    <div class="flex-shrink-0 w-6 h-6 mr-4 text-indigo-400 group-hover:scale-110 transition-transform duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                        </svg>
-                    </div>
-                    <span class="menu-title whitespace-nowrap font-medium">Products</span>
-                </a>
-            </li>
+            
 
             <!-- CRM -->
             <li>
-                <a href="{{ route('tenant.crm.index', ['tenant' => $tenant->slug]) }}"
+                <a href="{{ route('tenant.crm.index', ['tenant' => tenant()->slug]) }}"
                    class="menu-item flex items-center px-4 py-3 rounded-xl group {{ request()->routeIs('tenant.crm.*') ? 'active' : '' }}">
                     <div class="flex-shrink-0 w-6 h-6 mr-4 text-pink-400 group-hover:scale-110 transition-transform duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -95,11 +84,11 @@
                 </a>
             </li>
 
-           
+
 
             <!-- POS -->
             <li>
-                <a href="{{ route('tenant.pos.index', ['tenant' => $tenant->slug]) }}"
+                <a href="{{ route('tenant.pos.index', ['tenant' => tenant()->slug]) }}"
                    class="menu-item flex items-center px-4 py-3 rounded-xl group {{ request()->routeIs('tenant.pos.*') ? 'active' : '' }}">
                     <div class="flex-shrink-0 w-6 h-6 mr-4 text-cyan-400 group-hover:scale-110 transition-transform duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -112,7 +101,7 @@
 
             <!-- Payroll -->
             <li>
-                <a href="{{ route('tenant.payroll.index', ['tenant' => $tenant->slug]) }}"
+                <a href="{{ route('tenant.payroll.index', ['tenant' => tenant()->slug]) }}"
                    class="menu-item flex items-center px-4 py-3 rounded-xl group {{ request()->routeIs('tenant.payroll.*') ? 'active' : '' }}">
                     <div class="flex-shrink-0 w-6 h-6 mr-4 text-emerald-400 group-hover:scale-110 transition-transform duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -125,7 +114,7 @@
 
             <!-- Reports -->
             <li>
-                <a href="{{ route('tenant.reports.index', ['tenant' => $tenant->slug]) }}"
+                <a href="{{ route('tenant.reports.index', ['tenant' => tenant()->slug]) }}"
                    class="menu-item flex items-center px-4 py-3 rounded-xl group {{ request()->routeIs('tenant.reports.*') ? 'active' : '' }}">
                     <div class="flex-shrink-0 w-6 h-6 mr-4 text-red-400 group-hover:scale-110 transition-transform duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -138,7 +127,7 @@
 
             <!-- Settings -->
             <li>
-                <a href="{{ route('tenant.settings.index', ['tenant' => $tenant->slug]) }}"
+                <a href="{{ route('tenant.settings.index', ['tenant' => tenant()->slug]) }}"
                    class="menu-item flex items-center px-4 py-3 rounded-xl group {{ request()->routeIs('tenant.settings.*') ? 'active' : '' }}">
                     <div class="flex-shrink-0 w-6 h-6 mr-4 text-gray-400 group-hover:scale-110 transition-transform duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -48,13 +48,13 @@
                 <span class="text-sm font-medium">View Customers</span>
             </a>
 
-            <a href="#" class="quick-action-btn bg-gradient-to-br from-purple-500 to-purple-600 text-white p-4 rounded-xl text-center shadow-lg">
+            <a href="{{ route('tenant.crm.vendors.index', ['tenant' => $tenant->slug]) }}" class="quick-action-btn bg-gradient-to-br from-purple-500 to-purple-600 text-white p-4 rounded-xl text-center shadow-lg">
                 <div class="w-8 h-8 mx-auto mb-2">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                     </svg>
                 </div>
-                <span class="text-sm font-medium">Add Vendor</span>
+                <span class="text-sm font-medium">View Vendor</span>
             </a>
 
             <a href="#" class="quick-action-btn bg-gradient-to-br from-red-500 to-red-600 text-white p-4 rounded-xl text-center shadow-lg">
