@@ -93,7 +93,7 @@ class CustomerController extends Controller
                     ->with('success', 'Customer created successfully. You can now add another customer.');
             }
 
-            return redirect()->route('tenant.customers.index', ['tenant' => $tenant->slug])
+            return redirect()->route('tenant.crm.customers.index', ['tenant' => $tenant->slug])
                 ->with('success', 'Customer created successfully.');
         } catch (\Exception $e) {
             \Log::error('Error creating customer: ' . $e->getMessage());
@@ -190,7 +190,7 @@ class CustomerController extends Controller
                     ->with('success', 'Customer updated successfully. You can now add a new customer.');
             }
 
-            return redirect()->route('tenant.customers.index', ['tenant' => $tenant->slug])
+            return redirect()->route('tenant.crm.customers.index', ['tenant' => $tenant->slug])
                 ->with('success', 'Customer updated successfully.');
         } catch (\Exception $e) {
             \Log::error('Error updating customer: ' . $e->getMessage());
@@ -219,14 +219,14 @@ class CustomerController extends Controller
         $hasRelatedRecords = $customer->invoices()->exists();
 
         if ($hasRelatedRecords) {
-            return redirect()->route('tenant.customers.index', ['tenant' => $tenant->slug])
+            return redirect()->route('tenant.crm.customers.index', ['tenant' => $tenant->slug])
                 ->with('error', 'This customer cannot be deleted because they have related records.');
         }
 
         try {
             $customer->delete();
 
-            return redirect()->route('tenant.customers.index', ['tenant' => $tenant->slug])
+            return redirect()->route('tenant.crm.customers.index', ['tenant' => $tenant->slug])
                 ->with('success', 'Customer deleted successfully.');
         } catch (\Exception $e) {
             \Log::error('Error deleting customer: ' . $e->getMessage());

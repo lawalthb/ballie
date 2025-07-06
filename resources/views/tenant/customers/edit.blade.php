@@ -14,7 +14,7 @@
                     <p class="text-gray-600 mt-1">Update customer information and details</p>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <a href="{{ route('tenant.customers.show', ['tenant' => $tenant->slug, 'customer' => $customer->id]) }}"
+                    <a href="{{ route('tenant.crm.customers.show', ['tenant' => $tenant->slug, 'customer' => $customer->id]) }}"
                        class="text-gray-600 hover:text-gray-900">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -35,7 +35,7 @@
             </div>
         </div>
 
-        <form id="customerForm" action="{{ route('tenant.customers.update', ['tenant' => $tenant->slug, 'customer' => $customer->id]) }}" method="POST" class="p-6 space-y-8">
+        <form id="customerForm" action="{{ route('tenant.crm.customers.update', ['tenant' => $tenant->slug, 'customer' => $customer->id]) }}" method="POST" class="p-6 space-y-8">
             @csrf
             @method('PUT')
 
@@ -410,7 +410,7 @@
                         </button>
                     </div>
                     <div class="flex items-center space-x-4">
-                        <a href="{{ route('tenant.customers.show', ['tenant' => $tenant->slug, 'customer' => $customer->id]) }}"
+                        <a href="{{ route('tenant.crm.customers.show', ['tenant' => $tenant->slug, 'customer' => $customer->id]) }}"
                            class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
                             Cancel
                         </a>
