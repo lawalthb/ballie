@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="space-y-6">
-    <form action="{{ route('tenant.invoices.store', ['tenant' => tenant()->slug]) }}" method="POST">
+    <form action="{{ route('tenant.accounting.invoices.store', ['tenant' => tenant()->slug]) }}" method="POST">
         @csrf
 
         <!-- Invoice Header -->
@@ -121,3 +121,4 @@
                                                             </svg>
                                                         </button>
                                                     </td>
+                                                 

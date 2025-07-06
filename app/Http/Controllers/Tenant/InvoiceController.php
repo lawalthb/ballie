@@ -151,7 +151,7 @@ class InvoiceController extends Controller
 
 
 
-        return view('tenant.invoices.create', compact('customers', 'products', 'nextInvoiceNumber'));
+        return view('tenant.accounting.invoices.create', compact('customers', 'products', 'nextInvoiceNumber'));
     }
 
     /**

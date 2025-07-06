@@ -90,6 +90,67 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{invoice}/pdf', [InvoiceController::class, 'generatePdf'])->name('pdf');
                 Route::post('/{invoice}/send', [InvoiceController::class, 'sendToCustomer'])->name('send');
             });
+
+            // Voucher Types
+            Route::prefix('voucher-types')->name('voucher-types.')->group(function () {
+                Route::get('/', [VoucherTypeController::class, 'index'])->name('index');
+                Route::get('/create', [VoucherTypeController::class, 'create'])->name('create');
+                Route::post('/', [VoucherTypeController::class, 'store'])->name('store');
+                Route::get('/{voucherType}', [VoucherTypeController::class, 'show'])->name('show');
+                Route::get('/{voucherType}/edit', [VoucherTypeController::class, 'edit'])->name('edit');
+                Route::put('/{voucherType}', [VoucherTypeController::class, 'update'])->name('update');
+                Route::delete('/{voucherType}', [VoucherTypeController::class, 'destroy'])->name('destroy');
+                Route::post('/{voucherType}/reset-numbering', [VoucherTypeController::class, 'resetNumbering'])->name('reset-numbering');
+            });
+
+            // Vouchers
+            Route::prefix('vouchers')->name('vouchers.')->group(function () {
+                Route::get('/', [VoucherController::class, 'index'])->name('index');
+                Route::get('/create', [VoucherController::class, 'create'])->name('create');
+                Route::post('/', [VoucherController::class, 'store'])->name('store');
+                Route::get('/{voucher}', [VoucherController::class, 'show'])->name('show');
+                Route::get('/{voucher}/edit', [VoucherController::class, 'edit'])->name('edit');
+                Route::put('/{voucher}', [VoucherController::class, 'update'])->name('update');
+                Route::delete('/{voucher}', [VoucherController::class, 'destroy'])->name('destroy');
+                Route::post('/{voucher}/approve', [VoucherController::class, 'approve'])->name('approve');
+                Route::post('/{voucher}/reject', [VoucherController::class, 'reject'])->name('reject');
+                Route::post('/{voucher}/cancel', [VoucherController::class, 'cancel'])->name('cancel');
+                Route::get('/{voucher}/pdf', [VoucherController::class, 'generatePdf'])->name('pdf');
+                Route::post('/{voucher}/duplicate', [VoucherController::class, 'duplicate'])->name('duplicate');
+            });
+
+            // Expenses (add if not exists)
+            Route::prefix('expenses')->name('expenses.')->group(function () {
+                Route::get('/', [ExpenseController::class, 'index'])->name('index');
+                Route::get('/create', [ExpenseController::class, 'create'])->name('create');
+                Route::post('/', [ExpenseController::class, 'store'])->name('store');
+                Route::get('/{expense}', [ExpenseController::class, 'show'])->name('show');
+                Route::get('/{expense}/edit', [ExpenseController::class, 'edit'])->name('edit');
+                Route::put('/{expense}', [ExpenseController::class, 'update'])->name('update');
+                Route::delete('/{expense}', [ExpenseController::class, 'destroy'])->name('destroy');
+            });
+
+            // Payments (add if not exists)
+            Route::prefix('payments')->name('payments.')->group(function () {
+                Route::get('/', [PaymentController::class, 'index'])->name('index');
+                Route::get('/create', [PaymentController::class, 'create'])->name('create');
+                Route::post('/', [PaymentController::class, 'store'])->name('store');
+                Route::get('/{payment}', [PaymentController::class, 'show'])->name('show');
+                Route::get('/{payment}/edit', [PaymentController::class, 'edit'])->name('edit');
+                Route::put('/{payment}', [PaymentController::class, 'update'])->name('update');
+                Route::delete('/{payment}', [PaymentController::class, 'destroy'])->name('destroy');
+            });
+
+            // Chart of Accounts (add if not exists)
+            Route::prefix('chart-of-accounts')->name('chart-of-accounts.')->group(function () {
+                Route::get('/', [ChartOfAccountsController::class, 'index'])->name('index');
+                Route::get('/create', [ChartOfAccountsController::class, 'create'])->name('create');
+                Route::post('/', [ChartOfAccountsController::class, 'store'])->name('store');
+                Route::get('/{account}', [ChartOfAccountsController::class, 'show'])->name('show');
+                Route::get('/{account}/edit', [ChartOfAccountsController::class, 'edit'])->name('edit');
+                Route::put('/{account}', [ChartOfAccountsController::class, 'update'])->name('update');
+                Route::delete('/{account}', [ChartOfAccountsController::class, 'destroy'])->name('destroy');
+            });
         });
 
         // Inventory Module
@@ -178,6 +239,12 @@ Route::middleware(['auth'])->group(function () {
         // Reports Module
         Route::prefix('reports')->name('tenant.reports.')->group(function () {
             Route::get('/', [ReportsController::class, 'index'])->name('index');
+            Route::get('/profit-loss', [ReportsController::class, 'profitLoss'])->name('profit-loss');
+            Route::get('/balance-sheet', [ReportsController::class, 'balanceSheet'])->name('balance-sheet');
+            Route::get('/trial-balance', [ReportsController::class, 'trialBalance'])->name('trial-balance');
+            Route::get('/cash-flow', [ReportsController::class, 'cashFlow'])->name('cash-flow');
+            Route::get('/voucher-register', [ReportsController::class, 'voucherRegister'])->name('voucher-register');
+            Route::get('/account-ledger', [ReportsController::class, 'accountLedger'])->name('account-ledger');
         });
 
         // Documents Module
@@ -204,11 +271,6 @@ Route::middleware(['auth'])->group(function () {
 
 
         Route::get('/community', [CommunityController::class, 'index'])->name('tenant.community');
-
-
-
-
-
 
     });
 });
