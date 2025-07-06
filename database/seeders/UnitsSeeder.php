@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-
-use Illuminate\Database\Seeder;
-use App\Models\Unit;
 use App\Models\Tenant;
+use App\Models\Unit;
+use Illuminate\Database\Seeder;
 
 class UnitsSeeder extends Seeder
 {
@@ -14,180 +13,177 @@ class UnitsSeeder extends Seeder
      */
     public function run(): void
     {
-
-        // Get all tenants
         $tenants = Tenant::all();
 
         foreach ($tenants as $tenant) {
-            $this->seedUnitsForTenant($tenant->id);
+            $this->seedUnitsForTenant($tenant);
         }
     }
 
     /**
      * Seed units for a specific tenant.
      */
-    private function seedUnitsForTenant(int $tenantId): void
+    private function seedUnitsForTenant(Tenant $tenant): void
     {
-        // Length/Distance Units
+        // Length Units
         $meter = Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Meter',
             'symbol' => 'm',
-            'description' => 'Base unit for length measurement',
+            'description' => 'Base unit of length in the metric system',
             'is_base_unit' => true,
-            'conversion_factor' => 1.0,
+            'is_active' => true,
         ]);
 
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Centimeter',
             'symbol' => 'cm',
-            'description' => 'Centimeter - 1/100 of a meter',
-            'base_unit_id' => $meter->id,
+            'description' => 'One hundredth of a meter',
             'is_base_unit' => false,
+            'base_unit_id' => $meter->id,
             'conversion_factor' => 0.01,
+            'is_active' => true,
         ]);
 
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Millimeter',
             'symbol' => 'mm',
-            'description' => 'Millimeter - 1/1000 of a meter',
-            'base_unit_id' => $meter->id,
+            'description' => 'One thousandth of a meter',
             'is_base_unit' => false,
+            'base_unit_id' => $meter->id,
             'conversion_factor' => 0.001,
+            'is_active' => true,
         ]);
 
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Kilometer',
             'symbol' => 'km',
-            'description' => 'Kilometer - 1000 meters',
-            'base_unit_id' => $meter->id,
+            'description' => 'One thousand meters',
             'is_base_unit' => false,
-            'conversion_factor' => 1000.0,
+            'base_unit_id' => $meter->id,
+            'conversion_factor' => 1000,
+            'is_active' => true,
         ]);
 
-        Unit::create([
-            'tenant_id' => $tenantId,
-            'name' => 'Inch',
-            'symbol' => 'in',
-            'description' => 'Inch - Imperial unit of length',
-            'base_unit_id' => $meter->id,
-            'is_base_unit' => false,
-            'conversion_factor' => 0.0254,
-        ]);
-
-        Unit::create([
-            'tenant_id' => $tenantId,
-            'name' => 'Foot',
-            'symbol' => 'ft',
-            'description' => 'Foot - Imperial unit of length',
-            'base_unit_id' => $meter->id,
-            'is_base_unit' => false,
-            'conversion_factor' => 0.3048,
-        ]);
-
-        // Weight/Mass Units
+        // Weight Units
         $kilogram = Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Kilogram',
             'symbol' => 'kg',
-            'description' => 'Base unit for weight measurement',
+            'description' => 'Base unit of mass in the metric system',
             'is_base_unit' => true,
-            'conversion_factor' => 1.0,
+            'is_active' => true,
         ]);
 
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Gram',
             'symbol' => 'g',
-            'description' => 'Gram - 1/1000 of a kilogram',
-            'base_unit_id' => $kilogram->id,
+            'description' => 'One thousandth of a kilogram',
             'is_base_unit' => false,
+            'base_unit_id' => $kilogram->id,
             'conversion_factor' => 0.001,
+            'is_active' => true,
         ]);
 
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Pound',
             'symbol' => 'lb',
-            'description' => 'Pound - Imperial unit of weight',
-            'base_unit_id' => $kilogram->id,
+            'description' => 'Imperial unit of weight',
             'is_base_unit' => false,
+            'base_unit_id' => $kilogram->id,
             'conversion_factor' => 0.453592,
+            'is_active' => true,
         ]);
 
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Ounce',
             'symbol' => 'oz',
-            'description' => 'Ounce - Imperial unit of weight',
-            'base_unit_id' => $kilogram->id,
+            'description' => 'Imperial unit of weight, 1/16 of a pound',
             'is_base_unit' => false,
+            'base_unit_id' => $kilogram->id,
             'conversion_factor' => 0.0283495,
+            'is_active' => true,
         ]);
 
         // Volume Units
         $liter = Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Liter',
             'symbol' => 'L',
-            'description' => 'Base unit for volume measurement',
+            'description' => 'Base unit of volume in the metric system',
             'is_base_unit' => true,
-            'conversion_factor' => 1.0,
+            'is_active' => true,
         ]);
 
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Milliliter',
             'symbol' => 'mL',
-            'description' => 'Milliliter - 1/1000 of a liter',
-            'base_unit_id' => $liter->id,
+            'description' => 'One thousandth of a liter',
             'is_base_unit' => false,
+            'base_unit_id' => $liter->id,
             'conversion_factor' => 0.001,
+            'is_active' => true,
         ]);
 
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Gallon',
             'symbol' => 'gal',
-            'description' => 'Gallon - Imperial unit of volume',
-            'base_unit_id' => $liter->id,
+            'description' => 'Imperial unit of volume',
             'is_base_unit' => false,
+            'base_unit_id' => $liter->id,
             'conversion_factor' => 3.78541,
+            'is_active' => true,
+        ]);
+
+        Unit::create([
+            'tenant_id' => $tenant->id,
+            'name' => 'Quart',
+            'symbol' => 'qt',
+            'description' => 'Imperial unit of volume, 1/4 of a gallon',
+            'is_base_unit' => false,
+            'base_unit_id' => $liter->id,
+            'conversion_factor' => 0.946353,
+            'is_active' => true,
         ]);
 
         // Count/Quantity Units
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Piece',
             'symbol' => 'pcs',
-            'description' => 'Individual pieces or items',
+            'description' => 'Individual items or pieces',
             'is_base_unit' => true,
-            'conversion_factor' => 1.0,
+            'is_active' => true,
         ]);
 
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Dozen',
-            'symbol' => 'doz',
-            'description' => 'Dozen - 12 pieces',
+            'symbol' => 'dz',
+            'description' => 'Twelve pieces',
             'is_base_unit' => true,
-            'conversion_factor' => 1.0,
+            'is_active' => true,
         ]);
 
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Gross',
             'symbol' => 'gr',
-            'description' => 'Gross - 144 pieces',
+            'description' => 'Twelve dozen (144 pieces)',
             'is_base_unit' => true,
-            'conversion_factor' => 1.0,
+            'is_active' => true,
         ]);
 
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Box',
             'symbol' => 'box',
             'description' => 'Box or carton',
@@ -196,7 +192,7 @@ class UnitsSeeder extends Seeder
         ]);
 
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Pack',
             'symbol' => 'pack',
             'description' => 'Pack or package',
@@ -205,7 +201,7 @@ class UnitsSeeder extends Seeder
         ]);
 
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Set',
             'symbol' => 'set',
             'description' => 'Set of items',
@@ -215,59 +211,69 @@ class UnitsSeeder extends Seeder
 
         // Area Units
         $squareMeter = Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Square Meter',
             'symbol' => 'm²',
-            'description' => 'Base unit for area measurement',
+            'description' => 'Base unit of area in the metric system',
             'is_base_unit' => true,
-            'conversion_factor' => 1.0,
+            'is_active' => true,
         ]);
 
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Square Foot',
             'symbol' => 'ft²',
-            'description' => 'Square foot - Imperial unit of area',
-            'base_unit_id' => $squareMeter->id,
+            'description' => 'Imperial unit of area',
             'is_base_unit' => false,
+            'base_unit_id' => $squareMeter->id,
             'conversion_factor' => 0.092903,
+            'is_active' => true,
         ]);
 
         // Time Units
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Hour',
             'symbol' => 'hr',
-            'description' => 'Hour - unit of time',
+            'description' => 'Unit of time',
             'is_base_unit' => true,
-            'conversion_factor' => 1.0,
+            'is_active' => true,
         ]);
 
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Day',
             'symbol' => 'day',
-            'description' => 'Day - unit of time',
+            'description' => 'Unit of time',
             'is_base_unit' => true,
-            'conversion_factor' => 1.0,
+            'is_active' => true,
         ]);
 
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
+            'name' => 'Week',
+            'symbol' => 'wk',
+            'description' => 'Unit of time',
+            'is_base_unit' => true,
+            'is_active' => true,
+        ]);
+
+        Unit::create([
+            'tenant_id' => $tenant->id,
             'name' => 'Month',
             'symbol' => 'mo',
-            'description' => 'Month - unit of time',
+            'description' => 'Unit of time',
             'is_base_unit' => true,
-            'conversion_factor' => 1.0,
+            'is_active' => true,
         ]);
 
         Unit::create([
-            'tenant_id' => $tenantId,
+            'tenant_id' => $tenant->id,
             'name' => 'Year',
             'symbol' => 'yr',
-            'description' => 'Year - unit of time',
+            'description' => 'Unit of time',
             'is_base_unit' => true,
-            'conversion_factor' => 1.0,
+            'is_active' => true,
         ]);
     }
 }

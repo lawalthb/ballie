@@ -22,6 +22,8 @@ use App\Http\Controllers\Tenant\DocumentsController;
 use App\Http\Controllers\Tenant\ActivityController;
 use App\Http\Controllers\Tenant\SettingsController;
 use App\Http\Controllers\Tenant\VendorController;
+use App\Http\Controllers\Tenant\UnitController;
+
 use App\Models\Tenant;
 
 /*
@@ -103,6 +105,20 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/{product}', [ProductController::class, 'update'])->name('update');
                 Route::delete('/{product}', [ProductController::class, 'destroy'])->name('destroy');
             });
+
+                // Units
+                Route::prefix('units')->name('units.')->group(function () {
+                    Route::get('/', [UnitController::class, 'index'])->name('index');
+                    Route::get('/create', [UnitController::class, 'create'])->name('create');
+                    Route::post('/', [UnitController::class, 'store'])->name('store');
+                    Route::get('/{unit}', [UnitController::class, 'show'])->name('show');
+                    Route::get('/{unit}/edit', [UnitController::class, 'edit'])->name('edit');
+                    Route::put('/{unit}', [UnitController::class, 'update'])->name('update');
+                    Route::delete('/{unit}', [UnitController::class, 'destroy'])->name('destroy');
+                    Route::patch('/{unit}/toggle-status', [UnitController::class, 'toggleStatus'])->name('toggle-status');
+                });
+
+
         });
 
         // CRM Module

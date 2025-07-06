@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained('tenants')->onDelete('cascade');
+            $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('symbol', 10);
             $table->text('description')->nullable();
+            $table->boolean('is_base_unit')->default(false);
             $table->foreignId('base_unit_id')->nullable()->constrained('units')->onDelete('cascade');
-            $table->decimal('conversion_factor', 10, 6)->default(1.000000);
-            $table->boolean('is_base_unit')->default(true);
+            $table->decimal('conversion_factor', 12, 6)->default(1.000000);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
@@ -27,6 +27,10 @@ return new class extends Migration
             // Indexes
             $table->index(['tenant_id', 'is_active']);
             $table->index(['tenant_id', 'is_base_unit']);
+            $table->index(['tenant_id', 'name']);
+            $table->index(['tenant_id', 'symbol']);
+
+            // Unique constraints
             $table->unique(['tenant_id', 'name']);
             $table->unique(['tenant_id', 'symbol']);
         });
