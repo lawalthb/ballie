@@ -83,8 +83,13 @@
 </style>
 
 <!-- Hero Section with Carousel -->
-<section class="hero-section bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 text-white relative overflow-hidden" style="background: linear-gradient(135deg, var(--color-blue) 0%, var(--color-dark-purple) 50%, var(--color-deep-purple) 100%);">
+<section class="gradient-bg text-white py-20 relative overflow-hidden">
     <div class="absolute inset-0 bg-black opacity-20"></div>
+
+    <!-- Floating background elements -->
+    <div class="absolute top-10 left-10 w-20 h-20 bg-brand-gold opacity-20 rounded-full floating-animation"></div>
+    <div class="absolute top-32 right-20 w-16 h-16 bg-brand-teal opacity-30 rounded-full floating-animation" style="animation-delay: -2s;"></div>
+    <div class="absolute bottom-20 left-1/4 w-12 h-12 bg-brand-lavender opacity-25 rounded-full floating-animation" style="animation-delay: -4s;"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <!-- Carousel Container -->
@@ -607,34 +612,7 @@
     </div>
 </section>
 
-<!-- CTA Section -->
-<section class="section-spacing text-white" style="background: linear-gradient(135deg, var(--color-blue) 0%, var(--color-dark-purple) 100%);">
-    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Transform Your Business?
-        </h2>
-        <p class="text-xl text-gray-200 mb-8">
-            Join thousands of Nigerian businesses already using Ballie to streamline their operations and boost profitability.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            @auth
-                <a href="{{ route('dashboard') }}" class="bg-brand-gold text-gray-900 px-8 py-4 rounded-lg hover:bg-yellow-400 font-semibold text-lg transition-colors">
-                    Go to Dashboard
-                </a>
-            @else
-                <a href="{{ route('register') }}" class="bg-brand-gold text-gray-900 px-8 py-4 rounded-lg hover:bg-yellow-400 font-semibold text-lg transition-colors">
-                    Start Your Free Trial
-                </a>
-                <a href="#" class="border-2 border-brand-gold text-brand-gold px-8 py-4 rounded-lg hover:bg-brand-gold hover:text-gray-900 font-semibold text-lg transition-colors">
-                    Watch Demo
-                </a>
-            @endauth
-        </div>
-        <div class="text-gray-300 text-sm">
-            ✓ 30-day free trial &nbsp;&nbsp; ✓ No setup fees &nbsp;&nbsp; ✓ Cancel anytime &nbsp;&nbsp; ✓ Nigerian support team
-        </div>
-    </div>
-</section>
+@include('cta')
 
 <script>
     let slideIndex = 1;

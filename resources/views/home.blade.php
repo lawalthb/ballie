@@ -11,7 +11,7 @@
             <div>
                 <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
                     Smart Accounting for
-                    <span class="text-primary-600">African Businesses</span>
+                    <span class="text-primary-600">African Businesseslawal</span>
                 </h1>
                 <p class="text-xl text-gray-600 mb-8 leading-relaxed">
                     Manage your finances, inventory, customers, and payroll in one powerful platform.
@@ -387,45 +387,5 @@
     </div>
 </section>
 
-<!-- CTA Section -->
-<section class="py-20 bg-gradient-to-r from-primary-600 to-primary-700">
-    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Transform Your Business?
-        </h2>
-        <p class="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of Nigerian businesses already using Ballie to streamline their operations and grow faster.
-        </p>
-
-        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <a href="{{ route('register') }}" class="bg-white text-primary-600 px-8 py-4 rounded-lg hover:bg-gray-50 font-semibold text-lg transition-colors">
-                Start Your Free Trial
-            </a>
-            <a href="{{ route('features') }}" class="border-2 border-white text-white px-8 py-4 rounded-lg hover:bg-white hover:text-primary-600 font-semibold text-lg transition-colors">
-                Learn More
-            </a>
-        </div>
-
-        <div class="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-8 text-primary-100">
-            <div class="flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                30-day free trial
-            </div>
-            <div class="flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                No setup fees
-            </div>
-            <div class="flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                Cancel anytime
-            </div>
-        </div>
-    </div>
-</section>
+@include('cta')
 @endsection

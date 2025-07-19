@@ -88,33 +88,43 @@
 </style>
 
 <!-- Hero Section -->
-<section class="gradient-bg-1 text-white section-spacing">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div class="icon-bounce w-20 h-20 bg-brand-gold rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg class="w-10 h-10 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
-            </svg>
-        </div>
-        <h1 class="text-4xl md:text-6xl font-bold mb-6">
-            Everything You Need to Run Your Business
-            <span class="text-brand-gold block mt-2">Like a Pro</span>
-        </h1>
-        <p class="text-xl md:text-2xl text-gray-200 max-w-4xl mx-auto mb-8">
-            From accounting to payroll, inventory to customer management - Ballie provides all the tools your African business needs to succeed with <strong class="text-brand-gold">maximum availability and affordability</strong>.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="{{ route('register') }}" class="bg-brand-gold text-gray-900 px-8 py-4 rounded-lg hover:bg-yellow-400 font-semibold text-lg transition-colors">
-                Start Free Trial
-            </a>
-            <a href="{{ route('pricing') }}" class="border-2 border-brand-gold text-brand-gold px-8 py-4 rounded-lg hover:bg-brand-gold hover:text-gray-900 font-semibold text-lg transition-colors">
-                View Pricing
-            </a>
-        </div>
-        <div class="mt-6 text-gray-300 text-sm">
-            30-day free trial • No credit card required • Setup in minutes
+<section class="gradient-bg text-white py-20 relative overflow-hidden">
+    <div class="absolute inset-0 bg-black opacity-20"></div>
+
+    <!-- Floating background elements -->
+    <div class="absolute top-10 left-10 w-20 h-20 bg-brand-gold opacity-20 rounded-full floating-animation"></div>
+    <div class="absolute top-32 right-20 w-16 h-16 bg-brand-teal opacity-30 rounded-full floating-animation" style="animation-delay: -2s;"></div>
+    <div class="absolute bottom-20 left-1/4 w-12 h-12 bg-brand-lavender opacity-25 rounded-full floating-animation" style="animation-delay: -4s;"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <div class="icon-bounce w-20 h-20 bg-brand-gold rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                </svg>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 slide-in-left">
+                Everything You Need to Run Your Business
+                <span class="text-brand-gold block mt-2">Like a Pro</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-200 max-w-4xl mx-auto mb-8 slide-in-right">
+                From accounting to payroll, inventory to customer management - Ballie provides all the tools your African business needs to succeed with <strong class="text-brand-gold">maximum availability and affordability</strong>.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center slide-in-left">
+                <a href="{{ route('register') }}" class="bg-brand-gold text-gray-900 px-8 py-4 rounded-lg hover:bg-yellow-400 font-semibold text-lg transition-all transform hover:scale-105">
+                    Start Free Trial
+                </a>
+                <a href="{{ route('pricing') }}" class="border-2 border-brand-gold text-brand-gold px-8 py-4 rounded-lg hover:bg-brand-gold hover:text-gray-900 font-semibold text-lg transition-all">
+                    View Pricing
+                </a>
+            </div>
+            <div class="mt-6 text-gray-300 text-sm slide-in-right">
+                30-day free trial • No credit card required • Setup in minutes
+            </div>
         </div>
     </div>
 </section>
+
 
 <!-- Feature Categories -->
 <section class="section-spacing bg-white">
@@ -793,30 +803,7 @@
     </div>
 </section>
 
-<!-- CTA Section -->
-<section class="gradient-bg text-white section-spacing">
-    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Experience All These Features?
-        </h2>
-        <p class="text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
-            Start your free trial today and see how Ballie can transform your business operations with features that are always available and truly affordable.
-        </p>
-
-        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <a href="{{ route('register') }}" class="bg-brand-gold text-gray-900 px-8 py-4 rounded-lg hover:bg-yellow-400 font-semibold text-lg transition-colors">
-                Start Free Trial
-            </a>
-            <a href="{{ route('pricing') }}" class="border-2 border-brand-gold text-brand-gold px-8 py-4 rounded-lg hover:bg-brand-gold hover:text-gray-900 font-semibold text-lg transition-colors">
-                View Pricing
-            </a>
-        </div>
-
-        <div class="text-gray-300 text-sm">
-            30-day free trial • No credit card required • Cancel anytime • Nigerian business focused
-        </div>
-    </div>
-</section>
+@include('cta')
 
 <script>
 // Carousel functionality

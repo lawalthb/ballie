@@ -114,27 +114,35 @@
 </style>
 
 <!-- Hero Section -->
-<section class="gradient-bg text-white py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-6">
+<section class="gradient-bg text-white py-20 relative overflow-hidden">
+    <div class="absolute inset-0 bg-black opacity-20"></div>
+
+    <!-- Floating background elements -->
+    <div class="absolute top-10 left-10 w-20 h-20 bg-brand-gold opacity-20 rounded-full floating-animation"></div>
+    <div class="absolute top-32 right-20 w-16 h-16 bg-brand-teal opacity-30 rounded-full floating-animation" style="animation-delay: -2s;"></div>
+    <div class="absolute bottom-20 left-1/4 w-12 h-12 bg-brand-lavender opacity-25 rounded-full floating-animation" style="animation-delay: -4s;"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6 slide-in-left">
             Simple, <span class="text-brand-gold">Transparent Pricing</span>
         </h1>
-        <p class="text-xl text-gray-200 max-w-3xl mx-auto mb-8">
+        <p class="text-xl text-gray-200 max-w-3xl mx-auto mb-8 slide-in-right">
             Choose the plan that fits your business size and needs. All plans include our core features with no hidden fees.
             <strong class="text-brand-gold">Maximum affordability, always available.</strong>
         </p>
 
         <!-- Billing Toggle -->
-        <div class="flex items-center justify-center mb-12">
+        <div class="flex items-center justify-center mb-12 slide-in-left">
             <span class="text-gray-200 mr-4 font-medium">Monthly</span>
             <button id="billing-toggle" class="billing-toggle relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2">
                 <span id="toggle-dot" class="toggle-dot inline-block h-6 w-6 transform rounded-full bg-white transition-transform translate-x-1"></span>
             </button>
             <span class="text-gray-200 ml-4 font-medium">Yearly</span>
-            <span class="savings-badge ml-3 text-sm text-gray-900 px-3 py-1 rounded-full font-bold">Save 15%</span>
+            <span class="savings-badge ml-3 text-sm text-gray-900 px-3 py-1 rounded-full font-bold pulse-animation">Save 15%</span>
         </div>
     </div>
 </section>
+
 
 <!-- Pricing Cards -->
 <section class="py-20 bg-gray-50">
@@ -223,8 +231,8 @@
             </div>
 
             <!-- Professional Plan -->
-            <div class="pricing-card popular bg-white border-2 border-brand-gold rounded-2xl p-8 relative shadow-xl">
-                <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+            <div class="pricing-card popular bg-white border-2 border-brand-gold rounded-2xl p-8 relative shadow-xl ">
+                <div class="absolute -top-1 left-1/2 transform -translate-x-1/2">
                     <span class="bg-brand-gold text-gray-900 px-6 py-2 rounded-full text-sm font-bold shadow-lg">Most Popular</span>
                 </div>
 
@@ -680,30 +688,7 @@
     </div>
 </section>
 
-<!-- Final CTA Section -->
-<section class="gradient-bg text-white py-20">
-    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Transform Your Business?
-        </h2>
-        <p class="text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
-            Start your 30-day free trial today. No credit card required, no setup fees, and you can cancel anytime.
-        </p>
-
-        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <a href="{{ route('register') }}" class="bg-brand-gold text-gray-900 px-8 py-4 rounded-lg hover:bg-yellow-400 font-semibold text-lg transition-colors">
-                Start Free Trial
-            </a>
-            <a href="{{ route('contact') }}" class="border-2 border-brand-gold text-brand-gold px-8 py-4 rounded-lg hover:bg-brand-gold hover:text-gray-900 font-semibold text-lg transition-colors">
-                Contact Sales
-            </a>
-        </div>
-
-        <div class="text-gray-300 text-sm">
-            Join thousands of Nigerian businesses already using Ballie
-        </div>
-    </div>
-</section>
+@include('cta')
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

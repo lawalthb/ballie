@@ -1072,30 +1072,7 @@
     </div>
 </section>
 
-<!-- CTA Section -->
-<section class="py-20 gradient-bg text-white">
-    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Get Started?
-        </h2>
-        <p class="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-            Don't let questions hold you back. Our Nigerian support team is here to help you succeed with Ballie.
-        </p>
-
-        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <a href="{{ route('register') }}" class="bg-white text-brand-blue px-8 py-4 rounded-lg hover:bg-gray-50 font-semibold text-lg transition-all transform hover:scale-105 interactive-element">
-                Start Free Trial
-            </a>
-            <button onclick="openLiveChat()" class="border-2 border-white text-white px-8 py-4 rounded-lg hover:bg-white hover:text-brand-blue font-semibold text-lg transition-all transform hover:scale-105 interactive-element">
-                Chat with Support
-            </button>
-        </div>
-
-        <div class="text-sm opacity-75">
-            30-day free trial • No credit card required • Nigerian support team
-        </div>
-    </div>
-</section>
+@include('cta')
 
 <script>
 // Carousel functionality
