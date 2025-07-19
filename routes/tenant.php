@@ -24,7 +24,7 @@ use App\Http\Controllers\Tenant\ProductCategoryController;
 use App\Http\Controllers\Tenant\SettingsController;
 use App\Http\Controllers\Tenant\VendorController;
 use App\Http\Controllers\Tenant\UnitController;
-
+use App\Http\Controllers\Tenant\VoucherTypeController;
 use App\Models\Tenant;
 
 /*
