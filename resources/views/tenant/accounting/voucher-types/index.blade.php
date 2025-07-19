@@ -12,7 +12,7 @@
         </div>
 
         <div class="mt-4 lg:mt-0 flex flex-wrap gap-3">
-            <a href="{{ route('tenant.accounting.voucher-types.create', ['tenant' => $tenant->slug]) }}"
+            <a href="{{ route('tenant.accounting.voucher-types.create', ['tenant' => tenant()->slug]) }}"
                class="inline-flex items-center px-4 py-2 bg-primary-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-700 focus:bg-primary-700 active:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition ease-in-out duration-150">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -274,7 +274,7 @@
                                                         </svg>
                                                         <h3 class="text-lg font-medium text-gray-900 mb-2">No voucher types found</h3>
                                                         <p class="text-gray-500 mb-4">Get started by creating your first voucher type.</p>
-                                                        <a href="{{ route('tenant.accounting.voucher-types.create', ['tenant' => $tenant->slug]) }}"
+                                                        <a href="{{ route('tenant.accounting.voucher-types.create', ['tenant' => tenant()->slug]) }}"
                                                            class="inline-flex items-center px-4 py-2 bg-primary-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-700">
                                                             Create Voucher Type
                                                         </a>

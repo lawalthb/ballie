@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Tenant\Accounting\VoucherTypeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Tenant\AuthController;
 use App\Http\Controllers\Tenant\DashboardController;
@@ -24,7 +25,6 @@ use App\Http\Controllers\Tenant\ProductCategoryController;
 use App\Http\Controllers\Tenant\SettingsController;
 use App\Http\Controllers\Tenant\VendorController;
 use App\Http\Controllers\Tenant\UnitController;
-use App\Http\Controllers\Tenant\VoucherTypeController;
 use App\Models\Tenant;
 
 /*
