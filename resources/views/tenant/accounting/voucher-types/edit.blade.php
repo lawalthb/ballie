@@ -11,7 +11,7 @@
             <p class="mt-2 text-gray-600">Update the settings for {{ $voucherType->name }}</p>
         </div>
         <div class="flex items-center space-x-3">
-            <a href="{{ route('tenant.accounting.voucher-types.show', ['tenant' => $tenant->slug, 'voucher_type' => $voucherType->id]) }}"
+            <a href="{{ route('tenant.accounting.voucher-types.show',['tenant' => $tenant->slug, 'voucherType' => $voucherType->id]) }}"
                class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -47,7 +47,7 @@
     </div>
     @endif
 
-    <form action="{{ route('tenant.accounting.voucher-types.update', ['tenant' => $tenant->slug, 'voucher_type' => $voucherType->id]) }}"
+    <form action="{{ route('tenant.accounting.voucher-types.update', ['tenant' => $tenant->slug, 'voucherType' => $voucherType->id]) }}"
           method="POST"
           x-data="voucherTypeEditForm()"
           class="space-y-6">
@@ -348,7 +348,7 @@
 
         <!-- Form Actions -->
         <div class="flex items-center justify-end space-x-4 pt-6">
-            <a href="{{ route('tenant.accounting.voucher-types.show', ['tenant' => $tenant->slug, 'voucher_type' => $voucherType->id]) }}"
+            <a href="{{ route('tenant.accounting.voucher-types.show', ['tenant' => $tenant->slug, 'voucherType' => $voucherType->id]) }}"
                class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
                 Cancel
             </a>

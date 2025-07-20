@@ -101,6 +101,10 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/{voucherType}', [VoucherTypeController::class, 'update'])->name('update');
                 Route::delete('/{voucherType}', [VoucherTypeController::class, 'destroy'])->name('destroy');
                 Route::post('/{voucherType}/reset-numbering', [VoucherTypeController::class, 'resetNumbering'])->name('reset-numbering');
+
+                Route::post('/bulk-action', [VoucherTypeController::class, 'bulkAction'])->name('bulk-action');
+                Route::post('/toggle/{voucherType}', [VoucherTypeController::class, 'toggle'])->name('toggle');
+
             });
 
             // Vouchers

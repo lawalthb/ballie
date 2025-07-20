@@ -20,9 +20,9 @@
             </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200">
+               <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200">
             <div class="p-6">
-                <div class="flex items-center">
+                <div class="flex items-left">
                     <div class="flex-shrink-0">
                         <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
                             <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -30,17 +30,21 @@
                             </svg>
                         </div>
                     </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">Type</dt>
-                            <dd class="text-lg font-medium text-gray-900">
-                                {{ $voucherType->is_system_defined ? 'System' : 'Custom' }}
+                          <dd class="text-lg font-medium text-gray-900">
+                                @if($voucherType->is_system_defined)
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                        System
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        Custom
+                                    </span>
+                                @endif
                             </dd>
-                        </dl>
-                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 
     <!-- Main Content -->
@@ -198,7 +202,7 @@
                     @endif
 
                     @if(!$voucherType->is_system_defined)
-                        <a href="{{ route('tenant.accounting.voucher-types.edit', ['tenant' => $tenant->slug, 'voucher_type' => $voucherType->id]) }}"
+                        <a href="{{ route('tenant.accounting.voucher-types.edit',['tenant' => $tenant->slug, 'voucherType' => $voucherType->id]) }}"
                            class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -207,7 +211,7 @@
                         </a>
                     @endif
 
-                    <form action="{{ route('tenant.accounting.voucher-types.toggle', ['tenant' => $tenant->slug, 'voucher_type' => $voucherType->id]) }}"
+                    <form action="{{ route('tenant.accounting.voucher-types.toggle', ['tenant' => $tenant->slug, 'voucherType' => $voucherType->id]) }}"
                           method="POST">
                         @csrf
                         @method('PATCH')
@@ -228,7 +232,7 @@
                     </form>
 
                     @if(!$voucherType->is_system_defined && $voucherCount === 0)
-                        <form action="{{ route('tenant.accounting.voucher-types.destroy', ['tenant' => $tenant->slug, 'voucher_type' => $voucherType->id]) }}"
+                        <form action="{{ route('tenant.accounting.voucher-types.destroy',['tenant' => $tenant->slug, 'voucherType' => $voucherType->id]) }}"
                               method="POST"
                               onsubmit="return confirm('Are you sure you want to delete this voucher type? This action cannot be undone.')">
                             @csrf
@@ -255,7 +259,7 @@
                     <p class="text-sm text-gray-600 mb-4">
                         Reset the numbering sequence for this voucher type. This will set the next voucher number to your specified value.
                     </p>
-                    <form action="{{ route('tenant.accounting.voucher-types.reset-numbering', ['tenant' => $tenant->slug, 'voucher_type' => $voucherType->id]) }}"
+                    <form action="{{ route('tenant.accounting.voucher-types.reset-numbering', ['tenant' => $tenant->slug, 'voucherType' => $voucherType->id]) }}"
                           method="POST"
                           x-data="{ resetNumber: {{ $voucherType->current_number + 1 }} }"
                           onsubmit="return confirm('Are you sure you want to reset the numbering? This action cannot be undone.')">
