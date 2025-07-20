@@ -81,12 +81,25 @@ class VoucherController extends Controller
     /**
      * Show the form for creating a new voucher.
      */
-    public function create(Tenant $tenant)
+    public function create(Tenant $tenant, $type = null)
     {
         $voucherTypes = VoucherType::where('tenant_id', $tenant->id)
             ->where('is_active', true)
             ->orderBy('name')
             ->get();
+
+        $selectedType = null;
+        if ($type) {
+            $selectedType = VoucherType::where('tenant_id', $tenant->id)
+                ->where('code', strtoupper($type))
+                ->first();
+
+            if (!$selectedType) {
+                return redirect()
+                    ->route('tenant.accounting.vouchers.create', $tenant->slug)
+                    ->with('error', 'Invalid voucher type specified.');
+            }
+        }
 
         $ledgerAccounts = LedgerAccount::with('accountGroup')
             ->where('tenant_id', $tenant->id)
@@ -97,7 +110,8 @@ class VoucherController extends Controller
         return view('tenant.accounting.vouchers.create', compact(
             'tenant',
             'voucherTypes',
-            'ledgerAccounts'
+            'ledgerAccounts',
+            'selectedType'
         ));
     }
 

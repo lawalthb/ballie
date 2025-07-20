@@ -108,30 +108,30 @@ Route::middleware(['auth'])->group(function () {
 
             });
 
-            // Vouchers
-    Route::prefix('vouchers')->name('vouchers.')->group(function () {
-        Route::get('/', [VoucherController::class, 'index'])->name('index');
-        Route::get('/create', [VoucherController::class, 'create'])->name('create');
-        Route::post('/', [VoucherController::class, 'store'])->name('store');
-        Route::get('/{voucher}', [VoucherController::class, 'show'])->name('show');
-        Route::get('/{voucher}/edit', [VoucherController::class, 'edit'])->name('edit');
-        Route::put('/{voucher}', [VoucherController::class, 'update'])->name('update');
-        Route::delete('/{voucher}', [VoucherController::class, 'destroy'])->name('destroy');
+          // Vouchers
+Route::prefix('vouchers')->name('vouchers.')->group(function () {
+    Route::get('/', [VoucherController::class, 'index'])->name('index');
+    Route::get('/create', [VoucherController::class, 'create'])->name('create');
+    Route::get('/create/{type}', [VoucherController::class, 'create'])->name('create.type'); // Add this line
+    Route::post('/', [VoucherController::class, 'store'])->name('store');
+    Route::get('/{voucher}', [VoucherController::class, 'show'])->name('show');
+    Route::get('/{voucher}/edit', [VoucherController::class, 'edit'])->name('edit');
+    Route::put('/{voucher}', [VoucherController::class, 'update'])->name('update');
+    Route::delete('/{voucher}', [VoucherController::class, 'destroy'])->name('destroy');
 
-        // Voucher actions
-        Route::post('/{voucher}/post', [VoucherController::class, 'post'])->name('post');
-        Route::post('/{voucher}/unpost', [VoucherController::class, 'unpost'])->name('unpost');
-        Route::get('/{voucher}/duplicate', [VoucherController::class, 'duplicate'])->name('duplicate');
-        Route::get('/{voucher}/pdf', [VoucherController::class, 'pdf'])->name('pdf');
-        Route::get('/{voucher}/print', [VoucherController::class, 'print'])->name('print');
+    // Voucher actions
+    Route::post('/{voucher}/post', [VoucherController::class, 'post'])->name('post');
+    Route::post('/{voucher}/unpost', [VoucherController::class, 'unpost'])->name('unpost');
+    Route::get('/{voucher}/duplicate', [VoucherController::class, 'duplicate'])->name('duplicate');
+    Route::get('/{voucher}/pdf', [VoucherController::class, 'pdf'])->name('pdf');
+    Route::get('/{voucher}/print', [VoucherController::class, 'print'])->name('print');
 
-        // Bulk actions
-        Route::post('/bulk/post', [VoucherController::class, 'bulkPost'])->name('bulk.post');
-        Route::delete('/bulk/delete', [VoucherController::class, 'bulkDelete'])->name('bulk.delete');
-        Route::get('/export', [VoucherController::class, 'export'])->name('export');
-        Route::get('/create/{type}', [VoucherController::class, 'createType'])->name('create.type');
-        Route::post('/bulk-action', [VoucherController::class, 'bulkAction'])->name('bulk.action');
-    });
+    // Bulk actions
+    Route::post('/bulk/post', [VoucherController::class, 'bulkPost'])->name('bulk.post');
+    Route::delete('/bulk/delete', [VoucherController::class, 'bulkDelete'])->name('bulk.delete');
+    Route::get('/export', [VoucherController::class, 'export'])->name('export');
+    Route::post('/bulk-action', [VoucherController::class, 'bulkAction'])->name('bulk.action');
+});
 
             // Expenses (add if not exists)
             Route::prefix('expenses')->name('expenses.')->group(function () {

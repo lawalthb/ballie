@@ -33,7 +33,7 @@
                      x-transition:leave-end="transform opacity-0 scale-95"
                      class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
                     <div class="py-1">
-                        <a href="{{ route('tenant.accounting.vouchers.create.type', ['tenant' => $tenant->slug, 'type' => 'jv']) }}"
+                      <a href="{{ route('tenant.accounting.vouchers.create', ['tenant' => $tenant->slug, 'type' => 'jv']) }}"
                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
@@ -45,7 +45,7 @@
                                 </div>
                             </div>
                         </a>
-                        <a href="{{ route('tenant.accounting.vouchers.create.type', ['tenant' => $tenant->slug, 'type' => 'pv']) }}"
+                        <a href="{{ route('tenant.accounting.vouchers.create', ['tenant' => $tenant->slug, 'type' => 'pv']) }}"
                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-3">
@@ -57,7 +57,7 @@
                                 </div>
                             </div>
                         </a>
-                        <a href="{{ route('tenant.accounting.vouchers.create.type', ['tenant' => $tenant->slug, 'type' => 'rv']) }}"
+                        <a href="{{ route('tenant.accounting.vouchers.create', ['tenant' => $tenant->slug, 'type' => 'rv']) }}"
                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
@@ -69,7 +69,7 @@
                                 </div>
                             </div>
                         </a>
-                        <a href="{{ route('tenant.accounting.vouchers.create.type', ['tenant' => $tenant->slug, 'type' => 'sv']) }}"
+                        <a href="{{ route('tenant.accounting.vouchers.create', ['tenant' => $tenant->slug, 'type' => 'sv']) }}"
                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3">
@@ -81,7 +81,7 @@
                                 </div>
                             </div>
                         </a>
-                        <a href="{{ route('tenant.accounting.vouchers.create.type', ['tenant' => $tenant->slug, 'type' => 'pur']) }}"
+                        <a href="{{ route('tenant.accounting.vouchers.create', ['tenant' => $tenant->slug, 'type' => 'pur']) }}"
                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mr-3">
