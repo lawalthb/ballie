@@ -18,14 +18,16 @@ class InventoryController extends Controller
         $totalProducts = Product::where('tenant_id', $tenant->id)->count();
 
         $totalStockValue = Product::where('tenant_id', $tenant->id)
-            ->sum(DB::raw('current_stock * purchase_rate'));
+            ->sum(DB::raw('COALESCE(current_stock, 0) * COALESCE(purchase_rate, 0)'));
 
         $lowStockItems = Product::where('tenant_id', $tenant->id)
-            ->whereRaw('current_stock <= minimum_stock_level')
+            ->where('maintain_stock', true)
+            ->whereColumn('current_stock', '<=', 'reorder_level')
             ->count();
 
         $outOfStockItems = Product::where('tenant_id', $tenant->id)
-            ->where('current_stock', 0)
+            ->where('maintain_stock', true)
+            ->where('current_stock', '<=', 0)
             ->count();
 
         $totalCategories = ProductCategory::where('tenant_id', $tenant->id)->count();
@@ -34,18 +36,33 @@ class InventoryController extends Controller
 
         // Get recent products
         $recentProducts = Product::where('tenant_id', $tenant->id)
-            ->with(['category', 'unit'])
+            ->with(['category', 'primaryUnit'])
             ->orderBy('created_at', 'desc')
             ->limit(5)
-            ->get();
+            ->get()
+            ->map(function ($product) {
+                // Add compatibility attributes
+                $product->quantity = $product->current_stock;
+                $product->selling_price = $product->sales_rate;
+                $product->unit = $product->primaryUnit;
+                return $product;
+            });
 
         // Get low stock products
         $lowStockProducts = Product::where('tenant_id', $tenant->id)
-            ->with(['category', 'unit'])
-            ->whereRaw('current_stock <= minimum_stock_level')
+            ->with(['category', 'primaryUnit'])
+            ->where('maintain_stock', true)
+            ->whereColumn('current_stock', '<=', 'reorder_level')
             ->orderBy('current_stock', 'asc')
             ->limit(5)
-            ->get();
+            ->get()
+            ->map(function ($product) {
+                // Add compatibility attributes
+                $product->quantity = $product->current_stock;
+                $product->minimum_stock_level = $product->reorder_level;
+                $product->unit = $product->primaryUnit;
+                return $product;
+            });
 
         // Mock recent activities (you can replace with actual activity log)
         $recentActivities = collect([

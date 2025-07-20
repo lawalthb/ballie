@@ -22,12 +22,15 @@ class Product extends Model
         'hsn_code',
         'purchase_rate',
         'sales_rate',
+        'selling_price', // Add this for compatibility
         'mrp',
         'primary_unit_id',
         'unit_conversion_factor',
         'opening_stock',
         'current_stock',
+        'quantity', // Add this for compatibility
         'reorder_level',
+        'minimum_stock_level', // Add this for compatibility
         'stock_asset_account_id',
         'sales_account_id',
         'purchase_account_id',
@@ -48,11 +51,14 @@ class Product extends Model
     protected $casts = [
         'purchase_rate' => 'decimal:2',
         'sales_rate' => 'decimal:2',
+        'selling_price' => 'decimal:2',
         'mrp' => 'decimal:2',
         'unit_conversion_factor' => 'decimal:6',
         'opening_stock' => 'decimal:2',
         'current_stock' => 'decimal:2',
+        'quantity' => 'decimal:2',
         'reorder_level' => 'decimal:2',
+        'minimum_stock_level' => 'decimal:2',
         'opening_stock_value' => 'decimal:2',
         'current_stock_value' => 'decimal:2',
         'tax_rate' => 'decimal:2',
@@ -77,6 +83,12 @@ class Product extends Model
     public function primaryUnit()
     {
         return $this->belongsTo(Unit::class, 'primary_unit_id');
+    }
+
+    // Alias for compatibility
+    public function unit()
+    {
+        return $this->primaryUnit();
     }
 
     // Ledger Account Relationships
@@ -134,6 +146,22 @@ class Product extends Model
     public function getStockValueAttribute()
     {
         return $this->current_stock_value;
+    }
+
+    // Compatibility accessors
+    public function getQuantityAttribute($value)
+    {
+        return $value ?? $this->current_stock;
+    }
+
+    public function getSellingPriceAttribute($value)
+    {
+        return $value ?? $this->sales_rate;
+    }
+
+    public function getMinimumStockLevelAttribute($value)
+    {
+        return $value ?? $this->reorder_level;
     }
 
     // Scopes
