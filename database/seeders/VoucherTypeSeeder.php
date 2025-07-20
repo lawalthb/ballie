@@ -4,136 +4,129 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\VoucherType;
-use App\Models\Tenant;
 
 class VoucherTypeSeeder extends Seeder
 {
-    public function run()
-    {
-        // This should be run for each tenant after they complete onboarding
-        // For now, we'll create a method to seed for a specific tenant
-    }
-
     public static function seedForTenant($tenantId)
     {
-        $voucherTypes = [
+        // Check if voucher types already exist for this tenant
+        $existingTypes = VoucherType::where('tenant_id', $tenantId)->count();
+        if ($existingTypes > 0) {
+            return; // Skip seeding if types already exist
+        }
+
+        $defaultVoucherTypes = [
             [
-                'tenant_id' => $tenantId,
-                'name' => 'Journal Voucher',
-                'code' => 'JOURNAL',
-                'abbreviation' => 'JV',
-                'description' => 'For general journal entries and adjustments',
+                'name' => 'Journal',
+                'code' => 'JV',
+                'abbreviation' => 'J',
+                'description' => 'General journal entries for adjustments and corrections',
+                'numbering_method' => 'auto',
                 'prefix' => 'JV-',
+                'starting_number' => 1,
+                'current_number' => 0,
                 'has_reference' => false,
                 'affects_inventory' => false,
                 'affects_cashbank' => false,
                 'is_system_defined' => true,
+                'is_active' => true,
             ],
             [
-                'tenant_id' => $tenantId,
-                'name' => 'Payment Voucher',
-                'code' => 'PAYMENT',
-                'abbreviation' => 'PV',
-                'description' => 'For recording payments made',
+                'name' => 'Payment',
+                'code' => 'PV',
+                'abbreviation' => 'P',
+                'description' => 'Payment vouchers for cash and bank payments',
+                'numbering_method' => 'auto',
                 'prefix' => 'PV-',
+                'starting_number' => 1,
+                'current_number' => 0,
                 'has_reference' => true,
                 'affects_inventory' => false,
                 'affects_cashbank' => true,
                 'is_system_defined' => true,
-                'default_accounts' => json_encode([
-                    'credit_side' => ['cash', 'bank'], // These will be account group codes
-                ])
+                'is_active' => true,
             ],
             [
-                'tenant_id' => $tenantId,
-                'name' => 'Receipt Voucher',
-                'code' => 'RECEIPT',
-                'abbreviation' => 'RV',
-                'description' => 'For recording receipts received',
+                'name' => 'Receipt',
+                'code' => 'RV',
+                'abbreviation' => 'R',
+                'description' => 'Receipt vouchers for cash and bank receipts',
+                'numbering_method' => 'auto',
                 'prefix' => 'RV-',
+                'starting_number' => 1,
+                'current_number' => 0,
                 'has_reference' => true,
                 'affects_inventory' => false,
                 'affects_cashbank' => true,
                 'is_system_defined' => true,
-                'default_accounts' => json_encode([
-                    'debit_side' => ['cash', 'bank'],
-                ])
+                'is_active' => true,
             ],
-            [
-                'tenant_id' => $tenantId,
-                'name' => 'Contra Voucher',
-                'code' => 'CONTRA',
-                'abbreviation' => 'CV',
-                'description' => 'For transfers between cash and bank accounts',
-                'prefix' => 'CV-',
-                'has_reference' => true,
-                'affects_inventory' => false,
-                'affects_cashbank' => true,
-                'is_system_defined' => true,
-                'default_accounts' => json_encode([
-                    'both_sides' => ['cash', 'bank'],
-                ])
-            ],
-            [
-                'tenant_id' => $tenantId,
-                'name' => 'Sales Voucher',
-                'code' => 'SALES',
-                'abbreviation' => 'SV',
-                'description' => 'For recording sales transactions',
+              [
+                'name' => 'Sales',
+                'code' => 'SV',
+                'abbreviation' => 'S',
+                'description' => 'Sales vouchers for recording sales transactions',
+                'numbering_method' => 'auto',
                 'prefix' => 'SV-',
+                'starting_number' => 1,
+                'current_number' => 0,
                 'has_reference' => true,
                 'affects_inventory' => true,
                 'affects_cashbank' => false,
                 'is_system_defined' => true,
-                'default_accounts' => json_encode([
-                    'debit_side' => ['debtors', 'cash', 'bank'],
-                    'credit_side' => ['sales'],
-                ])
+                'is_active' => true,
             ],
             [
-                'tenant_id' => $tenantId,
-                'name' => 'Purchase Voucher',
-                'code' => 'PURCHASE',
+                'name' => 'Purchase',
+                'code' => 'PUR',
                 'abbreviation' => 'PU',
-                'description' => 'For recording purchase transactions',
-                'prefix' => 'PU-',
+                'description' => 'Purchase vouchers for recording purchase transactions',
+                'numbering_method' => 'auto',
+                'prefix' => 'PUR-',
+                'starting_number' => 1,
+                'current_number' => 0,
                 'has_reference' => true,
                 'affects_inventory' => true,
                 'affects_cashbank' => false,
                 'is_system_defined' => true,
-                'default_accounts' => json_encode([
-                    'debit_side' => ['purchases'],
-                    'credit_side' => ['creditors', 'cash', 'bank'],
-                ])
+                'is_active' => true,
             ],
             [
-                'tenant_id' => $tenantId,
-                'name' => 'Credit Note',
-                'code' => 'CREDIT_NOTE',
-                'abbreviation' => 'CN',
-                'description' => 'For sales returns and allowances',
-                'prefix' => 'CN-',
+                'name' => 'Contra',
+                'code' => 'CV',
+                'abbreviation' => 'C',
+                'description' => 'Contra vouchers for bank to cash or cash to bank transfers',
+                'numbering_method' => 'auto',
+                'prefix' => 'CV-',
+                'starting_number' => 1,
+                'current_number' => 0,
                 'has_reference' => true,
-                'affects_inventory' => true,
-                'affects_cashbank' => false,
+                'affects_inventory' => false,
+                'affects_cashbank' => true,
                 'is_system_defined' => true,
-            ],
-            [
-                'tenant_id' => $tenantId,
-                'name' => 'Debit Note',
-                'code' => 'DEBIT_NOTE',
-                'abbreviation' => 'DN',
-                'description' => 'For purchase returns and claims',
-                'prefix' => 'DN-',
-                'has_reference' => true,
-                'affects_inventory' => true,
-                'affects_cashbank' => false,
-                'is_system_defined' => true,
+                'is_active' => true,
             ],
         ];
 
-        foreach ($voucherTypes as $voucherType) {
+        foreach ($defaultVoucherTypes as $voucherType) {
+            $voucherType['tenant_id'] = $tenantId;
+            $voucherType['created_at'] = now();
+            $voucherType['updated_at'] = now();
+
             VoucherType::create($voucherType);
+        }
+    }
+
+    public function run()
+    {
+        // This method can be used for standalone seeding if needed
+        $tenantId = $this->command->option('tenant-id');
+
+        if ($tenantId) {
+            self::seedForTenant($tenantId);
+            $this->command->info("Voucher types seeded for tenant ID: {$tenantId}");
+        } else {
+            $this->command->error('Please provide --tenant-id option');
         }
     }
 }

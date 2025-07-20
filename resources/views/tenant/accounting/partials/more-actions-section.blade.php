@@ -210,7 +210,7 @@
                         </svg>
                     </div>
                     <div>
-                        <h5 class="font-semibold text-white group-hover:text-yellow-200 transition-colors duration-300">Chart of Accounts</h5>
+                        <h5 class="font-semibold text-white group-hover:text-yellow-200 transition-colors duration-300">Ledger Accounts</h5>
                         <p class="text-xs text-yellow-200">Account structure</p>
                     </div>
                 </div>

@@ -15,184 +15,109 @@ class AccountGroupSeeder extends Seeder
             return; // Skip seeding if groups already exist
         }
 
-        $accountGroups = [
+        $defaultGroups = [
             // Assets
             [
-                'tenant_id' => $tenantId,
                 'name' => 'Current Assets',
                 'code' => 'CA',
                 'nature' => 'assets',
                 'parent_id' => null,
+                'is_system_defined' => true,
+                'is_active' => true,
             ],
             [
-                'tenant_id' => $tenantId,
                 'name' => 'Fixed Assets',
                 'code' => 'FA',
                 'nature' => 'assets',
                 'parent_id' => null,
+                'is_system_defined' => true,
+                'is_active' => true,
             ],
 
             // Liabilities
             [
-                'tenant_id' => $tenantId,
                 'name' => 'Current Liabilities',
                 'code' => 'CL',
                 'nature' => 'liabilities',
                 'parent_id' => null,
+                'is_system_defined' => true,
+                'is_active' => true,
             ],
             [
-                'tenant_id' => $tenantId,
                 'name' => 'Long Term Liabilities',
                 'code' => 'LTL',
                 'nature' => 'liabilities',
                 'parent_id' => null,
+                'is_system_defined' => true,
+                'is_active' => true,
             ],
 
             // Income
             [
-                'tenant_id' => $tenantId,
-                'name' => 'Revenue',
-                'code' => 'REV',
+                'name' => 'Direct Income',
+                'code' => 'DI',
                 'nature' => 'income',
                 'parent_id' => null,
+                'is_system_defined' => true,
+                'is_active' => true,
             ],
             [
-                'tenant_id' => $tenantId,
-                'name' => 'Other Income',
-                'code' => 'OI',
+                'name' => 'Indirect Income',
+                'code' => 'II',
                 'nature' => 'income',
                 'parent_id' => null,
+                'is_system_defined' => true,
+                'is_active' => true,
             ],
 
             // Expenses
             [
-                'tenant_id' => $tenantId,
                 'name' => 'Direct Expenses',
                 'code' => 'DE',
                 'nature' => 'expenses',
                 'parent_id' => null,
+                'is_system_defined' => true,
+                'is_active' => true,
             ],
             [
-                'tenant_id' => $tenantId,
                 'name' => 'Indirect Expenses',
                 'code' => 'IE',
                 'nature' => 'expenses',
                 'parent_id' => null,
+                'is_system_defined' => true,
+                'is_active' => true,
+            ],
+
+            // Capital/Equity
+            [
+                'name' => 'Capital Account',
+                'code' => 'CAP',
+                'nature' => 'equity',
+                'parent_id' => null,
+                'is_system_defined' => true,
+                'is_active' => true,
             ],
         ];
 
-        foreach ($accountGroups as $group) {
+        foreach ($defaultGroups as $group) {
+            $group['tenant_id'] = $tenantId;
+            $group['created_at'] = now();
+            $group['updated_at'] = now();
+
             AccountGroup::create($group);
         }
+    }
 
-        // Create sub-groups
-        $subGroups = [
-            // Current Assets sub-groups
-            [
-                'tenant_id' => $tenantId,
-                'name' => 'Cash & Bank',
-                'code' => 'CB',
-                'nature' => 'assets',
-                'parent_id' => AccountGroup::where('tenant_id', $tenantId)->where('code', 'CA')->first()->id,
-            ],
-            [
-                'tenant_id' => $tenantId,
-                'name' => 'Accounts Receivable',
-                'code' => 'AR',
-                'nature' => 'assets',
-                'parent_id' => AccountGroup::where('tenant_id', $tenantId)->where('code', 'CA')->first()->id,
-            ],
-            [
-                'tenant_id' => $tenantId,
-                'name' => 'Inventory',
-                'code' => 'INV',
-                'nature' => 'assets',
-                'parent_id' => AccountGroup::where('tenant_id', $tenantId)->where('code', 'CA')->first()->id,
-            ],
+    public function run()
+    {
+        // This method can be used for standalone seeding if needed
+        $tenantId = $this->command->option('tenant-id');
 
-            // Fixed Assets sub-groups
-            [
-                'tenant_id' => $tenantId,
-                'name' => 'Plant & Machinery',
-                'code' => 'PM',
-                'nature' => 'assets',
-                'parent_id' => AccountGroup::where('tenant_id', $tenantId)->where('code', 'FA')->first()->id,
-            ],
-            [
-                'tenant_id' => $tenantId,
-                'name' => 'Furniture & Fixtures',
-                'code' => 'FF',
-                'nature' => 'assets',
-                'parent_id' => AccountGroup::where('tenant_id', $tenantId)->where('code', 'FA')->first()->id,
-            ],
-
-            // Current Liabilities sub-groups
-            [
-                'tenant_id' => $tenantId,
-                'name' => 'Accounts Payable',
-                'code' => 'AP',
-                'nature' => 'liabilities',
-                'parent_id' => AccountGroup::where('tenant_id', $tenantId)->where('code', 'CL')->first()->id,
-            ],
-            [
-                'tenant_id' => $tenantId,
-                'name' => 'Accrued Expenses',
-                'code' => 'AE',
-                'nature' => 'liabilities',
-                'parent_id' => AccountGroup::where('tenant_id', $tenantId)->where('code', 'CL')->first()->id,
-            ],
-
-            // Revenue sub-groups
-            [
-                'tenant_id' => $tenantId,
-                'name' => 'Sales',
-                'code' => 'SALES',
-                'nature' => 'income',
-                'parent_id' => AccountGroup::where('tenant_id', $tenantId)->where('code', 'REV')->first()->id,
-            ],
-            [
-                'tenant_id' => $tenantId,
-                'name' => 'Service Income',
-                'code' => 'SI',
-                'nature' => 'income',
-                'parent_id' => AccountGroup::where('tenant_id', $tenantId)->where('code', 'REV')->first()->id,
-            ],
-
-            // Direct Expenses sub-groups
-            [
-                'tenant_id' => $tenantId,
-                'name' => 'Cost of Goods Sold',
-                'code' => 'COGS',
-                'nature' => 'expenses',
-                'parent_id' => AccountGroup::where('tenant_id', $tenantId)->where('code', 'DE')->first()->id,
-            ],
-            [
-                'tenant_id' => $tenantId,
-                'name' => 'Purchases',
-                'code' => 'PUR',
-                'nature' => 'expenses',
-                'parent_id' => AccountGroup::where('tenant_id', $tenantId)->where('code', 'DE')->first()->id,
-            ],
-
-            // Indirect Expenses sub-groups
-            [
-                'tenant_id' => $tenantId,
-                'name' => 'Administrative Expenses',
-                'code' => 'ADMIN',
-                'nature' => 'expenses',
-                'parent_id' => AccountGroup::where('tenant_id', $tenantId)->where('code', 'IE')->first()->id,
-            ],
-            [
-                'tenant_id' => $tenantId,
-                'name' => 'Selling Expenses',
-                'code' => 'SELL',
-                'nature' => 'expenses',
-                'parent_id' => AccountGroup::where('tenant_id', $tenantId)->where('code', 'IE')->first()->id,
-            ],
-        ];
-
-        foreach ($subGroups as $group) {
-            AccountGroup::create($group);
+        if ($tenantId) {
+            self::seedForTenant($tenantId);
+            $this->command->info("Account groups seeded for tenant ID: {$tenantId}");
+        } else {
+            $this->command->error('Please provide --tenant-id option');
         }
     }
 }

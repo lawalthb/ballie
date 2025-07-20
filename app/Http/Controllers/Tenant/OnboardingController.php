@@ -10,13 +10,87 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
+use Database\Seeders\AccountGroupSeeder;
+use Database\Seeders\VoucherTypeSeeder;
+use Database\Seeders\DefaultLedgerAccountsSeeder;
 
 class OnboardingController extends Controller
 {
+    public function store(Request $request)
+    {
+        try {
+            DB::transaction(function () use ($request) {
+                $tenant = $this->createTenant($request);
+                $this->seedDefaultData($tenant);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Tenant onboarded successfully with default data',
+                    'tenant' => $tenant
+                ]);
+            });
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Onboarding failed: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    private function seedDefaultData($tenant)
+    {
+        AccountGroupSeeder::seedForTenant($tenant->id);
+        VoucherTypeSeeder::seedForTenant($tenant->id);
+        DefaultLedgerAccountsSeeder::seedForTenant($tenant->id);
+
+        Log::info("Default data seeded for tenant: {$tenant->name} (ID: {$tenant->id})");
+    }
+
+    private function createTenant($request)
+    {
+        return Tenant::create([]);
+    }
+
+    public function checkOnboardingStatus($tenantId)
+    {
+        $accountGroupsCount = \App\Models\AccountGroup::where('tenant_id', $tenantId)->count();
+        $voucherTypesCount = \App\Models\VoucherType::where('tenant_id', $tenantId)->count();
+        $ledgerAccountsCount = \App\Models\LedgerAccount::where('tenant_id', $tenantId)->count();
+
+        return response()->json([
+            'onboarding_complete' => $accountGroupsCount > 0 && $voucherTypesCount > 0 && $ledgerAccountsCount > 0,
+            'account_groups' => $accountGroupsCount,
+            'voucher_types' => $voucherTypesCount,
+            'ledger_accounts' => $ledgerAccountsCount,
+        ]);
+    }
+
+    public function reseedDefaultData($tenantId)
+    {
+        try {
+            $tenant = \App\Models\Tenant::findOrFail($tenantId);
+
+            DB::transaction(function () use ($tenant) {
+                $this->seedDefaultData($tenant);
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Default data re-seeded successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Re-seeding failed: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function index(Tenant $tenant)
     {
-        // Check if onboarding is already completed
         if ($tenant->onboarding_completed_at) {
             return redirect()->route('tenant.dashboard', ['tenant' => $tenant->slug]);
         }
@@ -26,7 +100,6 @@ class OnboardingController extends Controller
 
     public function showStep(Tenant $tenant, $step)
     {
-        // Check if onboarding is already completed
         if ($tenant->onboarding_completed_at) {
             return redirect()->route('tenant.dashboard', ['tenant' => $tenant->slug]);
         }
@@ -50,7 +123,6 @@ class OnboardingController extends Controller
             case 'team':
                 return $this->saveTeamStep($request, $tenant);
             default:
-
                 return redirect()->route('tenant.onboarding.index', ['tenant' => $tenant->slug]);
         }
     }
@@ -75,16 +147,13 @@ class OnboardingController extends Controller
 
         $data = $request->except(['logo']);
 
-        // Handle logo upload
         if ($request->hasFile('logo')) {
             $logoPath = $request->file('logo')->store('tenant-logos', 'public');
             $data['logo'] = $logoPath;
         }
 
-        // Update tenant information
         $tenant->update($data);
 
-        // Update onboarding progress
         $progress = $tenant->onboarding_progress ?? [];
         $progress['company'] = true;
         $tenant->update(['onboarding_progress' => $progress]);
@@ -117,12 +186,10 @@ class OnboardingController extends Controller
         $data['enable_withholding_tax'] = $request->boolean('enable_withholding_tax');
         $data['features'] = $request->input('features', []);
 
-        // Save preferences to tenant settings
         $settings = $tenant->settings ?? [];
         $settings = array_merge($settings, $data);
         $tenant->update(['settings' => $settings]);
 
-        // Update onboarding progress
         $progress = $tenant->onboarding_progress ?? [];
         $progress['preferences'] = true;
         $tenant->update(['onboarding_progress' => $progress]);
@@ -135,7 +202,6 @@ class OnboardingController extends Controller
 
     public function saveTeamStep(Request $request, Tenant $tenant)
     {
-        // If skipping team setup
         if ($request->has('skip_team') && $request->skip_team == '1') {
             return redirect()->route('tenant.onboarding.step', [
                 'tenant' => $tenant->slug,
@@ -143,15 +209,12 @@ class OnboardingController extends Controller
             ])->with('success', 'Team setup skipped. You can add team members later from your dashboard.');
         }
 
-        // Validate team members if any are provided
         $teamMembers = $request->input('team_members', []);
 
-        // Filter out empty team members
         $validTeamMembers = array_filter($teamMembers, function($member) {
             return !empty($member['name']) || !empty($member['email']) || !empty($member['role']);
         });
 
-        // Validate each team member that has data
         if (!empty($validTeamMembers)) {
             $rules = [];
             $messages = [];
@@ -170,9 +233,7 @@ class OnboardingController extends Controller
 
             $request->validate($rules, $messages);
 
-            // Process and save team members
             foreach ($validTeamMembers as $memberData) {
-                // Create user invitation or save team member data
                 $this->createTeamMemberInvitation($tenant, $memberData);
             }
 
@@ -182,7 +243,6 @@ class OnboardingController extends Controller
             $successMessage = "Team setup completed. You can add team members later from your dashboard.";
         }
 
-        // Update onboarding progress
         $progress = $tenant->onboarding_progress ?? [];
         $progress['team'] = true;
         $tenant->update(['onboarding_progress' => $progress]);
@@ -195,42 +255,14 @@ class OnboardingController extends Controller
 
     private function createTeamMemberInvitation($tenant, $memberData)
     {
-        // Here you would typically:
-        // 1. Create a user invitation record
-        // 2. Send invitation email
-        // 3. Store team member data
-
-        // For now, let's just log it
-        \Log::info('Team member invitation created', [
+        Log::info('Team member invitation created', [
             'tenant_id' => $tenant->id,
             'member_data' => $memberData
         ]);
-
-        // You can implement the actual invitation logic here
-        // Example:
-        // TeamInvitation::create([
-        //     'tenant_id' => $tenant->id,
-        //     'email' => $memberData['email'],
-        //     'name' => $memberData['name'],
-        //     'role' => $memberData['role'],
-        //     'department' => $memberData['department'] ?? null,
-        //     'invited_by' => auth()->id(),
-        //     'token' => Str::random(32),
-        //     'expires_at' => now()->addDays(7),
-        // ]);
-
-        // Send invitation email
-        // Mail::to($memberData['email'])->send(new TeamInvitationMail($invitation));
     }
 
-    /**
-     * Get the current tenant
-     *
-     * @return \App\Models\Tenant
-     */
     private function getCurrentTenant()
     {
-        // Get the current tenant from the route parameter
         $routeParameters = request()->route()->parameters();
         if (isset($routeParameters['tenant'])) {
             if ($routeParameters['tenant'] instanceof Tenant) {
@@ -240,12 +272,10 @@ class OnboardingController extends Controller
             }
         }
 
-        // Fallback to the tenant from the subdomain/domain if using that approach
         if (function_exists('tenant') && tenant()) {
             return tenant();
         }
 
-        // If all else fails, try to get the tenant from the authenticated user
         if (auth()->check() && auth()->user()->tenant_id) {
             return Tenant::find(auth()->user()->tenant_id);
         }
@@ -253,20 +283,14 @@ class OnboardingController extends Controller
         throw new \Exception('Could not determine the current tenant.');
     }
 
-    /**
-     * Complete the onboarding process
-     */
     public function complete(Request $request, Tenant $tenant)
     {
         $tenant = $request->route('tenant');
 
+        AccountGroupSeeder::seedForTenant($tenant->id);
+        VoucherTypeSeeder::seedForTenant($tenant->id);
+        DefaultLedgerAccountsSeeder::seedForTenant($tenant->id);
 
-    // Setup accounting structure
-    \Database\Seeders\AccountGroupSeeder::seedForTenant($tenant->id);
-    \Database\Seeders\VoucherTypeSeeder::seedForTenant($tenant->id);
-
-    
-        // Update tenant to mark onboarding as complete
         $tenant->update([
             'onboarding_completed_at' => now(),
             'onboarding_progress' => [
@@ -277,8 +301,6 @@ class OnboardingController extends Controller
             ]
         ]);
 
-
-        // Redirect to dashboard
         return redirect()->route('tenant.dashboard', ['tenant' => $tenant->slug])
             ->with('success', 'Welcome to Ballie! Your account is now fully set up and ready to use.');
     }
