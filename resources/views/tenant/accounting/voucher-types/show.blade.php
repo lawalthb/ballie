@@ -344,11 +344,20 @@
                             <dt class="text-sm font-medium text-gray-500">Default Accounts</dt>
                             <dd class="mt-1">
                                 <div class="space-y-1">
-                                    @foreach($voucherType->default_accounts as $accountType => $accountId)
-                                    <div class="text-xs bg-gray-100 px-2 py-1 rounded">
-                                        {{ ucfirst(str_replace('_', ' ', $accountType)) }}: {{ $accountId }}
-                                    </div>
-                                    @endforeach
+                                    @if($voucherType->default_accounts && is_array($voucherType->default_accounts))
+                                        @foreach($voucherType->default_accounts as $accountType => $accountId)
+                                            <div class="flex justify-between py-2">
+            <span class="text-sm text-gray-600">
+                {{ ucfirst(str_replace('_', ' ', $accountType)) }}:
+            </span>
+            <span class="text-sm font-medium text-gray-900">
+                {{ $accountId }}
+            </span>
+        </div>
+    @endforeach
+@else
+    <p class="text-sm text-gray-500">No default accounts configured</p>
+@endif
                                 </div>
                             </dd>
                         </div>

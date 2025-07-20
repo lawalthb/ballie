@@ -107,21 +107,7 @@ Route::middleware(['auth'])->group(function () {
 
             });
 
-            // Vouchers
-            Route::prefix('vouchers')->name('vouchers.')->group(function () {
-                Route::get('/', [VoucherController::class, 'index'])->name('index');
-                Route::get('/create', [VoucherController::class, 'create'])->name('create');
-                Route::post('/', [VoucherController::class, 'store'])->name('store');
-                Route::get('/{voucher}', [VoucherController::class, 'show'])->name('show');
-                Route::get('/{voucher}/edit', [VoucherController::class, 'edit'])->name('edit');
-                Route::put('/{voucher}', [VoucherController::class, 'update'])->name('update');
-                Route::delete('/{voucher}', [VoucherController::class, 'destroy'])->name('destroy');
-                Route::post('/{voucher}/approve', [VoucherController::class, 'approve'])->name('approve');
-                Route::post('/{voucher}/reject', [VoucherController::class, 'reject'])->name('reject');
-                Route::post('/{voucher}/cancel', [VoucherController::class, 'cancel'])->name('cancel');
-                Route::get('/{voucher}/pdf', [VoucherController::class, 'generatePdf'])->name('pdf');
-                Route::post('/{voucher}/duplicate', [VoucherController::class, 'duplicate'])->name('duplicate');
-            });
+      
 
             // Expenses (add if not exists)
             Route::prefix('expenses')->name('expenses.')->group(function () {

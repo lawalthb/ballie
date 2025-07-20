@@ -37,7 +37,7 @@
                 </div>
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Add Your Products</h3>
                 <p class="text-gray-600 mb-4">Start by adding your products or services to your inventory.</p>
-                <a href="{{ route('tenant.products.create', ['tenant' => $currentTenant->slug]) }}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                <a href="#" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                     Add Products
                 </a>
             </div>
