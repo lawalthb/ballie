@@ -2,6 +2,105 @@
 
 @section('title', 'Ledger Accounts')
 
+@push('styles')
+<style>
+    /* Account Tree Styles */
+    .account-tree .account-item {
+        transition: background-color 0.15s ease-in-out;
+    }
+
+    .account-tree .account-item:hover {
+        background-color: #f9fafb;
+    }
+
+    .account-tree .level-0 {
+        padding-left: 0;
+    }
+
+    .account-tree .level-1 {
+        padding-left: 1.5rem;
+        border-left: 2px solid #e5e7eb;
+        margin-left: 0.75rem;
+    }
+
+    .account-tree .level-2 {
+        padding-left: 3rem;
+        border-left: 2px solid #e5e7eb;
+        margin-left: 1.5rem;
+    }
+
+    .account-tree .level-3 {
+        padding-left: 4.5rem;
+        border-left: 2px solid #e5e7eb;
+        margin-left: 2.25rem;
+    }
+
+    /* Balance Colors */
+    .balance-positive {
+        color: #059669;
+        font-weight: 500;
+    }
+
+    .balance-negative {
+        color: #dc2626;
+        font-weight: 500;
+    }
+
+    .balance-zero {
+        color: #6b7280;
+    }
+
+    /* Toggle Button Animation */
+    .toggle-children svg {
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .toggle-children.expanded svg {
+        transform: rotate(90deg);
+    }
+
+    /* Custom scrollbar for better UX */
+    .overflow-x-auto::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .overflow-x-auto::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 4px;
+    }
+
+    .overflow-x-auto::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+
+    .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+
+    /* Form focus states */
+    .form-checkbox:checked {
+        background-color: #3b82f6;
+        border-color: #3b82f6;
+    }
+
+    .form-checkbox:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Responsive table improvements */
+    @media (max-width: 768px) {
+        .account-tree .level-1,
+        .account-tree .level-2,
+        .account-tree .level-3 {
+            padding-left: 1rem;
+            margin-left: 0.5rem;
+        }
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="space-y-6">
     <!-- Header -->
@@ -24,20 +123,20 @@
                    class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md {{ $viewType === 'tree' ? 'bg-primary-100 text-primary-700' : 'text-gray-500 hover:text-gray-700' }}">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h2a2 2 0 012 2v0H8v0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h2a2 2 0 012 2v0M8 5a2 2 0 012-2h2a2 2 0 012 2v0"></path>
                     </svg>
                     Tree
                 </a>
             </div>
 
             <!-- Actions Dropdown -->
-            <div class="relative" x-data="{ open: false }">
-                <button @click="open = !open"
-                        class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-50 focus:bg-gray-50 active:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition ease-in-out duration-150">
+            <div class="relative inline-block text-left" x-data="{ open: false }">
+                <button @click="open = !open" type="button"
+                        class="inline-flex items-center px-4 py-2 bg-primary-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-700 focus:bg-primary-700 active:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
-                    Actions
+                    Add Account
                     <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
@@ -50,9 +149,16 @@
                      x-transition:leave="transition ease-in duration-75"
                      x-transition:leave-start="transform opacity-100 scale-100"
                      x-transition:leave-end="transform opacity-0 scale-95"
-                     class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                     class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
                     <div class="py-1">
-                        <button @click="$refs.importModal.click(); open = false"
+                        <a href="{{ route('tenant.accounting.ledger-accounts.create', $tenant) }}"
+                           class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Create Account
+                        </a>
+                        <button @click="openImportModal(); open = false"
                                 class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
@@ -66,6 +172,7 @@
                             </svg>
                             Export Accounts
                         </a>
+                        <div class="border-t border-gray-100"></div>
                         <a href="{{ route('tenant.accounting.ledger-accounts.template', $tenant) }}"
                            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -76,15 +183,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Create Account Button -->
-            <a href="{{ route('tenant.accounting.ledger-accounts.create', $tenant) }}"
-               class="inline-flex items-center px-4 py-2 bg-primary-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-700 focus:bg-primary-700 active:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                Create Account
-            </a>
         </div>
     </div>
 
@@ -131,7 +229,7 @@
                 <div class="flex-shrink-0">
                     <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
                         <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                         </svg>
                     </div>
                 </div>
@@ -150,7 +248,7 @@
                     <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
                         <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h2a2 2 0 012 2v0H8v0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h2a2 2 0 012 2v0M8 5a2 2 0 012-2h2a2 2 0 012 2v0"></path>
                         </svg>
                     </div>
                 </div>
@@ -263,7 +361,7 @@
                                 class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 rounded-lg">
                             <option value="name" {{ request('sort') === 'name' ? 'selected' : '' }}>Name</option>
                             <option value="code" {{ request('sort') === 'code' ? 'selected' : '' }}>Code</option>
-                            <option value="account_type" {{ request('sort') === 'account_type' ? 'selected' : '' }}>Account Type</option>
+                            <option value="account_type" {{ request('sort') === 'account_type' ? 'selected' : '' }}>Type</option>
                             <option value="created_at" {{ request('sort') === 'created_at' ? 'selected' : '' }}>Date Created</option>
                         </select>
                     </div>
@@ -292,7 +390,7 @@
                     </div>
 
                     <!-- Active Filters Display -->
-                    @if(request()->hasAny(['search', 'account_type', 'account_group_id', 'is_active', 'sort']))
+                    @if(request()->hasAny(['search', 'account_type', 'account_group_id', 'is_active']))
                         <div class="flex flex-wrap items-center gap-2">
                             <span class="text-sm text-gray-500">Active filters:</span>
 
@@ -318,45 +416,92 @@
                                 </span>
                             @endif
 
+                            @if(request('account_group_id'))
+                                @php
+                                    $selectedGroup = $accountGroups->find(request('account_group_id'));
+                                @endphp
+                                @if($selectedGroup)
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                        Group: {{ $selectedGroup->name }}
+                                        <a href="{{ request()->fullUrlWithQuery(['account_group_id' => null]) }}" class="ml-1 text-purple-600 hover:text-purple-800">
+                                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                            </svg>
+                                        </a>
+                                    </span>
+                                @endif
+                            @endif
+
                             @if(request('is_active'))
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                     Status: {{ request('is_active') === '1' ? 'Active' : 'Inactive' }}
-                                    <a href="{{ request()->fullUrlWithQuery(['is_active' => null]) }}" class="ml-1 text-purple-600 hover:text-purple-800">
+                                    <a href="{{ request()->fullUrlWithQuery(['is_active' => null]) }}" class="ml-1 text-blue-600 hover:text-blue-800">
                                         <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                                        </svg>
-                                    </a>
-                                </span>
+                                            </svg>
+                                        </a>
+                                    </span>
+                                @endif
                             @endif
                         </div>
-                    @endif
+                
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Accounts Content -->
+    <!-- Accounts Display -->
     <div class="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
         @if($viewType === 'tree')
-            @include('tenant.accounting.ledger-accounts.partials.account-tree', ['accounts' => $accounts])
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">Account Hierarchy</h3>
+                <p class="mt-1 text-sm text-gray-500">View accounts in a hierarchical tree structure</p>
+            </div>
+            <div class="p-6">
+                @include('tenant.accounting.ledger-accounts.partials.account-tree', ['accounts' => $accounts])
+            </div>
         @else
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">Account List</h3>
+                <p class="mt-1 text-sm text-gray-500">View all accounts in a detailed list format</p>
+            </div>
             @include('tenant.accounting.ledger-accounts.partials.account-list', ['accounts' => $accounts])
         @endif
     </div>
 </div>
 
 <!-- Import Modal -->
-@include('tenant.accounting.ledger-accounts.partials.import-modal')
-
-<!-- Hidden button for modal trigger -->
-<button x-ref="importModal" data-bs-toggle="modal" data-bs-target="#importModal" class="hidden"></button>
+<div x-data="importModal()" x-show="open" style="display: none;">
+    @include('tenant.accounting.ledger-accounts.partials.import-modal')
+</div>
 
 <script>
+// Alpine.js component for import modal
+function importModal() {
+    return {
+        open: false,
+        init() {
+            // Listen for global modal open events
+            window.addEventListener('open-import-modal', () => {
+                this.open = true;
+            });
+        }
+    }
+}
+
+// Global function to open import modal
+function openImportModal() {
+    window.dispatchEvent(new CustomEvent('open-import-modal'));
+}
+
+// Auto-submit form on filter change (optional)
 document.addEventListener('DOMContentLoaded', function() {
-    // Auto-submit form on filter change
-    document.querySelectorAll('select[name="account_type"], select[name="account_group_id"], select[name="is_active"]').forEach(function(select) {
+    const autoSubmitSelects = document.querySelectorAll('select[name="account_type"], select[name="account_group_id"], select[name="is_active"]');
+
+    autoSubmitSelects.forEach(function(select) {
         select.addEventListener('change', function() {
-            this.form.submit();
+            // Optional: Auto-submit on change
+            // this.form.submit();
         });
     });
 });
