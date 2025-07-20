@@ -160,6 +160,10 @@ Route::prefix('ledger-accounts')->name('ledger-accounts.')->group(function () {
     Route::post('/bulk-delete', [LedgerAccountController::class, 'bulkDelete'])->name('bulk-delete');
     Route::post('/bulk-activate', [LedgerAccountController::class, 'bulkActivate'])->name('bulk-activate');
     Route::post('/bulk-deactivate', [LedgerAccountController::class, 'bulkDeactivate'])->name('bulk-deactivate');
+  
+    Route::patch('/{ledgerAccount}/toggle-status', [LedgerAccountController::class, 'toggleStatus'])->name('toggle-status');
+
+
 });
 
 

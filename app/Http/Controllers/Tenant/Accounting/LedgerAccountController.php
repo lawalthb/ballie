@@ -183,23 +183,43 @@ class LedgerAccountController extends Controller
         }
     }
 
-    public function show(Request $request, Tenant $tenant, LedgerAccount $ledgerAccount)
-    {
-        $ledgerAccount->load(['accountGroup', 'parent', 'children']);
+public function show(Request $request, Tenant $tenant, LedgerAccount $ledgerAccount)
+{
+    $ledgerAccount->load(['accountGroup', 'parent', 'children']);
 
-        // Get recent transactions for this account (if you have transactions table)
-        // $recentTransactions = $ledgerAccount->transactions()->latest()->take(10)->get();
+    // Get recent transactions for this account
+    $recentTransactions = collect(); // Empty collection for now
 
-        // Get account balance history (if you track balance changes)
-        // $balanceHistory = $ledgerAccount->balanceHistory()->latest()->take(20)->get();
+    // If you have voucher entries relationship, uncomment this:
+    // $recentTransactions = $ledgerAccount->voucherEntries()
+    //     ->with(['voucher'])
+    //     ->latest()
+    //     ->take(10)
+    //     ->get();
 
-        return view('tenant.accounting.ledger-accounts.show', compact(
-            'tenant',
-            'ledgerAccount'
-            // 'recentTransactions',
-            // 'balanceHistory'
-        ));
-    }
+    // Get account balance totals
+    $totalDebits = 0;
+    $totalCredits = 0;
+    $transactionCount = 0;
+    $lastTransaction = null;
+
+    // If you have voucher entries relationship, uncomment these:
+    // $totalDebits = $ledgerAccount->voucherEntries()->sum('debit_amount');
+    // $totalCredits = $ledgerAccount->voucherEntries()->sum('credit_amount');
+    // $transactionCount = $ledgerAccount->voucherEntries()->count();
+    // $lastTransaction = $ledgerAccount->voucherEntries()->latest()->first();
+
+    return view('tenant.accounting.ledger-accounts.show', compact(
+        'tenant',
+        'ledgerAccount',
+        'recentTransactions',
+        'totalDebits',
+        'totalCredits',
+        'transactionCount',
+        'lastTransaction'
+    ));
+}
+
 
     public function edit(Request $request, Tenant $tenant, LedgerAccount $ledgerAccount)
     {
