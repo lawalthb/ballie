@@ -9,14 +9,14 @@ use App\Http\Controllers\Tenant\AuthController;
 use App\Http\Controllers\Tenant\DashboardController;
 use App\Http\Controllers\Tenant\OnboardingController;
 use App\Http\Controllers\Tenant\ProductController;
-use App\Http\Controllers\Tenant\CustomerController;
+use App\Http\Controllers\Tenant\Crm\CustomerController;
 use App\Http\Controllers\Tenant\InvoiceController;
 use App\Http\Controllers\Tenant\HelpController;
 use App\Http\Controllers\Tenant\SupportController;
 use App\Http\Controllers\Tenant\CommunityController;
 use App\Http\Controllers\Tenant\AccountingController;
 use App\Http\Controllers\Tenant\InventoryController;
-use App\Http\Controllers\Tenant\CrmController;
+use App\Http\Controllers\Tenant\Crm\CrmController;
 use App\Http\Controllers\Tenant\PosController;
 use App\Http\Controllers\Tenant\PayrollController;
 use App\Http\Controllers\Tenant\ReportsController;
@@ -24,7 +24,7 @@ use App\Http\Controllers\Tenant\DocumentsController;
 use App\Http\Controllers\Tenant\ActivityController;
 use App\Http\Controllers\Tenant\ProductCategoryController;
 use App\Http\Controllers\Tenant\SettingsController;
-use App\Http\Controllers\Tenant\VendorController;
+use App\Http\Controllers\Tenant\Crm\VendorController;
 use App\Http\Controllers\Tenant\UnitController;
 use App\Models\Tenant;
 use App\Http\Controllers\Tenant\Accounting\LedgerAccountController;
@@ -160,7 +160,7 @@ Route::prefix('ledger-accounts')->name('ledger-accounts.')->group(function () {
     Route::post('/bulk-delete', [LedgerAccountController::class, 'bulkDelete'])->name('bulk-delete');
     Route::post('/bulk-activate', [LedgerAccountController::class, 'bulkActivate'])->name('bulk-activate');
     Route::post('/bulk-deactivate', [LedgerAccountController::class, 'bulkDeactivate'])->name('bulk-deactivate');
-  
+
     Route::patch('/{ledgerAccount}/toggle-status', [LedgerAccountController::class, 'toggleStatus'])->name('toggle-status');
 
 
@@ -247,6 +247,7 @@ Route::prefix('ledger-accounts')->name('ledger-accounts.')->group(function () {
         });
 
         // CRM Module
+               // CRM Module
         Route::prefix('crm')->name('tenant.crm.')->group(function () {
             Route::get('/', [CrmController::class, 'index'])->name('index');
 
@@ -261,20 +262,18 @@ Route::prefix('ledger-accounts')->name('ledger-accounts.')->group(function () {
                 Route::delete('/{customer}', [CustomerController::class, 'destroy'])->name('destroy');
             });
 
-
-               // Vendor
-               Route::prefix('vendors')->name('vendors.')->group(function () {
-                Route::get('/', [VendorController::class, 'index'])->name('index');
-                Route::get('/create', [VendorController::class, 'create'])->name('create');
-                Route::post('/', [VendorController::class, 'store'])->name('store');
-                Route::get('/{vendor}', [VendorController::class, 'show'])->name('show');
-                Route::get('/{vendor}/edit', [VendorController::class, 'edit'])->name('edit');
-                Route::put('/{vendor}', [VendorController::class, 'update'])->name('update');
-                Route::delete('/{vendor}', [VendorController::class, 'destroy'])->name('destroy');
+            // Vendor
+            Route::prefix('vendors')->name('vendors.')->group(function () {
+                Route::get('/', [\VendorController::class, 'index'])->name('index');
+                Route::get('/create', [\VendorController::class, 'create'])->name('create');
+                Route::post('/', [\VendorController::class, 'store'])->name('store');
+                Route::get('/{vendor}', [\VendorController::class, 'show'])->name('show');
+                Route::get('/{vendor}/edit', [\VendorController::class, 'edit'])->name('edit');
+                Route::put('/{vendor}', [\VendorController::class, 'update'])->name('update');
+                Route::delete('/{vendor}', [\VendorController::class, 'destroy'])->name('destroy');
             });
-
-
         });
+
 
         // POS Module
         Route::prefix('pos')->name('tenant.pos.')->group(function () {

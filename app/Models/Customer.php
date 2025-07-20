@@ -88,14 +88,7 @@ class Customer extends Model
         return $this->belongsTo(LedgerAccount::class);
     }
 
-    /**
-     * Get the invoices for the customer.
-     */
-    public function invoices()
-    {
-        return $this->hasMany(Invoice::class);
-    }
-
+ 
     // Create ledger account for customer
     public function createLedgerAccount()
     {
