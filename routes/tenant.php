@@ -27,6 +27,7 @@ use App\Http\Controllers\Tenant\SettingsController;
 use App\Http\Controllers\Tenant\VendorController;
 use App\Http\Controllers\Tenant\UnitController;
 use App\Models\Tenant;
+use App\Http\Controllers\Tenant\Accounting\LedgerAccountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -132,6 +133,37 @@ Route::prefix('vouchers')->name('vouchers.')->group(function () {
     Route::get('/export', [VoucherController::class, 'export'])->name('export');
     Route::post('/bulk-action', [VoucherController::class, 'bulkAction'])->name('bulk.action');
 });
+
+
+// Ledger Accounts
+Route::prefix('ledger-accounts')->name('ledger-accounts.')->group(function () {
+     Route::get('/', [LedgerAccountController::class, 'index'])->name('index');
+    Route::get('/create', [LedgerAccountController::class, 'create'])->name('create');
+       Route::get('/template', [LedgerAccountController::class, 'downloadTemplate'])->name('template');
+    Route::post('/', [LedgerAccountController::class, 'store'])->name('store');
+    Route::get('/{ledgerAccount}', [LedgerAccountController::class, 'show'])->name('show');
+    Route::get('/{ledgerAccount}/edit', [LedgerAccountController::class, 'edit'])->name('edit');
+    Route::put('/{ledgerAccount}', [LedgerAccountController::class, 'update'])->name('update');
+    Route::delete('/{ledgerAccount}', [LedgerAccountController::class, 'destroy'])->name('destroy');
+
+    // Export/Import routes
+    Route::get('/export/template', [LedgerAccountController::class, 'downloadTemplate'])->name('export.template');
+    Route::post('/import', [LedgerAccountController::class, 'import'])->name('import');
+    Route::get('/export/all', [LedgerAccountController::class, 'export'])->name('export');
+
+    // Individual account actions
+    Route::get('/{ledgerAccount}/export-ledger', [LedgerAccountController::class, 'exportLedger'])->name('export-ledger');
+    Route::get('/{ledgerAccount}/print-ledger', [LedgerAccountController::class, 'printLedger'])->name('print-ledger');
+    Route::get('/{ledgerAccount}/balance', [LedgerAccountController::class, 'getBalance'])->name('balance');
+
+    // Bulk actions
+    Route::post('/bulk-delete', [LedgerAccountController::class, 'bulkDelete'])->name('bulk-delete');
+    Route::post('/bulk-activate', [LedgerAccountController::class, 'bulkActivate'])->name('bulk-activate');
+    Route::post('/bulk-deactivate', [LedgerAccountController::class, 'bulkDeactivate'])->name('bulk-deactivate');
+});
+
+
+
 
             // Expenses (add if not exists)
             Route::prefix('expenses')->name('expenses.')->group(function () {

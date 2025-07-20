@@ -201,7 +201,7 @@
         </h4>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- Chart of Accounts Card -->
-            <a href="{{ route('tenant.accounting.chart-of-accounts.index', ['tenant' => $tenant->slug]) }}"
+            <a href="{{ route('tenant.accounting.ledger-accounts.index', ['tenant' => $tenant->slug]) }}"
                class="action-card bg-gradient-to-br from-yellow-600 to-yellow-800 hover:from-yellow-500 hover:to-yellow-700 border border-yellow-500 rounded-xl p-4 transition-all duration-300 hover:shadow-lg hover:scale-105 group">
                 <div class="flex items-center mb-3">
                     <div class="w-10 h-10 bg-yellow-500 bg-opacity-30 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300">
