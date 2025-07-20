@@ -102,27 +102,32 @@ class LedgerAccountController extends Controller
         ));
     }
 
-    public function create(Request $request, Tenant $tenant)
-    {
-        $accountGroups = AccountGroup::where('tenant_id', $tenant->id)
-            ->where('is_active', true)
-            ->orderBy('name')
-            ->get();
-
-        $parentAccounts = LedgerAccount::where('tenant_id', $tenant->id)
-            ->where('is_active', true)
-            ->orderBy('name')
-            ->get();
-
-        $accountTypes = ['asset', 'liability', 'income', 'expense', 'equity'];
-
-        return view('tenant.accounting.ledger-accounts.create', compact(
-            'tenant',
-            'accountGroups',
-            'parentAccounts',
-            'accountTypes'
-        ));
+   public function create(Request $request, Tenant $tenant)
+{
+    // Create default account groups if none exist
+    if (AccountGroup::where('tenant_id', $tenant->id)->count() === 0) {
+        $this->createDefaultAccountGroups($tenant);
     }
+
+    $accountGroups = AccountGroup::where('tenant_id', $tenant->id)
+        ->where('is_active', true)
+        ->orderBy('name')
+        ->get();
+
+    $parentAccounts = LedgerAccount::where('tenant_id', $tenant->id)
+        ->where('is_active', true)
+        ->orderBy('name')
+        ->get();
+
+    $accountTypes = ['asset', 'liability', 'income', 'expense', 'equity'];
+
+    return view('tenant.accounting.ledger-accounts.create', compact(
+        'tenant',
+        'accountGroups',
+        'parentAccounts',
+        'accountTypes'
+    ));
+}
 
     public function store(Request $request, Tenant $tenant)
     {
@@ -161,10 +166,10 @@ class LedgerAccountController extends Controller
                 ]);
 
                 // Log activity
-                activity()
-                    ->performedOn($ledgerAccount)
-                    ->causedBy(auth()->user())
-                    ->log('Ledger account created');
+                // activity()
+                //     ->performedOn($ledgerAccount)
+                //     ->causedBy(auth()->user())
+                //     ->log('Ledger account created');
             });
 
             return redirect()
@@ -745,5 +750,33 @@ class LedgerAccountController extends Controller
             'total_debits' => $ledgerAccount->getTotalDebits(),
             'total_credits' => $ledgerAccount->getTotalCredits(),
         ]);
+    }
+
+    private function createDefaultAccountGroups(Tenant $tenant)
+    {
+        $defaultGroups = [
+            ['name' => 'Current Assets', 'nature' => 'assets', 'code' => 'CA'],
+            ['name' => 'Fixed Assets', 'nature' => 'assets', 'code' => 'FA'],
+            ['name' => 'Current Liabilities', 'nature' => 'liabilities', 'code' => 'CL'],
+            ['name' => 'Long Term Liabilities', 'nature' => 'liabilities', 'code' => 'LTL'],
+            ['name' => 'Owner Equity', 'nature' => 'equity', 'code' => 'OE'],
+            ['name' => 'Revenue', 'nature' => 'income', 'code' => 'REV'],
+            ['name' => 'Operating Expenses', 'nature' => 'expenses', 'code' => 'OPEX'],
+            ['name' => 'Cost of Goods Sold', 'nature' => 'expenses', 'code' => 'COGS'],
+        ];
+
+        foreach ($defaultGroups as $group) {
+            AccountGroup::firstOrCreate(
+                [
+                    'tenant_id' => $tenant->id,
+                    'code' => $group['code']
+                ],
+                [
+                    'name' => $group['name'],
+                    'nature' => $group['nature'],
+                    'is_active' => true,
+                ]
+            );
+        }
     }
 }
