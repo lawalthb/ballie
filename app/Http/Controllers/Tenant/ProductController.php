@@ -11,6 +11,7 @@ use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -255,7 +256,7 @@ public function update(Request $request, Tenant $tenant, Product $product)
             ->withInput();
     }
 }
-    
+
     public function bulkAction(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -398,4 +399,47 @@ public function update(Request $request, Tenant $tenant, Product $product)
 
         return response()->stream($callback, 200, $headers);
     }
+
+
+    public function destroy(Tenant $tenant, Product $product)
+{
+    // Ensure the product belongs to the tenant
+    if ($product->tenant_id !== $tenant->id) {
+        abort(404);
+    }
+
+    try {
+        // Check if product has any related transactions/records
+        $hasTransactions = false;
+
+        // You can add checks for related records here, for example:
+        // $hasTransactions = $product->invoiceItems()->exists() ||
+        //                   $product->purchaseItems()->exists() ||
+        //                   $product->stockMovements()->exists();
+
+        if ($hasTransactions) {
+            return redirect()->back()
+                ->with('error', 'Cannot delete product as it has related transaction records. You can deactivate it instead.');
+        }
+
+        // Delete product image if exists
+        if ($product->image_path) {
+            Storage::disk('public')->delete($product->image_path);
+        }
+
+        // Delete the product
+        $product->delete();
+
+        return redirect()->route('tenant.inventory.products.index', ['tenant' => $tenant->slug])
+            ->with('success', 'Product deleted successfully.');
+
+    } catch (\Exception $e) {
+        \Log::error('Error deleting product: ' . $e->getMessage());
+
+        return redirect()->back()
+            ->with('error', 'An error occurred while deleting the product. Please try again.');
+    }
+}
+
+
 }
