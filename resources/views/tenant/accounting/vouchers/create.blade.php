@@ -130,7 +130,9 @@
         </div>
 
         <!-- Voucher Entries -->
-      @include('tenant.accounting.vouchers.partials.voucher-entries')
+        @include('tenant.accounting.vouchers.partials.voucher-entries')
+
+    </form>
 </div>
 
 @push('scripts')
@@ -139,143 +141,21 @@ function voucherForm() {
     return {
         voucherTypeId: '{{ old('voucher_type_id', $selectedType?->id ?? '') }}',
         voucherNumberPreview: 'Auto-generated',
-        entries: [
-            {
-                ledger_account_id: '',
-                particulars: '',
-                debit_amount: '',
-                credit_amount: ''
-            },
-            {
-                ledger_account_id: '',
-                particulars: '',
-                debit_amount: '',
-                credit_amount: ''
-            }
-        ],
-        totalDebits: 0,
-        totalCredits: 0,
-        quickTemplates: [],
         voucherTypes: @json($voucherTypes->keyBy('id')),
-
-        get isBalanced() {
-            return Math.abs(this.totalDebits - this.totalCredits) < 0.01 && this.totalDebits > 0;
-        },
 
         init() {
             // Initialize with old input or duplicate data if available
-            @if(old('entries'))
-                this.entries = @json(old('entries'));
-            @elseif(isset($duplicateData) && isset($duplicateData['entries']))
-                this.entries = @json($duplicateData['entries']);
-            @endif
-
-            this.updateTotals();
             this.updateVoucherType();
-        },
-
-        addEntry() {
-            this.entries.push({
-                ledger_account_id: '',
-                particulars: '',
-                debit_amount: '',
-                credit_amount: ''
-            });
-        },
-
-        removeEntry(index) {
-            if (this.entries.length > 2) {
-                this.entries.splice(index, 1);
-                this.updateTotals();
-            }
-        },
-
-        clearDebit(index) {
-            if (this.entries[index].credit_amount) {
-                this.entries[index].debit_amount = '';
-            }
-        },
-
-        clearCredit(index) {
-            if (this.entries[index].debit_amount) {
-                this.entries[index].credit_amount = '';
-            }
-        },
-
-        updateTotals() {
-            this.totalDebits = this.entries.reduce((sum, entry) => {
-                return sum + (parseFloat(entry.debit_amount) || 0);
-            }, 0);
-
-            this.totalCredits = this.entries.reduce((sum, entry) => {
-                return sum + (parseFloat(entry.credit_amount) || 0);
-            }, 0);
+            console.log('✅ Voucher form initialized');
         },
 
         updateVoucherType() {
             if (this.voucherTypeId && this.voucherTypes[this.voucherTypeId]) {
                 const voucherType = this.voucherTypes[this.voucherTypeId];
                 this.voucherNumberPreview = voucherType.prefix + 'XXXX';
-                this.loadQuickTemplates(voucherType.code);
             } else {
                 this.voucherNumberPreview = 'Auto-generated';
-                this.quickTemplates = [];
             }
-        },
-
-        loadQuickTemplates(typeCode) {
-            const templates = {
-                'JOURNAL': [
-                    { name: 'Adjustment Entry', description: 'General adjustment between accounts' },
-                    { name: 'Accrual Entry', description: 'Record accrued expenses or income' },
-                    { name: 'Depreciation', description: 'Monthly depreciation entry' }
-                ],
-                'PAYMENT': [
-                    { name: 'Supplier Payment', description: 'Payment to supplier/vendor' },
-                    { name: 'Expense Payment', description: 'Direct expense payment' },
-                    { name: 'Loan Payment', description: 'Loan installment payment' }
-                ],
-                'RECEIPT': [
-                    { name: 'Customer Receipt', description: 'Receipt from customer' },
-                    { name: 'Cash Sales', description: 'Direct cash sales receipt' },
-                    { name: 'Other Income', description: 'Miscellaneous income receipt' }
-                ],
-                'SALES': [
-                    { name: 'Credit Sales', description: 'Sales on credit terms' },
-                    { name: 'Cash Sales', description: 'Direct cash sales' },
-                    { name: 'Service Income', description: 'Service revenue recognition' }
-                ],
-                'PURCHASE': [
-                    { name: 'Inventory Purchase', description: 'Purchase of goods for resale' },
-                    { name: 'Asset Purchase', description: 'Purchase of fixed assets' },
-                    { name: 'Expense Purchase', description: 'Purchase of consumables/expenses' }
-                ]
-            };
-
-            this.quickTemplates = templates[typeCode] || [];
-        },
-
-        applyTemplate(template) {
-            alert('Template: ' + template.name + '\nThis feature can be customized to auto-fill common entries.');
-        },
-
-        updateEntryAccount(index) {
-            if (!this.entries[index].particulars && this.entries[index].ledger_account_id) {
-                const accountSelect = document.querySelector(`select[name="entries[${index}][ledger_account_id]"]`);
-                if (accountSelect && accountSelect.selectedIndex > 0) {
-                    const selectedOption = accountSelect.options[accountSelect.selectedIndex];
-                    if (selectedOption && selectedOption.text) {
-                        this.entries[index].particulars = 'Being ' + selectedOption.text.split(' (')[0];
-                    }
-                }
-            }
-        },
-
-        formatNumber(num) {
-            return new Intl.NumberFormat('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }).format(num || 0);
         }
     }
 }
