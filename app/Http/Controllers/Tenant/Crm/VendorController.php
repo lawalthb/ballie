@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Tenant;
+namespace App\Http\Controllers\Tenant\Crm;
 
 use App\Http\Controllers\Controller;
 use App\Models\Vendor;
@@ -87,7 +87,7 @@ class VendorController extends Controller
         // Update outstanding balance from ledger
         $vendor->updateOutstandingBalance();
 
-        return view('tenant.vendors.show', compact('vendor'));
+        return view('tenant.crm.vendors.show', compact('vendor'));
     }
 
     public function edit(Tenant $tenant, $id)
@@ -95,7 +95,7 @@ class VendorController extends Controller
         $vendor = Vendor::where('tenant_id', $tenant->id)
             ->findOrFail($id);
 
-        return view('tenant.vendors.edit', compact('vendor'));
+        return view('tenant.crm.vendors.edit', compact('vendor'));
     }
 
     public function update(Request $request, $id)

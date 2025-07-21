@@ -193,29 +193,32 @@
                         <div class="hidden text-sm text-red-600 mt-1 field-error" id="company_name-error"></div>
                     </div>
 
-                    <div class="mt-4">
-                        <label for="tax_id" class="block text-sm font-medium text-gray-700 mb-1">
-                            Tax ID
-                        </label>
-                        <input type="text" name="tax_id" id="tax_id"
-                            class="mt-1 focus:ring-purple-500 focus:border-purple-500 block w-full shadow-sm sm:text-sm rounded-md {{ $errors->has('tax_id') ? 'border-red-300' : 'border-gray-300' }}"
-                            value="{{ old('tax_id') }}" placeholder="123456789">
-                        @error('tax_id')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+    <div>
+        <label for="tax_id" class="block text-sm font-medium text-gray-700 mb-1">
+            TIN No.
+        </label>
+        <input type="text" name="tax_id" id="tax_id"
+            class="mt-1 focus:ring-purple-500 focus:border-purple-500 block w-full shadow-sm sm:text-sm rounded-md {{ $errors->has('tax_id') ? 'border-red-300' : 'border-gray-300' }}"
+            value="{{ old('tax_id') }}" placeholder="123456789">
+        @error('tax_id')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+        @enderror
+    </div>
 
-                    <div class="mt-4">
-                        <label for="registration_number" class="block text-sm font-medium text-gray-700 mb-1">
-                            Registration Number
-                        </label>
-                        <input type="text" name="registration_number" id="registration_number"
-                        class="mt-1 focus:ring-purple-500 focus:border-purple-500 block w-full shadow-sm sm:text-sm rounded-md {{ $errors->has('registration_number') ? 'border-red-300' : 'border-gray-300' }}"
-                        value="{{ old('registration_number') }}" placeholder="REG123456">
-                    @error('registration_number')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
+    <div>
+        <label for="registration_number" class="block text-sm font-medium text-gray-700 mb-1">
+            Registration Number
+        </label>
+        <input type="text" name="registration_number" id="registration_number"
+            class="mt-1 focus:ring-purple-500 focus:border-purple-500 block w-full shadow-sm sm:text-sm rounded-md {{ $errors->has('registration_number') ? 'border-red-300' : 'border-gray-300' }}"
+            value="{{ old('registration_number') }}" placeholder="REG123456">
+        @error('registration_number')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+        @enderror
+    </div>
+</div>
+
             </div>
 
             <!-- Common Fields -->
@@ -240,7 +243,7 @@
                         </label>
                         <input type="tel" name="phone" id="phone"
                             class="mt-1 focus:ring-purple-500 focus:border-purple-500 block w-full shadow-sm sm:text-sm rounded-md {{ $errors->has('phone') ? 'border-red-300' : 'border-gray-300' }}"
-                            value="{{ old('phone') }}" placeholder="+1 (555) 123-4567">
+                            value="{{ old('phone') }}" placeholder="08132712715">
                         @error('phone')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -887,18 +890,18 @@ document.getElementById('save-draft-btn').addEventListener('click', function() {
 });
 
 // Auto-format phone numbers
-const phoneInputs = document.querySelectorAll('input[type="tel"]');
-phoneInputs.forEach(input => {
-    input.addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length >= 6) {
-            value = value.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
-        } else if (value.length >= 3) {
-            value = value.replace(/(\d{3})(\d{0,3})/, '($1) $2');
-        }
-        e.target.value = value;
-    });
-});
+// const phoneInputs = document.querySelectorAll('input[type="tel"]');
+// phoneInputs.forEach(input => {
+//     input.addEventListener('input', function(e) {
+//         let value = e.target.value.replace(/\D/g, '');
+//         if (value.length >= 6) {
+//             value = value.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+//         } else if (value.length >= 3) {
+//             value = value.replace(/(\d{3})(\d{0,3})/, '($1) $2');
+//         }
+//         e.target.value = value;
+//     });
+// });
 
 // Auto-format credit limit
 const creditLimitInput = document.getElementById('credit_limit');

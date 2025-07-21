@@ -60,7 +60,7 @@ class CustomerController extends Controller
             }
         }
 
-        $customers = Customer::where('tenant_id', $tenant->id)-> paginate(10);
+        $customers = Customer::where('tenant_id', $tenant->id)->latest()-> paginate(10);
 
         // Calculate statistics for the index page
         $totalCustomers = Customer::where('tenant_id', $tenant->id)->count();

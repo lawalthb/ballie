@@ -216,6 +216,8 @@ Route::prefix('ledger-accounts')->name('ledger-accounts.')->group(function () {
                 Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
                 Route::put('/{product}', [ProductController::class, 'update'])->name('update');
                 Route::delete('/{product}', [ProductController::class, 'destroy'])->name('destroy');
+              
+                Route::patch('/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('toggle-status');
             });
 
                 // Units
@@ -264,13 +266,13 @@ Route::prefix('ledger-accounts')->name('ledger-accounts.')->group(function () {
 
             // Vendor
             Route::prefix('vendors')->name('vendors.')->group(function () {
-                Route::get('/', [\VendorController::class, 'index'])->name('index');
-                Route::get('/create', [\VendorController::class, 'create'])->name('create');
-                Route::post('/', [\VendorController::class, 'store'])->name('store');
-                Route::get('/{vendor}', [\VendorController::class, 'show'])->name('show');
-                Route::get('/{vendor}/edit', [\VendorController::class, 'edit'])->name('edit');
-                Route::put('/{vendor}', [\VendorController::class, 'update'])->name('update');
-                Route::delete('/{vendor}', [\VendorController::class, 'destroy'])->name('destroy');
+                Route::get('/', [VendorController::class, 'index'])->name('index');
+                Route::get('/create', [VendorController::class, 'create'])->name('create');
+                Route::post('/', [VendorController::class, 'store'])->name('store');
+                Route::get('/{vendor}', [VendorController::class, 'show'])->name('show');
+                Route::get('/{vendor}/edit', [VendorController::class, 'edit'])->name('edit');
+                Route::put('/{vendor}', [VendorController::class, 'update'])->name('update');
+                Route::delete('/{vendor}', [VendorController::class, 'destroy'])->name('destroy');
             });
         });
 
