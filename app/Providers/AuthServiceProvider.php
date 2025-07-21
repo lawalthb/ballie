@@ -14,7 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // ... existing policies
-        VoucherType::class => VoucherTypePolicy::class,
+      //  VoucherType::class => VoucherTypePolicy::class,
     ];
 
     /**

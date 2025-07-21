@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\Tenant;
-
+use App\Models\ProductCategory;
+use App\Models\Unit;
+use App\Models\LedgerAccount;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant;
 use App\Models\User;
@@ -16,6 +18,8 @@ use Illuminate\Validation\Rule;
 use Database\Seeders\AccountGroupSeeder;
 use Database\Seeders\VoucherTypeSeeder;
 use Database\Seeders\DefaultLedgerAccountsSeeder;
+use Database\Seeders\DefaultProductCategoriesSeeder;
+use Database\Seeders\DefaultUnitsSeeder;
 
 class OnboardingController extends Controller
 {
@@ -40,13 +44,35 @@ class OnboardingController extends Controller
         }
     }
 
-    private function seedDefaultData($tenant)
+   private function seedDefaultData($tenant)
     {
-        AccountGroupSeeder::seedForTenant($tenant->id);
-        VoucherTypeSeeder::seedForTenant($tenant->id);
-        DefaultLedgerAccountsSeeder::seedForTenant($tenant->id);
+        try {
+            // Seed Account Groups
+            AccountGroupSeeder::seedForTenant($tenant->id);
+            Log::info("Account groups seeded for tenant: {$tenant->id}");
 
-        Log::info("Default data seeded for tenant: {$tenant->name} (ID: {$tenant->id})");
+            // Seed Voucher Types
+            VoucherTypeSeeder::seedForTenant($tenant->id);
+            Log::info("Voucher types seeded for tenant: {$tenant->id}");
+
+            // Seed Default Ledger Accounts
+            DefaultLedgerAccountsSeeder::seedForTenant($tenant->id);
+            Log::info("Ledger accounts seeded for tenant: {$tenant->id}");
+
+            // Seed Product Categories
+            DefaultProductCategoriesSeeder::seedForTenant($tenant->id);
+            Log::info("Product categories seeded for tenant: {$tenant->id}");
+
+            // Seed Units
+            DefaultUnitsSeeder::seedForTenant($tenant->id);
+            Log::info("Units seeded for tenant: {$tenant->id}");
+
+            Log::info("All default data seeded successfully for tenant: {$tenant->name} (ID: {$tenant->id})");
+
+        } catch (\Exception $e) {
+            Log::error("Error seeding default data for tenant {$tenant->id}: " . $e->getMessage());
+            throw $e;
+        }
     }
 
     private function createTenant($request)
@@ -54,18 +80,32 @@ class OnboardingController extends Controller
         return Tenant::create([]);
     }
 
-    public function checkOnboardingStatus($tenantId)
+   public function checkOnboardingStatus($tenantId)
     {
-        $accountGroupsCount = \App\Models\AccountGroup::where('tenant_id', $tenantId)->count();
-        $voucherTypesCount = \App\Models\VoucherType::where('tenant_id', $tenantId)->count();
-        $ledgerAccountsCount = \App\Models\LedgerAccount::where('tenant_id', $tenantId)->count();
+        try {
+            $accountGroupsCount = \App\Models\AccountGroup::where('tenant_id', $tenantId)->count();
+            $voucherTypesCount = \App\Models\VoucherType::where('tenant_id', $tenantId)->count();
+            $ledgerAccountsCount = \App\Models\LedgerAccount::where('tenant_id', $tenantId)->count();
+            $categoriesCount = \App\Models\ProductCategory::where('tenant_id', $tenantId)->count();
+            $unitsCount = \App\Models\Unit::where('tenant_id', $tenantId)->count();
 
-        return response()->json([
-            'onboarding_complete' => $accountGroupsCount > 0 && $voucherTypesCount > 0 && $ledgerAccountsCount > 0,
-            'account_groups' => $accountGroupsCount,
-            'voucher_types' => $voucherTypesCount,
-            'ledger_accounts' => $ledgerAccountsCount,
-        ]);
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'account_groups' => $accountGroupsCount,
+                    'voucher_types' => $voucherTypesCount,
+                    'ledger_accounts' => $ledgerAccountsCount,
+                    'product_categories' => $categoriesCount,
+                    'units' => $unitsCount,
+                    'total_seeded_items' => $accountGroupsCount + $voucherTypesCount + $ledgerAccountsCount + $categoriesCount + $unitsCount
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error checking onboarding status: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function reseedDefaultData($tenantId)
@@ -287,10 +327,9 @@ class OnboardingController extends Controller
     {
         $tenant = $request->route('tenant');
 
-        AccountGroupSeeder::seedForTenant($tenant->id);
-        VoucherTypeSeeder::seedForTenant($tenant->id);
-        DefaultLedgerAccountsSeeder::seedForTenant($tenant->id);
 
+   // Seed default data for the tenant
+                $this->seedDefaultData($tenant);
         $tenant->update([
             'onboarding_completed_at' => now(),
             'onboarding_progress' => [
