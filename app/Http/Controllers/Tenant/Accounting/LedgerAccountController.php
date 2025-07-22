@@ -131,26 +131,39 @@ class LedgerAccountController extends Controller
 
     public function store(Request $request, Tenant $tenant)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'code' => [
-                'required',
-                'string',
-                'max:50',
-                Rule::unique('ledger_accounts')->where(function ($query) use ($tenant) {
-                    return $query->where('tenant_id', $tenant->id);
-                })
-            ],
-            'account_group_id' => 'required|exists:account_groups,id',
-            'account_type' => 'required|in:asset,liability,income,expense,equity',
-            'description' => 'nullable|string|max:500',
-            'opening_balance' => 'nullable|numeric|min:0',
-            'parent_id' => 'nullable|exists:ledger_accounts,id',
-            'is_active' => 'boolean',
-        ]);
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'code' => [
+                    'required',
+                    'string',
+                    'max:50',
+                    Rule::unique('ledger_accounts')->where(function ($query) use ($tenant) {
+                        return $query->where('tenant_id', $tenant->id);
+                    })
+                ],
+                'account_group_id' => 'required|exists:account_groups,id',
+                'account_type' => 'required|in:asset,liability,income,expense,equity',
+                'description' => 'nullable|string|max:500',
+                'opening_balance' => 'nullable|numeric|min:0',
+                'parent_id' => 'nullable|exists:ledger_accounts,id',
+                'is_active' => 'boolean',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $e->errors()
+                ], 422);
+            }
+            throw $e;
+        }
 
         try {
-            DB::transaction(function () use ($request, $tenant) {
+            $ledgerAccount = null;
+            
+            DB::transaction(function () use ($request, $tenant, &$ledgerAccount) {
                 $ledgerAccount = LedgerAccount::create([
                     'tenant_id' => $tenant->id,
                     'account_group_id' => $request->account_group_id,
@@ -172,11 +185,40 @@ class LedgerAccountController extends Controller
                 //     ->log('Ledger account created');
             });
 
+            // Check if this is an AJAX request
+            if ($request->expectsJson()) {
+                // Load the account with its relationships for the response
+                $ledgerAccount->load('accountGroup');
+                
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Ledger account created successfully.',
+                    'account' => [
+                        'id' => $ledgerAccount->id,
+                        'name' => $ledgerAccount->name,
+                        'code' => $ledgerAccount->code,
+                        'account_type' => $ledgerAccount->account_type,
+                        'account_group' => [
+                            'id' => $ledgerAccount->accountGroup->id,
+                            'name' => $ledgerAccount->accountGroup->name,
+                        ]
+                    ]
+                ]);
+            }
+
             return redirect()
                 ->route('tenant.accounting.ledger-accounts.index', ['tenant' => $tenant->slug])
                 ->with('success', 'Ledger account created successfully.');
 
         } catch (\Exception $e) {
+            // Check if this is an AJAX request
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to create ledger account: ' . $e->getMessage()
+                ], 422);
+            }
+            
             return back()
                 ->withInput()
                 ->with('error', 'Failed to create ledger account: ' . $e->getMessage());

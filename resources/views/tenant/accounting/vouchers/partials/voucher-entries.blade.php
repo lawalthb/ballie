@@ -3,6 +3,15 @@
         <div class="flex items-center justify-between">
             <h3 class="text-lg font-medium text-gray-900">Voucher Entries</h3>
             <div class="flex items-center space-x-3">
+                <!-- Quick Add Ledger Account Button -->
+                <button type="button"
+                        onclick="openAddLedgerModal()"
+                        class="inline-flex items-center px-3 py-2 border border-green-300 text-sm leading-4 font-medium rounded-md text-green-700 bg-green-50 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Add Account
+                </button>
                 <!-- Accounting Help Button -->
                 <button type="button"
                         onclick="toggleAccountingHelp()"
@@ -315,6 +324,124 @@
             </div>
         </div>
     </div>
+
+    <!-- Quick Add Ledger Account Modal -->
+    <div id="addLedgerModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">Add New Ledger Account</h3>
+                    <button type="button" onclick="closeAddLedgerModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <form id="addLedgerForm" onsubmit="addNewLedgerAccount(event)">
+                    <div class="space-y-4">
+                        <!-- Account Name -->
+                        <div>
+                            <label for="ledger_name" class="block text-sm font-medium text-gray-700">
+                                Account Name <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" 
+                                   id="ledger_name" 
+                                   name="name" 
+                                   required
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                        </div>
+
+                        <!-- Account Code -->
+                        <div>
+                            <label for="ledger_code" class="block text-sm font-medium text-gray-700">
+                                Account Code <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" 
+                                   id="ledger_code" 
+                                   name="code" 
+                                   required
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                        </div>
+
+                        <!-- Account Group -->
+                        <div>
+                            <label for="ledger_account_group_id" class="block text-sm font-medium text-gray-700">
+                                Account Group <span class="text-red-500">*</span>
+                            </label>
+                            <select id="ledger_account_group_id" 
+                                    name="account_group_id" 
+                                    required
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                                <option value="">Select Account Group</option>
+                                @foreach($ledgerAccounts->pluck('accountGroup')->filter()->unique('id')->sortBy('name') as $group)
+                                    <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Account Type -->
+                        <div>
+                            <label for="ledger_account_type" class="block text-sm font-medium text-gray-700">
+                                Account Type <span class="text-red-500">*</span>
+                            </label>
+                            <select id="ledger_account_type" 
+                                    name="account_type" 
+                                    required
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                                <option value="">Select Account Type</option>
+                                <option value="asset">Asset</option>
+                                <option value="liability">Liability</option>
+                                <option value="income">Income</option>
+                                <option value="expense">Expense</option>
+                                <option value="equity">Equity</option>
+                            </select>
+                        </div>
+
+                        <!-- Opening Balance -->
+                        <div>
+                            <label for="ledger_opening_balance" class="block text-sm font-medium text-gray-700">
+                                Opening Balance
+                            </label>
+                            <input type="number" 
+                                   id="ledger_opening_balance" 
+                                   name="opening_balance" 
+                                   step="0.01"
+                                   min="0"
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                        </div>
+
+                        <!-- Description -->
+                        <div>
+                            <label for="ledger_description" class="block text-sm font-medium text-gray-700">
+                                Description
+                            </label>
+                            <textarea id="ledger_description" 
+                                      name="description" 
+                                      rows="2"
+                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-end space-x-3 mt-6">
+                        <button type="button" 
+                                onclick="closeAddLedgerModal()"
+                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                                class="px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                            <span id="addLedgerSubmitText">Add Account</span>
+                            <svg id="addLedgerSpinner" class="hidden animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <style>
@@ -455,6 +582,126 @@ window.toggleAccountingHelp = function() {
     const panel = document.getElementById('accounting-help-panel');
     panel.classList.toggle('hidden');
     panel.classList.toggle('show');
+};
+
+// Quick Add Ledger Account functions
+window.openAddLedgerModal = function() {
+    document.getElementById('addLedgerModal').classList.remove('hidden');
+    document.getElementById('ledger_name').focus();
+};
+
+window.closeAddLedgerModal = function() {
+    document.getElementById('addLedgerModal').classList.add('hidden');
+    document.getElementById('addLedgerForm').reset();
+};
+
+window.addNewLedgerAccount = function(event) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const formData = new FormData(form);
+    const submitButton = form.querySelector('button[type="submit"]');
+    const submitText = document.getElementById('addLedgerSubmitText');
+    const spinner = document.getElementById('addLedgerSpinner');
+    
+    // Show loading state
+    submitButton.disabled = true;
+    submitText.textContent = 'Adding...';
+    spinner.classList.remove('hidden');
+    
+    // Make AJAX request
+    fetch('{{ route("tenant.accounting.ledger-accounts.store", ["tenant" => $tenant->slug]) }}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Add new account to all dropdowns
+            updateLedgerDropdowns(data.account);
+            
+            // Close modal and reset form
+            closeAddLedgerModal();
+            
+            // Show success message
+            showNotification('Ledger account added successfully!', 'success');
+        } else {
+            // Handle validation errors
+            if (data.errors) {
+                let errorMessage = 'Please correct the following errors:\n';
+                Object.keys(data.errors).forEach(field => {
+                    errorMessage += `- ${data.errors[field][0]}\n`;
+                });
+                alert(errorMessage);
+            } else {
+                alert(data.message || 'Failed to add ledger account. Please try again.');
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while adding the account. Please try again.');
+    })
+    .finally(() => {
+        // Reset button state
+        submitButton.disabled = false;
+        submitText.textContent = 'Add Account';
+        spinner.classList.add('hidden');
+    });
+};
+
+window.updateLedgerDropdowns = function(newAccount) {
+    // Find all ledger account dropdowns and add the new option
+    const selects = document.querySelectorAll('select[name*="[ledger_account_id]"]');
+    
+    selects.forEach(select => {
+        const option = document.createElement('option');
+        option.value = newAccount.id;
+        option.textContent = `${newAccount.name} (${newAccount.account_group.name})`;
+        option.setAttribute('data-type', newAccount.account_type.toLowerCase());
+        option.setAttribute('data-hint', newAccount.account_group.name);
+        
+        // Add option in alphabetical order
+        let inserted = false;
+        for (let i = 1; i < select.options.length; i++) { // Start from 1 to skip "Select Account" option
+            if (select.options[i].text.localeCompare(option.textContent) > 0) {
+                select.insertBefore(option.cloneNode(true), select.options[i]);
+                inserted = true;
+                break;
+            }
+        }
+        
+        if (!inserted) {
+            select.appendChild(option.cloneNode(true));
+        }
+    });
+};
+
+window.showNotification = function(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 ${
+        type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' :
+        type === 'error' ? 'bg-red-100 text-red-800 border border-red-200' :
+        'bg-blue-100 text-blue-800 border border-blue-200'
+    }`;
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            ${message}
+        </div>
+    `;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
 };
 
 window.showAccountHint = function(selectElement, index) {
