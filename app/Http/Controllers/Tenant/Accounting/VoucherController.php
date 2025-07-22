@@ -8,6 +8,7 @@ use App\Models\Voucher;
 use App\Models\VoucherType;
 use App\Models\VoucherEntry;
 use App\Models\LedgerAccount;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -81,12 +82,22 @@ class VoucherController extends Controller
     /**
      * Show the form for creating a new voucher.
      */
-    public function create(Tenant $tenant, $type = null)
+   public function create(Request $request, Tenant $tenant, $type = null)
     {
         $voucherTypes = VoucherType::where('tenant_id', $tenant->id)
             ->where('is_active', true)
             ->orderBy('name')
             ->get();
+
+              // Get products for inventory-enabled vouchers
+        $products = Product::where('tenant_id', $tenant->id)
+            ->where('is_active', true)
+            ->with(['primaryUnit', 'category'])
+            ->orderBy('name')
+            ->get();
+
+
+
 
         $selectedType = null;
         if ($type) {
@@ -107,10 +118,11 @@ class VoucherController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('tenant.accounting.vouchers.create', compact(
+       return view('tenant.accounting.vouchers.create', compact(
             'tenant',
             'voucherTypes',
             'ledgerAccounts',
+            'products',
             'selectedType'
         ));
     }

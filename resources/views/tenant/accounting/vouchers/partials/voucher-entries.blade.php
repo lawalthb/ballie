@@ -515,6 +515,7 @@ window.voucherEntries = function() {
         ],
         voucherTypeId: '',
         quickTemplates: [],
+        currentVoucherType: null,
 
         get totalDebits() {
             return this.entries.reduce((sum, entry) => {
@@ -571,7 +572,6 @@ window.voucherEntries = function() {
         updateEntryAccount(index) {
             const entry = this.entries[index];
             if (!entry.particulars && entry.ledger_account_id) {
-                // Auto-populate particulars based on account type
                 const selectElement = document.querySelector(`select[name="entries[${index}][ledger_account_id]"]`);
                 if (selectElement) {
                     const selectedOption = selectElement.options[selectElement.selectedIndex];
@@ -598,9 +598,120 @@ window.voucherEntries = function() {
             }
         },
 
+        // NEW: Handle auto-generation from inventory
+        generateEntriesFromInventory(inventoryData) {
+            const { inventoryItems, totalAmount, voucherType } = inventoryData;
+
+            // Clear existing entries
+            this.entries = [];
+
+            if (voucherType && voucherType.name) {
+                const typeName = voucherType.name.toLowerCase();
+
+                if (typeName.includes('sales')) {
+                    // Sales Transaction
+                    this.entries.push({
+                        ledger_account_id: '',
+                        particulars: 'Being goods sold (Debtors/Cash A/c Dr)',
+                        debit_amount: totalAmount.toFixed(2),
+                        credit_amount: ''
+                    });
+                    this.entries.push({
+                        ledger_account_id: '',
+                        particulars: 'Being sales revenue',
+                        debit_amount: '',
+                        credit_amount: totalAmount.toFixed(2)
+                    });
+                } else if (typeName.includes('purchase')) {
+                    // Purchase Transaction
+                    this.entries.push({
+                        ledger_account_id: '',
+                        particulars: 'Being goods purchased',
+                        debit_amount: totalAmount.toFixed(2),
+                        credit_amount: ''
+                    });
+                    this.entries.push({
+                        ledger_account_id: '',
+                        particulars: 'Being payment made (Cash/Bank/Creditors A/c Cr)',
+                        debit_amount: '',
+                        credit_amount: totalAmount.toFixed(2)
+                    });
+                } else {
+                    // Generic inventory adjustment
+                    this.entries.push({
+                        ledger_account_id: '',
+                        particulars: 'Being inventory adjustment',
+                        debit_amount: totalAmount.toFixed(2),
+                        credit_amount: ''
+                    });
+                    this.entries.push({
+                        ledger_account_id: '',
+                        particulars: 'Being corresponding account',
+                        debit_amount: '',
+                        credit_amount: totalAmount.toFixed(2)
+                    });
+                }
+            }
+
+            // Show success notification
+            this.showNotification('Voucher entries generated from inventory items!', 'success');
+        },
+
+        // NEW: Notification system
+        showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 ${
+                type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' :
+                type === 'error' ? 'bg-red-100 text-red-800 border border-red-200' :
+                'bg-blue-100 text-blue-800 border border-blue-200'
+            }`;
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    ${message}
+                </div>
+            `;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        },
+
+        // NEW: Watch for voucher type changes
+        watchVoucherType() {
+            this.$watch('voucherTypeId', (value) => {
+                if (value) {
+                    // Find the voucher type object
+                    const voucherType = @json($voucherTypes->keyBy('id'));
+                    this.currentVoucherType = voucherType[value] || null;
+
+                    // Dispatch event for inventory section
+                    document.dispatchEvent(new CustomEvent('voucher-type-changed', {
+                        detail: {
+                            voucherTypeId: value,
+                            voucherType: this.currentVoucherType
+                        }
+                    }));
+
+                    this.loadQuickTemplates();
+                }
+            });
+        },
+
         init() {
             this.loadQuickTemplates();
-            console.log('✅ Voucher entries component initialized');
+            this.watchVoucherType();
+
+            // Listen for inventory entry generation
+            document.addEventListener('generate-voucher-entries', (e) => {
+                this.generateEntriesFromInventory(e.detail);
+            });
+
+            console.log('✅ Voucher entries component initialized with inventory integration');
         },
 
         loadQuickTemplates() {
@@ -615,18 +726,10 @@ window.voucherEntries = function() {
                         ]
                     },
                     {
-                                            name: '🏦 Bank Payment',
+                        name: '🏦 Bank Payment',
                         description: 'Payment made via bank',
                         entries: [
                             { particulars: 'Being payment made', amount_type: 'debit' },
-                            { particulars: 'Being bank payment', amount_type: 'credit' }
-                        ]
-                    },
-                    {
-                        name: '💡 Utility Payment',
-                        description: 'Electricity, water, etc.',
-                        entries: [
-                            { particulars: 'Being utility bill payment', amount_type: 'debit' },
                             { particulars: 'Being bank payment', amount_type: 'credit' }
                         ]
                     }
@@ -647,38 +750,57 @@ window.voucherEntries = function() {
                             { particulars: 'Being bank receipt', amount_type: 'debit' },
                             { particulars: 'Being income received', amount_type: 'credit' }
                         ]
+                    }
+                ],
+                'sales': [
+                    {
+                        name: '🛒 Cash Sales',
+                        description: 'Cash sales transaction',
+                        entries: [
+                            { particulars: 'Being cash sales', amount_type: 'debit' },
+                            { particulars: 'Being sales revenue', amount_type: 'credit' }
+                        ]
                     },
                     {
-                        name: '🛒 Sales Receipt',
-                        description: 'Receipt from sales',
+                        name: '🏦 Credit Sales',
+                        description: 'Credit sales transaction',
                         entries: [
-                            { particulars: 'Being sales receipt', amount_type: 'debit' },
+                            { particulars: 'Being debtors A/c', amount_type: 'debit' },
                             { particulars: 'Being sales revenue', amount_type: 'credit' }
                         ]
                     }
                 ],
-                'journal': [
+                'purchase': [
                     {
-                        name: '⚖️ Adjustment Entry',
-                        description: 'General adjustment entry',
+                        name: '💰 Cash Purchase',
+                        description: 'Cash purchase transaction',
                         entries: [
-                            { particulars: 'Being adjustment entry', amount_type: 'debit' },
-                            { particulars: 'Being adjustment entry', amount_type: 'credit' }
+                            { particulars: 'Being goods purchased', amount_type: 'debit' },
+                            { particulars: 'Being cash payment', amount_type: 'credit' }
                         ]
                     },
                     {
-                        name: '🔄 Transfer Entry',
-                        description: 'Transfer between accounts',
+                        name: '🏦 Credit Purchase',
+                        description: 'Credit purchase transaction',
                         entries: [
-                            { particulars: 'Being transfer entry', amount_type: 'debit' },
-                            { particulars: 'Being transfer entry', amount_type: 'credit' }
+                            { particulars: 'Being goods purchased', amount_type: 'debit' },
+                            { particulars: 'Being creditors A/c', amount_type: 'credit' }
                         ]
                     }
                 ]
             };
 
-            // Set templates based on current voucher type
-            this.quickTemplates = templates['journal'] || [];
+            // Determine template type based on current voucher type
+            let templateType = 'journal';
+            if (this.currentVoucherType && this.currentVoucherType.name) {
+                const typeName = this.currentVoucherType.name.toLowerCase();
+                if (typeName.includes('sales')) templateType = 'sales';
+                else if (typeName.includes('purchase')) templateType = 'purchase';
+                else if (typeName.includes('payment')) templateType = 'payment';
+                else if (typeName.includes('receipt')) templateType = 'receipt';
+            }
+
+            this.quickTemplates = templates[templateType] || templates['journal'] || [];
         }
     }
 };
