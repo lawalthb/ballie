@@ -131,8 +131,7 @@
 
         <!-- Voucher Entries -->
         @include('tenant.accounting.vouchers.partials.voucher-entries')
- <!-- Inventory Entries (for voucher types that affect inventory) -->
-        @include('tenant.accounting.vouchers.partials.inventory-entries')
+
     </form>
 </div>
 
