@@ -150,7 +150,7 @@ class LedgerAccountController extends Controller
                 'is_active' => 'boolean',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            if ($request->expectsJson()) {
+            if ($request->expectsJson() || $request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Validation failed',
@@ -186,7 +186,7 @@ class LedgerAccountController extends Controller
             });
 
             // Check if this is an AJAX request
-            if ($request->expectsJson()) {
+            if ($request->expectsJson() || $request->ajax() || $request->wantsJson()) {
                 // Load the account with its relationships for the response
                 $ledgerAccount->load('accountGroup');
                 
@@ -212,7 +212,7 @@ class LedgerAccountController extends Controller
 
         } catch (\Exception $e) {
             // Check if this is an AJAX request
-            if ($request->expectsJson()) {
+            if ($request->expectsJson() || $request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Failed to create ledger account: ' . $e->getMessage()
